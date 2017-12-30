@@ -3,6 +3,8 @@ package com.example.zbyszek.stackmoney2
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
+import android.arch.persistence.room.Room
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -12,22 +14,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.zbyszek.stackmoney2.model.Question
+import com.example.zbyszek.stackmoney2.model.User
+import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.android.synthetic.main.fragment_register.view.*
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.AnkoAsyncContext
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.doAsyncResult
+import org.jetbrains.anko.uiThread
 
 class RegisterFragment : Fragment() {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private var mAuthTask: RegisterFragment.UserRegisterTask? = null
+    lateinit var database : AppDatabase
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view =  inflater!!.inflate(R.layout.fragment_register, container, false)
 
         view.email_sign_up_button.setOnClickListener { attemptRegister() }
+        databaseConnection()
 
         return view
+    }
+
+    fun databaseConnection(){
+        database = AppDatabase.getInMemoryDatabase(context)
     }
 
 
@@ -121,7 +137,7 @@ class RegisterFragment : Fragment() {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
-            mAuthTask = UserRegisterTask(loginStr, passwordStr)
+            mAuthTask = UserRegisterTask(loginStr, passwordStr, questionStr, questionAnswerStr)
             mAuthTask!!.execute(null as Void?)
         }
     }
@@ -129,7 +145,13 @@ class RegisterFragment : Fragment() {
     private fun isLoginValid(login: String): Boolean {
         //TODO: Replace this with your own logic
 //        return email.contains("@")
-        return login.length > 4
+        var result = true
+
+        doAsync {
+            result = database.userDAO().userLoginExists(login)
+        }
+
+        return login.length > 4 //&& !result
     }
 
     private fun isPasswordValid(password: String): Boolean {
@@ -189,14 +211,29 @@ class RegisterFragment : Fragment() {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    inner class UserRegisterTask internal constructor(private val mEmail: String, private val mPassword: String) : AsyncTask<Void, Void, Boolean>() {
+    inner class UserRegisterTask internal constructor(private val mEmail: String,
+                                                      private val mPassword: String,
+                                                      private val mQuestion: String,
+                                                      private val mAnswer: String) : AsyncTask<Void, Void, Boolean>() {
 
         override fun doInBackground(vararg params: Void): Boolean? {
-            // TODO: attempt authentication against a network service.
+            var user = User(mEmail, mPassword)
 
-            // TODO: dodawanie uzytkownika do bazy i przejdzie do apki
+            doAsync {
+                var result = database.userDAO().insertUser(user)
+                if (result != null){
+                    var question = Question(result, mQuestion, mAnswer)
+                    database.questionDAO().insertQuestion(question)
+                }
 
-            return true
+                uiThread {
+                    if (result != null){
+                        finish()
+                    }
+                }
+            }
+
+            return false
         }
 
         override fun onPostExecute(success: Boolean?) {
@@ -216,11 +253,9 @@ class RegisterFragment : Fragment() {
             showProgress(false)
         }
 
-        fun finish(){
-            Toast.makeText(activity,
-                    "To jest Image Fragmnent",
-                    Toast.LENGTH_SHORT)
-                    .show()
+        private fun finish(){
+            val intent: Intent = Intent(context, MainActivity::class.java)
+            startActivity(intent)
         }
     }
     

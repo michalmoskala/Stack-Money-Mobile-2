@@ -3,6 +3,7 @@ package com.example.zbyszek.stackmoney2
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -15,20 +16,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.example.zbyszek.stackmoney2.model.User
+import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.support.v4.uiThread
+import org.jetbrains.anko.uiThread
 
 class LoginFragment : Fragment() {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private var mAuthTask: UserLoginTask? = null
+    lateinit var database : AppDatabase
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view =  inflater!!.inflate(R.layout.fragment_login, container, false)
 
         view.email_sign_in_button.setOnClickListener { attemptLogin() }
+        databaseConnection()
+
+        doAsync {
+            var users = database.userDAO().getAllUsers()
+            var string = ""
+            users.forEach({string += it.id.toString() + " " + it.login + it.password + "|"})
+
+            uiThread {
+                Toast.makeText( context,
+                        string,
+                        Toast.LENGTH_SHORT ).show()
+            }
+        }
 
         return view
     }
@@ -67,9 +87,6 @@ class LoginFragment : Fragment() {
             showProgress(true)
             mAuthTask = UserLoginTask(loginStr, passwordStr)
             mAuthTask!!.execute(null as Void?)
-
-            val intent: Intent = Intent(context, MainActivity::class.java)
-            startActivity(intent)
         }
     }
 
@@ -101,6 +118,10 @@ class LoginFragment : Fragment() {
                 })
     }
 
+    fun databaseConnection(){
+        database = AppDatabase.getInMemoryDatabase(context)
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -110,19 +131,33 @@ class LoginFragment : Fragment() {
         override fun doInBackground(vararg params: Void): Boolean? {
             // TODO: attempt authentication against a network service.
 
-            return true
+            doAsync {
+                var result = database.userDAO().userExists(mEmail, mPassword)
+                uiThread {
+                    if (result){
+                        finish()
+                    }
+                    else {
+                        password.error = getString(R.string.error_incorrect_password)
+                        password.requestFocus()
+                    }
+                }
+            }
+
+            return false
         }
 
         override fun onPostExecute(success: Boolean?) {
             mAuthTask = null
             showProgress(false)
 
-            if (success!!) {
-                finish()
-            } else {
-                password.error = getString(R.string.error_incorrect_password)
-                password.requestFocus()
-            }
+
+//            if (success!!) {
+//                finish()
+//            } else {
+//                password.error = getString(R.string.error_incorrect_password)
+//                password.requestFocus()
+//            }
         }
 
         override fun onCancelled() {
@@ -131,10 +166,8 @@ class LoginFragment : Fragment() {
         }
 
         private fun finish(){
-//            Toast.makeText(activity,
-//                    "To jest Image Fragmnent",
-//                    Toast.LENGTH_SHORT)
-//                    .show()
+            val intent: Intent = Intent(context, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 
