@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -31,14 +32,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         onNavigationItemSelected(nav_view.menu.getItem(0));
 
-
     }
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            if (nav_view.menu.getItem(0).isChecked)
+                finish()
+            else
+                onNavigationItemSelected(nav_view.menu.getItem(0))
         }
     }
 
@@ -71,21 +74,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.nav_camera -> {
                 swapFragments(Operations())
+                nav_view.menu.getItem(0).setChecked(true)
             }
             R.id.nav_gallery -> {
                 swapFragments(Categories())
+                nav_view.menu.getItem(1).setChecked(true)
             }
             R.id.nav_slideshow -> {
                 swapFragments(Statistics())
+                nav_view.menu.getItem(2).setChecked(true)
             }
             R.id.nav_manage -> {
                 swapFragments(Patterns())
+                nav_view.menu.getItem(3).setChecked(true)
             }
             R.id.nav_share -> {
                 swapFragments(Accounts())
+                nav_view.menu.getItem(4).setChecked(true)
             }
             R.id.nav_send -> {
                 swapFragments(Planned())
+                nav_view.menu.getItem(5).setChecked(true)
             }
         }
 
