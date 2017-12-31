@@ -2,7 +2,7 @@ package com.example.zbyszek.stackmoney2.model
 
 import android.arch.persistence.room.*
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
-import com.example.zbyszek.stackmoney2.model.account.CategorySQL
+import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 
 @Entity(
         tableName = "operation_patterns",

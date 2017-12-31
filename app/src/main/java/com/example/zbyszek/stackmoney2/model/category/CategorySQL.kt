@@ -1,9 +1,10 @@
-package com.example.zbyszek.stackmoney2.model.account
+package com.example.zbyszek.stackmoney2.model.category
 
 import android.arch.persistence.room.*
 import com.example.zbyszek.stackmoney2.model.Color
 import com.example.zbyszek.stackmoney2.model.Icon
 import com.example.zbyszek.stackmoney2.model.User
+import com.example.zbyszek.stackmoney2.model.account.SubCategory
 
 @Entity(
         tableName = "categories",
@@ -35,7 +36,7 @@ data class CategorySQL(
         var iconId : Int,
 
         @ColumnInfo(name = "parent_category_id")
-        var parentAccountId : Long?,
+        var parentCategoryId : Long?,
 
         @ColumnInfo(name = "visible_in_expenses")
         var visibleInExpenses : Boolean,
@@ -49,4 +50,11 @@ data class CategorySQL(
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
+
+    fun convertToCategory(): ICategory {
+        return if (parentCategoryId == null)
+            Category(id, userId, colorId, iconId, visibleInExpenses, visibleInIncomes, name)
+        else
+            SubCategory(id, userId, colorId, iconId, parentCategoryId ?: 0, visibleInExpenses, visibleInIncomes, name)
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.zbyszek.stackmoney2.model.account
+package com.example.zbyszek.stackmoney2.model.category
 
 class Category(
         override var id : Long,

@@ -1,10 +1,5 @@
-package com.example.zbyszek.stackmoney2.model.account
+package com.example.zbyszek.stackmoney2.model.category
 
-import android.arch.persistence.room.ColumnInfo
-
-/**
- * Created by kumal on 30.12.2017.
- */
 interface ICategory {
     var id : Long
     var userId : Long

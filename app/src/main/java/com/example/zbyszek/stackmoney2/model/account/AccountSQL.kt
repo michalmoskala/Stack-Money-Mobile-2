@@ -36,4 +36,11 @@ data class AccountSQL(
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
+
+    fun convertToAccount(): IAccount {
+        return if (parentAccountId == null)
+            Account(id, userId, colorId, name)
+        else
+            SubAccount(id, userId, colorId, parentAccountId  ?: 0, name)
+    }
 }

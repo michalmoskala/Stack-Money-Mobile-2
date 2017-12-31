@@ -1,7 +1,7 @@
 package com.example.zbyszek.stackmoney2.sql.dao
 
 import android.arch.persistence.room.*
-import com.example.zbyszek.stackmoney2.model.account.CategorySQL
+import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 
 @Dao
 interface CategoryDAO {
