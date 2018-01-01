@@ -1,4 +1,4 @@
-package com.example.zbyszek.stackmoney2
+package com.example.zbyszek.stackmoney2.fragments
 
 import android.os.Bundle
 import android.app.Fragment
@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.model.category.*
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.*
@@ -15,7 +16,7 @@ import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.uiThread
 
 
-class Categories : Fragment() {
+class CategoriesFragment : Fragment() {
 
     lateinit var database : AppDatabase
     private var categoriesArrayList: ArrayList<CategoryWithSubCategories> = ArrayList()

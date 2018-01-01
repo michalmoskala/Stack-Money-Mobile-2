@@ -10,33 +10,6 @@ import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.model.account.SubCategory
 import kotlinx.android.synthetic.main.fragment_sub_category_list_row.view.*
 
-//class SubCategoryListAdapter(var listOfNames: List<ICategory>, context: Context, var listener:(ICategory) -> Unit) : RecyclerView.Adapter<SubCategoryListAdapter.ViewHolder>(){
-//
-//    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder.bind(listOfNames[position],listener)
-//    }
-//
-//    override fun getItemCount(): Int = listOfNames.size
-//
-//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder{
-//        val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_sub_category_list_row,null)
-//        return ViewHolder(view)
-//    }
-//
-//    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        fun bind(item: ICategory, listener: (ICategory) -> Unit) = with(itemView) {
-//            itemView.name.text = " -> " + item.name
-////            itemTitle.text = item.title
-////            itemImage.loadUrl(item.url)
-//            setOnClickListener {
-////                listener(item)
-//                Toast.makeText(context,item.name, Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
-//}
-
-
 class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>) : RecyclerView.Adapter<SubCategoryListAdapter.SubCategoryHolder>(){
 
     override fun onBindViewHolder(holder: SubCategoryListAdapter.SubCategoryHolder, position: Int) {

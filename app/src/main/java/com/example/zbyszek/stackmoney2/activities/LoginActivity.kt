@@ -1,19 +1,17 @@
-package com.example.zbyszek.stackmoney2
+package com.example.zbyszek.stackmoney2.activities
 
 import android.support.design.widget.TabLayout
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import com.example.zbyszek.stackmoney2.fragments.LoginFragment
+import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.fragments.RegisterFragment
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {

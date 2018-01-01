@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.zbyszek.stackmoney2.RegisterFragment">
+    tools:context="com.example.zbyszek.stackmoney2.fragments.RegisterFragment">
 
     <!-- Login progress -->
     <ProgressBar

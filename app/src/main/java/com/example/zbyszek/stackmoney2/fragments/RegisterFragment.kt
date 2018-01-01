@@ -1,9 +1,8 @@
-package com.example.zbyszek.stackmoney2
+package com.example.zbyszek.stackmoney2.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.arch.persistence.room.Room
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
@@ -13,23 +12,21 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.activities.MainActivity
 import com.example.zbyszek.stackmoney2.model.Question
 import com.example.zbyszek.stackmoney2.model.User
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_register.*
 import kotlinx.android.synthetic.main.fragment_register.view.*
-import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.AnkoAsyncContext
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.doAsyncResult
 import org.jetbrains.anko.uiThread
 
 class RegisterFragment : Fragment() {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private var mAuthTask: RegisterFragment.UserRegisterTask? = null
+    private var mAuthTask: UserRegisterTask? = null
     lateinit var database : AppDatabase
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

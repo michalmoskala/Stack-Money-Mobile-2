@@ -15,9 +15,12 @@ interface UserDAO {
     @Delete()
     fun deleteUser(user : User)
 
-    @Query("SELECT COUNT(*) FROM users WHERE login IS :login AND password IS :password")
+    @Query("SELECT COUNT(*) FROM users WHERE login IS :login AND password IS :password LIMIT 1")
     fun userExists(login : String, password : String) : Boolean
 
-    @Query("SELECT COUNT(*) FROM users WHERE login IS :login")
+    @Query("SELECT * FROM users WHERE login IS :login AND password IS :password LIMIT 1")
+    fun getUser(login : String, password : String) : User?
+
+    @Query("SELECT COUNT(*) FROM users WHERE login IS :login LIMIT 1")
     fun userLoginExists(login : String) : Boolean
 }

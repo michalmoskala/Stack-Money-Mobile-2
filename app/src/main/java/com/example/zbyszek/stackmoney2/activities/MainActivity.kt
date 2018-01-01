@@ -1,18 +1,17 @@
-package com.example.zbyszek.stackmoney2
+package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Fragment
-import android.graphics.Path
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import com.example.zbyszek.stackmoney2.*
+import com.example.zbyszek.stackmoney2.fragments.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -73,28 +72,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_camera -> {
-                swapFragments(Operations())
-                nav_view.menu.getItem(0).setChecked(true)
+                swapFragments(OperationsFragment())
+                nav_view.menu.getItem(0).isChecked = true
+                supportActionBar!!.setTitle(R.string.title_operations)
             }
             R.id.nav_gallery -> {
-                swapFragments(Categories())
-                nav_view.menu.getItem(1).setChecked(true)
+                swapFragments(CategoriesFragment())
+                nav_view.menu.getItem(1).isChecked = true
+                supportActionBar!!.setTitle(R.string.title_categories)
             }
             R.id.nav_slideshow -> {
-                swapFragments(Statistics())
-                nav_view.menu.getItem(2).setChecked(true)
+                swapFragments(StatisticsFragment())
+                nav_view.menu.getItem(2).isChecked = true
+                supportActionBar!!.setTitle(R.string.title_statistics)
             }
             R.id.nav_manage -> {
-                swapFragments(Patterns())
-                nav_view.menu.getItem(3).setChecked(true)
+                swapFragments(PatternsFragment())
+                nav_view.menu.getItem(3).isChecked = true
+                supportActionBar!!.setTitle(R.string.title_patterns)
             }
             R.id.nav_share -> {
-                swapFragments(Accounts())
-                nav_view.menu.getItem(4).setChecked(true)
+                swapFragments(AccountsFragment())
+                nav_view.menu.getItem(4).isChecked = true
+                supportActionBar!!.setTitle(R.string.title_accounts)
             }
             R.id.nav_send -> {
-                swapFragments(Planned())
-                nav_view.menu.getItem(5).setChecked(true)
+                swapFragments(PlannedFragment())
+                nav_view.menu.getItem(5).isChecked = true
+                supportActionBar!!.setTitle(R.string.title_planned)
             }
         }
 

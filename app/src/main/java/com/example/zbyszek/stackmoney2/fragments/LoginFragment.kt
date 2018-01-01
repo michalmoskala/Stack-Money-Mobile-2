@@ -1,12 +1,10 @@
-package com.example.zbyszek.stackmoney2
+package com.example.zbyszek.stackmoney2.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -16,13 +14,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.zbyszek.stackmoney2.model.User
+import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_login.view.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.support.v4.uiThread
 import org.jetbrains.anko.uiThread
+import com.example.zbyszek.stackmoney2.activities.MainActivity
+
 
 class LoginFragment : Fragment() {
     /**
@@ -132,9 +131,15 @@ class LoginFragment : Fragment() {
             // TODO: attempt authentication against a network service.
 
             doAsync {
-                var result = database.userDAO().userExists(mEmail, mPassword)
+                val result = database.userDAO().userExists(mEmail, mPassword)
+                val user = database.userDAO().getUser(mEmail, mPassword)
+
                 uiThread {
                     if (result){
+                        val prefs = activity.getSharedPreferences("com.example.app", Context.MODE_PRIVATE)
+                        val userIdKey = "com.example.app.userId"
+                        prefs.edit().putLong(userIdKey, user!!.id).apply()
+                        val l = prefs.getLong(userIdKey, -1)
                         finish()
                     }
                     else {
