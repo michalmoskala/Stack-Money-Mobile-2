@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.MainActivity
+import com.example.zbyszek.stackmoney2.model.Preferences
 import com.example.zbyszek.stackmoney2.model.Question
 import com.example.zbyszek.stackmoney2.model.User
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
@@ -214,17 +215,18 @@ class RegisterFragment : Fragment() {
                                                       private val mAnswer: String) : AsyncTask<Void, Void, Boolean>() {
 
         override fun doInBackground(vararg params: Void): Boolean? {
-            var user = User(mEmail, mPassword)
+            val user = User(mEmail, mPassword)
 
             doAsync {
-                var result = database.userDAO().insertUser(user)
+                val result = database.userDAO().insertUser(user)
                 if (result != null){
-                    var question = Question(result, mQuestion, mAnswer)
+                    val question = Question(result, mQuestion, mAnswer)
                     database.questionDAO().insertQuestion(question)
                 }
 
                 uiThread {
                     if (result != null){
+                        Preferences.setUserId(result, activity)
                         finish()
                     }
                 }

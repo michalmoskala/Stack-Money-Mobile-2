@@ -13,7 +13,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -21,6 +20,8 @@ import kotlinx.android.synthetic.main.fragment_login.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import com.example.zbyszek.stackmoney2.activities.MainActivity
+import com.example.zbyszek.stackmoney2.model.Preferences
+import org.jetbrains.anko.support.v4.act
 
 
 class LoginFragment : Fragment() {
@@ -36,18 +37,6 @@ class LoginFragment : Fragment() {
 
         view.email_sign_in_button.setOnClickListener { attemptLogin() }
         databaseConnection()
-
-        doAsync {
-            var users = database.userDAO().getAllUsers()
-            var string = ""
-            users.forEach({string += it.id.toString() + " " + it.login + it.password + "|"})
-
-            uiThread {
-                Toast.makeText( context,
-                        string,
-                        Toast.LENGTH_SHORT ).show()
-            }
-        }
 
         return view
     }
@@ -136,10 +125,7 @@ class LoginFragment : Fragment() {
 
                 uiThread {
                     if (result){
-                        val prefs = activity.getSharedPreferences("com.example.app", Context.MODE_PRIVATE)
-                        val userIdKey = "com.example.app.userId"
-                        prefs.edit().putLong(userIdKey, user!!.id).apply()
-                        val l = prefs.getLong(userIdKey, -1)
+                        Preferences.setUserId(user!!.id, activity)
                         finish()
                     }
                     else {

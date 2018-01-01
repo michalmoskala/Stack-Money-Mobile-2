@@ -7,28 +7,27 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Operations" />
+            android:title="@string/title_operations" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Categories" />
+            android:title="@string/title_categories" />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Statistics" />
+            android:title="@string/title_statistics" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Patterns" />
+            android:title="@string/title_patterns" />
         <item
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_menu_share"
-            android:title="Accounts" />
+            android:title="@string/title_accounts" />
         <item
             android:id="@+id/nav_send"
             android:icon="@drawable/ic_menu_send"
-            android:title="Planned" />
+            android:title="@string/title_planned" />
     </group>
-
 
 </menu>

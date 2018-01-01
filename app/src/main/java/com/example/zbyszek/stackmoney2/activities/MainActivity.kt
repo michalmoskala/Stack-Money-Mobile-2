@@ -1,6 +1,7 @@
 package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Fragment
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -8,19 +9,38 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.zbyszek.stackmoney2.*
 import com.example.zbyszek.stackmoney2.fragments.*
+import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import android.widget.TextView
+import com.example.zbyszek.stackmoney2.model.Preferences
+import kotlinx.android.synthetic.main.nav_header_main.view.*
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    lateinit var database : AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+        databaseConnection()
 
-
+        val l = Preferences.getUserId(this)
+        doAsync {
+            val login = database.userDAO().getLoginById(l)
+            uiThread {
+                Toast.makeText(applicationContext,"Witaj " + login, Toast.LENGTH_SHORT).show()
+                val hView = nav_view.getHeaderView(0)
+                hView.textView.text = "Witaj $login!"
+            }
+        }
 
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -29,8 +49,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        onNavigationItemSelected(nav_view.menu.getItem(0));
+        onNavigationItemSelected(nav_view.menu.getItem(0))
+    }
 
+    fun databaseConnection(){
+        database = AppDatabase.getInMemoryDatabase(this)
     }
 
     override fun onBackPressed() {

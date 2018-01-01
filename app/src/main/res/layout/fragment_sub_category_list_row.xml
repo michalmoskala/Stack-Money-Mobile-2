@@ -6,6 +6,7 @@
     tools:context="com.example.zbyszek.stackmoney2.fragments.elements.categoryWithSubCategories_list_row">
 
     <!-- TODO: Update blank fragment layout -->
+    
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"

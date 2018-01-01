@@ -21,6 +21,9 @@ interface UserDAO {
     @Query("SELECT * FROM users WHERE login IS :login AND password IS :password LIMIT 1")
     fun getUser(login : String, password : String) : User?
 
+    @Query("SELECT login FROM users WHERE id IS :id LIMIT 1")
+    fun getLoginById(id : Long) : String?
+
     @Query("SELECT COUNT(*) FROM users WHERE login IS :login LIMIT 1")
     fun userLoginExists(login : String) : Boolean
 }

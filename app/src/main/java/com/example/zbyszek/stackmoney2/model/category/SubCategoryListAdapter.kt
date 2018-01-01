@@ -43,7 +43,7 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
 
         fun bind(item: ICategory) {
             this.subCategory = item
-            itemView.name.text = " -> " + item.name
+            itemView.name.text = " -> ${item.name}"
         }
     }
 }

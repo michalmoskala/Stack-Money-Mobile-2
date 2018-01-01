@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.model.Preferences
 import com.example.zbyszek.stackmoney2.model.category.*
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.*
@@ -30,7 +31,8 @@ class CategoriesFragment : Fragment() {
         databaseConnection()
 
         doAsync {
-            val sqlCategories = database.categoryDAO().getAllCategories()
+            val userId = Preferences.getUserId(activity)
+            val sqlCategories = database.categoryDAO().getAllUserCategories(userId)
             val categoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInExpenses(sqlCategories)
             categoriesArrayList = ArrayList(categoriesList)
             uiThread {
