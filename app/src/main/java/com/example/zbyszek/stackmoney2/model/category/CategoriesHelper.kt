@@ -2,7 +2,7 @@ package com.example.zbyszek.stackmoney2.model.category
 
 class CategoriesHelper {
     companion object {
-        fun getCategoriesWithSubCategories(list: List<CategorySQL>): List<CategoryWithSubCategories> {
+        fun getCategoriesWithSubCategories(list: List<BindedCategorySQL>): List<CategoryWithSubCategories> {
             val mainCategories = list.filter { it.parentCategoryId == null }
             val subCategoriesGroups = list
                     .filter { it.parentCategoryId != null }
@@ -15,7 +15,7 @@ class CategoriesHelper {
                     }
         }
 
-        fun getCategoriesWithSubCategoriesInExpenses(list: List<CategorySQL>): List<CategoryWithSubCategories> {
+        fun getCategoriesWithSubCategoriesInExpenses(list: List<BindedCategorySQL>): List<CategoryWithSubCategories> {
             val mainCategories = list.filter { it.parentCategoryId == null && it.visibleInExpenses }
             val subCategoriesGroups = list
                     .filter { it.parentCategoryId != null && it.visibleInExpenses }
@@ -28,7 +28,7 @@ class CategoriesHelper {
                     }
         }
 
-        fun getCategoriesWithSubCategoriesInIncomes(list: List<CategorySQL>): List<CategoryWithSubCategories> {
+        fun getCategoriesWithSubCategoriesInIncomes(list: List<BindedCategorySQL>): List<CategoryWithSubCategories> {
             val mainCategories = list.filter { it.parentCategoryId == null && it.visibleInIncomes }
             val subCategoriesGroups = list
                     .filter { it.parentCategoryId != null && it.visibleInIncomes }

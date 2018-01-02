@@ -5,6 +5,8 @@ interface ICategory {
     var userId : Long
     var colorId : Int
     var iconId : Int
+    var color : String
+    var icon : String
     var visibleInExpenses : Boolean
     var visibleInIncomes : Boolean
     var name : String

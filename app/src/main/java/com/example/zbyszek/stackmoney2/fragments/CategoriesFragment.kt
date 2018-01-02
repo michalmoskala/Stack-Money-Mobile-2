@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.model.Preferences
 import com.example.zbyszek.stackmoney2.model.category.*
@@ -38,7 +39,8 @@ class CategoriesFragment : Fragment() {
 
         doAsync {
             val userId = Preferences.getUserId(activity)
-            val sqlCategories = database.categoryDAO().getAllUserCategories(userId)
+            val sqlCategories = database.categoryDAO().getAllUserBindedCategories(userId)
+//            val sqlBindedCategoried = database.categoryDAO().getAllUserBindedCategories(userId)
 
             val expenseCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInExpenses(sqlCategories)
             val incomeCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInIncomes(sqlCategories)
@@ -47,6 +49,8 @@ class CategoriesFragment : Fragment() {
             incomeCategoriesArrayList = ArrayList(incomeCategoriesList)
 
             uiThread {
+//                Toast.makeText(activity, sqlBindedCategoried.toString(), Toast.LENGTH_LONG).show()
+
                 expenseLinearLayoutManager = LinearLayoutManager(activity)
                 recyclerview_expense_categories.layoutManager = expenseLinearLayoutManager
 

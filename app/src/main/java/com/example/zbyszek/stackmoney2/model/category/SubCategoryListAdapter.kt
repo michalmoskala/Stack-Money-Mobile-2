@@ -1,14 +1,18 @@
 package com.example.zbyszek.stackmoney2.model.category
 
 import android.content.Context
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.model.FontManager
 import com.example.zbyszek.stackmoney2.model.account.SubCategory
 import kotlinx.android.synthetic.main.fragment_sub_category_list_row.view.*
+import org.jetbrains.anko.textColor
 
 class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>) : RecyclerView.Adapter<SubCategoryListAdapter.SubCategoryHolder>(){
 
@@ -44,6 +48,9 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
         fun bind(item: ICategory) {
             this.subCategory = item
             itemView.name.text = item.name
+            itemView.icon.typeface = FontManager.getTypeface(itemView.context, FontManager.FONTAWESOME)
+            itemView.icon.textColor = Color.parseColor(item.color)
+            itemView.icon.text = Html.fromHtml(item.icon)
         }
     }
 }

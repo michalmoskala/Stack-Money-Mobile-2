@@ -17,6 +17,7 @@
             android:layout_height="32dp"
             android:background="@drawable/circle">
             <TextView
+                android:id="@+id/icon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAlignment="center"
