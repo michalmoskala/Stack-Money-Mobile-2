@@ -2,15 +2,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.zbyszek.stackmoney2.fragments.elements.categoryWithSubCategories_list_row">
 
     <!-- TODO: Update blank fragment layout -->
-    
-    <TextView
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_marginLeft="16dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/circle">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAlignment="center"
+                android:gravity="center_vertical"
+                android:text="X"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/hello_blank_fragment" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -2,21 +2,43 @@ package com.example.zbyszek.stackmoney2.model.category
 
 class CategoriesHelper {
     companion object {
-        fun getCategoriesWithSubCategoriesInExpenses(list: List<CategorySQL>): List<CategoryWithSubCategories> {
+        fun getCategoriesWithSubCategories(list: List<CategorySQL>): List<CategoryWithSubCategories> {
             val mainCategories = list.filter { it.parentCategoryId == null }
             val subCategoriesGroups = list
                     .filter { it.parentCategoryId != null }
                     .groupBy { it.parentCategoryId }
-//
-
-//            fun group(id: Long): List<CategorySQL>
 
             return mainCategories
                     .map { CategoryWithSubCategories(
                             it.convertToCategory(),
                             if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory()} ))
                     }
-//            return mainCategories.map { CategoryWithSubCategories(it.convertToCategory(), arrayListOf()) }
+        }
+
+        fun getCategoriesWithSubCategoriesInExpenses(list: List<CategorySQL>): List<CategoryWithSubCategories> {
+            val mainCategories = list.filter { it.parentCategoryId == null && it.visibleInExpenses }
+            val subCategoriesGroups = list
+                    .filter { it.parentCategoryId != null && it.visibleInExpenses }
+                    .groupBy { it.parentCategoryId }
+
+            return mainCategories
+                    .map { CategoryWithSubCategories(
+                            it.convertToCategory(),
+                            if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory()} ))
+                    }
+        }
+
+        fun getCategoriesWithSubCategoriesInIncomes(list: List<CategorySQL>): List<CategoryWithSubCategories> {
+            val mainCategories = list.filter { it.parentCategoryId == null && it.visibleInIncomes }
+            val subCategoriesGroups = list
+                    .filter { it.parentCategoryId != null && it.visibleInIncomes }
+                    .groupBy { it.parentCategoryId }
+
+            return mainCategories
+                    .map { CategoryWithSubCategories(
+                            it.convertToCategory(),
+                            if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory()} ))
+                    }
         }
     }
 }

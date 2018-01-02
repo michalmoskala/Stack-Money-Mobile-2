@@ -20,9 +20,15 @@ import org.jetbrains.anko.uiThread
 class CategoriesFragment : Fragment() {
 
     lateinit var database : AppDatabase
-    private var categoriesArrayList: ArrayList<CategoryWithSubCategories> = ArrayList()
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var adapter: CategoryListAdapter
+
+    private var expenseCategoriesArrayList: ArrayList<CategoryWithSubCategories> = ArrayList()
+    private var incomeCategoriesArrayList: ArrayList<CategoryWithSubCategories> = ArrayList()
+
+    private lateinit var expenseLinearLayoutManager: LinearLayoutManager
+    private lateinit var incomeLinearLayoutManager: LinearLayoutManager
+
+    private lateinit var expenseAdapter: CategoryListAdapter
+    private lateinit var incomeAdapter: CategoryListAdapter
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -33,13 +39,25 @@ class CategoriesFragment : Fragment() {
         doAsync {
             val userId = Preferences.getUserId(activity)
             val sqlCategories = database.categoryDAO().getAllUserCategories(userId)
-            val categoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInExpenses(sqlCategories)
-            categoriesArrayList = ArrayList(categoriesList)
+
+            val expenseCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInExpenses(sqlCategories)
+            val incomeCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInIncomes(sqlCategories)
+
+            expenseCategoriesArrayList = ArrayList(expenseCategoriesList)
+            incomeCategoriesArrayList = ArrayList(incomeCategoriesList)
+
             uiThread {
-                linearLayoutManager = LinearLayoutManager(activity)
-                recyclerview_expense_categories.layoutManager = linearLayoutManager
-                adapter = CategoryListAdapter(categoriesArrayList)
-                recyclerview_expense_categories.adapter = adapter
+                expenseLinearLayoutManager = LinearLayoutManager(activity)
+                recyclerview_expense_categories.layoutManager = expenseLinearLayoutManager
+
+                incomeLinearLayoutManager = LinearLayoutManager(activity)
+                recyclerview_income_categories.layoutManager = incomeLinearLayoutManager
+
+                expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList)
+                recyclerview_expense_categories.adapter = expenseAdapter
+
+                incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList)
+                recyclerview_income_categories.adapter = incomeAdapter
             }
         }
 
@@ -58,15 +76,15 @@ class CategoriesFragment : Fragment() {
 
     fun receivedNewCategory(newCategory: CategoryWithSubCategories) {
         runOnUiThread {
-            this.categoriesArrayList.add(0, newCategory)
-            this.adapter.notifyItemInserted(0)
+            this.expenseCategoriesArrayList.add(0, newCategory)
+            this.expenseAdapter.notifyItemInserted(0)
         }
     }
 
     fun receivedNewCategory(newSubCategory: ICategory) {
         runOnUiThread {
-            this.categoriesArrayList[0].subCategories.add(0, newSubCategory)
-            this.adapter.notifyItemChanged(0)
+            this.expenseCategoriesArrayList[0].subCategories.add(0, newSubCategory)
+            this.expenseAdapter.notifyItemChanged(0)
         }
     }
 
