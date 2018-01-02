@@ -21,6 +21,7 @@
     <string name="action_sign_up_short">Zarejestruj</string>
     <string name="action_sign_in">Zaloguj</string>>
     <string name="action_sign_up">Zarejestruj</string>
+    <string name="action_add">Dodaj</string>
     <string name="action_settings">Ustawienia</string>
 
     <string name="section_format">Hello World from section: %1$d</string>
@@ -40,4 +41,9 @@
 
     <string name="title_expenses">Wydatki</string>
     <string name="title_incomes">Wpływy</string>
+  
+    <string name="operation_ammount">Kwota</string>
+    <string name="operation_title">Nazwa</string>
+    <string name="operation_description">Opis</string>
+    <string name="operation_isExpence">Czy dochód</string>
 </resources>

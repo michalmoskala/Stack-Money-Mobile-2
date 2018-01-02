@@ -1,8 +1,10 @@
 package com.example.zbyszek.stackmoney2.model.operation
+
 import android.arch.persistence.room.*
 import com.example.zbyszek.stackmoney2.model.User
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
 import com.example.zbyszek.stackmoney2.model.category.CategorySQL
+import java.io.Serializable
 
 @Entity(
         tableName = "operations",
@@ -49,7 +51,7 @@ data class Operation(
 
         @ColumnInfo(name = "date")
         var date : String?
-) {
+): Serializable {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
