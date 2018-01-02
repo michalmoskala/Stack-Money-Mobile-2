@@ -29,7 +29,7 @@ interface AccountDAO {
     @Query("SELECT " +
             "MAIN.id AS id, " +
             "(SELECT TOTAL(CASE WHEN is_expense THEN -cost " +
-            "ELSE cost END) AS balance" +
+            "ELSE cost END) AS balance " +
             "FROM operations " +
             "WHERE user_id IS :userId AND account_id IN (MAIN.id, " +
             "(SELECT DISTINCT id " +

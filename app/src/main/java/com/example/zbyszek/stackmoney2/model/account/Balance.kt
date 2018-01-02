@@ -8,7 +8,7 @@ import com.example.zbyszek.stackmoney2.model.Color
 import com.example.zbyszek.stackmoney2.model.User
 
 data class Balance(
-        @ColumnInfo(name = "balance")
+        @ColumnInfo(name = "Balance")
         var balance : Long
 ) {
     @ColumnInfo(name = "id")
