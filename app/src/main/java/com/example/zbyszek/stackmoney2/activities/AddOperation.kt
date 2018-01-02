@@ -25,7 +25,7 @@ class AddOperation : AppCompatActivity() {
             val description=description_input.text.toString()
 
 
-            val operation= Operation(1, 1, 1, 1, title, cost, isExpence, true, description, "2015-01-01")
+            val operation= Operation(1, 1, 1, title, cost, isExpence, true, description, "2015-01-01")
             val bundle = Bundle()
 
             bundle.putSerializable("data",operation)

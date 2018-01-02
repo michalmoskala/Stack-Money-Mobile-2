@@ -1,8 +1,6 @@
 package com.example.zbyszek.stackmoney2.model.operation
 
-/**
- * Created by Zbyszek on 1/2/2018.
- */
+
 
 interface IOperation{
     var id:Long

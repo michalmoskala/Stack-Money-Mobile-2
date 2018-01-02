@@ -1,7 +1,7 @@
 package com.example.zbyszek.stackmoney2.sql.dao
 
 import android.arch.persistence.room.*
-import com.example.zbyszek.stackmoney2.model.Operation
+import com.example.zbyszek.stackmoney2.model.operation.Operation
 
 @Dao
 interface OperationDAO {
