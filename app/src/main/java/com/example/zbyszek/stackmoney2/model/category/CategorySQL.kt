@@ -55,6 +55,6 @@ data class CategorySQL(
         return if (parentCategoryId == null)
             Category(id, userId, colorId, iconId, visibleInExpenses, visibleInIncomes, name)
         else
-            SubCategory(id, userId, colorId, iconId, parentCategoryId ?: 0, visibleInExpenses, visibleInIncomes, name)
+            SubCategory(id, userId, colorId, iconId,  parentCategoryId ?: 0, visibleInExpenses, visibleInIncomes, name)
     }
 }

@@ -14,7 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.MainActivity
-import com.example.zbyszek.stackmoney2.model.Preferences
+import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.model.Question
 import com.example.zbyszek.stackmoney2.model.User
 import com.example.zbyszek.stackmoney2.sql.AppDatabase

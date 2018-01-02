@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.zbyszek.stackmoney2.fragments.elements.categoryWithSubCategories_list_row">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:id="@+id/category"
@@ -25,15 +24,22 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="16dp"
             android:gravity="center_vertical"
             android:text="@string/hello_blank_fragment" />
+
+        <TextView
+            android:id="@+id/balance"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:text="x zł" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_sub"
+        android:id="@+id/recyclerview_sub_accounts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/category"

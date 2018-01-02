@@ -5,6 +5,7 @@ class SubAccount(
         override var userId : Long,
         override var colorId : Int,
         var parentAccountId : Long,
-        override var name : String
+        override var name : String,
+        override var color : String = "#2d5ac1"
 ) : IAccount {
 }

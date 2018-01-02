@@ -7,6 +7,8 @@ class Category(
         override var iconId : Int,
         override var visibleInExpenses : Boolean,
         override var visibleInIncomes : Boolean,
-        override var name : String
+        override var name : String,
+        override var color : String = "#2d5ac1",
+        override var icon : String = "&#xF1B9;"
 ) : ICategory {
 }

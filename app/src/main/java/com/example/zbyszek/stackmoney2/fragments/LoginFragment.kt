@@ -3,7 +3,6 @@ package com.example.zbyszek.stackmoney2.fragments
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
-import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Build
@@ -20,8 +19,7 @@ import kotlinx.android.synthetic.main.fragment_login.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import com.example.zbyszek.stackmoney2.activities.MainActivity
-import com.example.zbyszek.stackmoney2.model.Preferences
-import org.jetbrains.anko.support.v4.act
+import com.example.zbyszek.stackmoney2.helpers.Preferences
 
 
 class LoginFragment : Fragment() {
@@ -157,7 +155,8 @@ class LoginFragment : Fragment() {
         }
 
         private fun finish(){
-            val intent: Intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("page_id", 1)
             startActivity(intent)
         }
     }
