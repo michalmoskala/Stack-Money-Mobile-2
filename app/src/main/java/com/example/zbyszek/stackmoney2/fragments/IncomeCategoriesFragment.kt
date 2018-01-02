@@ -44,7 +44,7 @@ class IncomeCategoriesFragment : Fragment() {
                 incomeLinearLayoutManager = LinearLayoutManager(activity)
                 recyclerview_income_categories.layoutManager = incomeLinearLayoutManager
 
-                incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, context)
+//                incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, context)
                 recyclerview_income_categories.adapter = incomeAdapter
             }
         }

@@ -40,10 +40,10 @@ class CategoriesFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_categories, container, false)
         databaseConnection()
 
+        val fragment = this
         doAsync {
-            val userId = Preferences.getUserId(activity)
+            val userId = Preferences.getUserId(context)
             val sqlCategories = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
-//            val sqlBindedCategoried = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
 
             val expenseCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInExpenses(sqlCategories)
             val incomeCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInIncomes(sqlCategories)
@@ -52,18 +52,16 @@ class CategoriesFragment : Fragment() {
             incomeCategoriesArrayList = ArrayList(incomeCategoriesList)
 
             uiThread {
-//                Toast.makeText(activity, sqlBindedCategoried.toString(), Toast.LENGTH_LONG).show()
-
-                expenseLinearLayoutManager = LinearLayoutManager(activity)
+                expenseLinearLayoutManager = LinearLayoutManager(context)
                 recyclerview_expense_categories.layoutManager = expenseLinearLayoutManager
 
-                incomeLinearLayoutManager = LinearLayoutManager(activity)
+                incomeLinearLayoutManager = LinearLayoutManager(context)
                 recyclerview_income_categories.layoutManager = incomeLinearLayoutManager
 
-                expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, context)
+                expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, fragment)
                 recyclerview_expense_categories.adapter = expenseAdapter
 
-                incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, context)
+                incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, fragment)
                 recyclerview_income_categories.adapter = incomeAdapter
             }
         }
@@ -98,7 +96,7 @@ class CategoriesFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
 //        val operation = data.getSerializableExtra("new_operation")
         runOnUiThread {
-            Toast.makeText(context, "GITARSON", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.context, "GITARSON", Toast.LENGTH_SHORT).show()
         }
     }
 

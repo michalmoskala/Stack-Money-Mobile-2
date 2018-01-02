@@ -1,6 +1,7 @@
 package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Fragment
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -18,6 +19,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import org.jetbrains.anko.runOnUiThread
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -89,7 +91,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    fun swapFragments(fragment: Fragment){
+    private fun swapFragments(fragment: Fragment){
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_frame, fragment)
