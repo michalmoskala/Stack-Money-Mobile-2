@@ -10,4 +10,5 @@ interface IAccount {
     var userId : Long
     var colorId : Int
     var name : String
+    var color : String
 }

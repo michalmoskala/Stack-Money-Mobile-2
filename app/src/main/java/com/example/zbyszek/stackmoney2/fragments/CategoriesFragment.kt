@@ -6,10 +6,11 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
-import com.example.zbyszek.stackmoney2.model.Preferences
+import com.example.zbyszek.stackmoney2.helpers.Preferences
+import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
 import com.example.zbyszek.stackmoney2.model.category.*
+import com.example.zbyszek.stackmoney2.helpers.CategoriesHelper
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kotlinx.android.synthetic.main.fragment_categories.view.*
@@ -39,8 +40,8 @@ class CategoriesFragment : Fragment() {
 
         doAsync {
             val userId = Preferences.getUserId(activity)
-            val sqlCategories = database.categoryDAO().getAllUserBindedCategories(userId)
-//            val sqlBindedCategoried = database.categoryDAO().getAllUserBindedCategories(userId)
+            val sqlCategories = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
+//            val sqlBindedCategoried = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
 
             val expenseCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInExpenses(sqlCategories)
             val incomeCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInIncomes(sqlCategories)

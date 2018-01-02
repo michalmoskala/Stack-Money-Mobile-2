@@ -1,7 +1,6 @@
 package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Fragment
-import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -17,8 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import android.widget.TextView
-import com.example.zbyszek.stackmoney2.model.Preferences
+import com.example.zbyszek.stackmoney2.helpers.Preferences
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 
 

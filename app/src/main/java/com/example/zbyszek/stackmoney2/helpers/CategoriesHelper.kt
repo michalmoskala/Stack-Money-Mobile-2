@@ -1,4 +1,7 @@
-package com.example.zbyszek.stackmoney2.model.category
+package com.example.zbyszek.stackmoney2.helpers
+
+import com.example.zbyszek.stackmoney2.model.category.BindedCategorySQL
+import com.example.zbyszek.stackmoney2.model.category.CategoryWithSubCategories
 
 class CategoriesHelper {
     companion object {
@@ -9,9 +12,10 @@ class CategoriesHelper {
                     .groupBy { it.parentCategoryId }
 
             return mainCategories
-                    .map { CategoryWithSubCategories(
-                            it.convertToCategory(),
-                            if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory()} ))
+                    .map {
+                        CategoryWithSubCategories(
+                                it.convertToCategory(),
+                                if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory() }))
                     }
         }
 
@@ -22,9 +26,10 @@ class CategoriesHelper {
                     .groupBy { it.parentCategoryId }
 
             return mainCategories
-                    .map { CategoryWithSubCategories(
-                            it.convertToCategory(),
-                            if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory()} ))
+                    .map {
+                        CategoryWithSubCategories(
+                                it.convertToCategory(),
+                                if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory() }))
                     }
         }
 
@@ -35,9 +40,10 @@ class CategoriesHelper {
                     .groupBy { it.parentCategoryId }
 
             return mainCategories
-                    .map { CategoryWithSubCategories(
-                            it.convertToCategory(),
-                            if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory()} ))
+                    .map {
+                        CategoryWithSubCategories(
+                                it.convertToCategory(),
+                                if (subCategoriesGroups[it.id] == null) arrayListOf() else ArrayList(subCategoriesGroups[it.id]!!.map { it.convertToCategory() }))
                     }
         }
     }

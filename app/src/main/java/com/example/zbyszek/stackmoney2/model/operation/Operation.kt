@@ -1,5 +1,6 @@
-package com.example.zbyszek.stackmoney2.model
+package com.example.zbyszek.stackmoney2.model.operation
 import android.arch.persistence.room.*
+import com.example.zbyszek.stackmoney2.model.User
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
 import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 

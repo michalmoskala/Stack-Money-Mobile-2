@@ -2,6 +2,7 @@ package com.example.zbyszek.stackmoney2.sql.dao
 
 import android.arch.persistence.room.*
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
+import com.example.zbyszek.stackmoney2.model.account.BindedAccountSQL
 
 @Dao
 interface AccountDAO {
@@ -11,6 +12,12 @@ interface AccountDAO {
 
     @Query("SELECT * FROM accounts WHERE user_id IS :userId")
     fun getAllUserAccountsSQL(userId : Long) : List<AccountSQL>
+
+    @Query("SELECT accounts.*, colors.value AS color " +
+            "FROM accounts " +
+            "JOIN colors ON colors.id = accounts.color_id " +
+            "WHERE user_id IS :userId")
+    fun getAllUserBindedAccountsSQL(userId : Long) : List<BindedAccountSQL>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAccountSQL(accountSQL : AccountSQL) : Long?

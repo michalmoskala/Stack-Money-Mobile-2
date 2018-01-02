@@ -1,4 +1,4 @@
-package com.example.zbyszek.stackmoney2.model.category
+package com.example.zbyszek.stackmoney2.adapters
 
 import android.graphics.Color
 import android.support.v7.widget.LinearLayoutManager
@@ -9,14 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
-import com.example.zbyszek.stackmoney2.model.FontManager
+import com.example.zbyszek.stackmoney2.helpers.FontManager
+import com.example.zbyszek.stackmoney2.model.category.CategoryWithSubCategories
 import kotlinx.android.synthetic.main.fragment_category_with_sub_categories_list_row.view.*
-import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.textColor
 
 class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubCategories>) : RecyclerView.Adapter<CategoryListAdapter.CategoryHolder>(){
 
-    override fun onBindViewHolder(holder: CategoryListAdapter.CategoryHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryHolder, position: Int) {
         val itemPhoto = categoriesList[position]
         holder.bind(itemPhoto)
     }

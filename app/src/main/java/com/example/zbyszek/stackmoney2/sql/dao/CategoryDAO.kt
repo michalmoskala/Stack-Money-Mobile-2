@@ -8,18 +8,22 @@ import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 interface CategoryDAO {
 
     @Query("SELECT * FROM categories")
-    fun getAllCategories() : List<CategorySQL>
+    fun getAllCategoriesSQL() : List<CategorySQL>
 
     @Query("SELECT * FROM categories WHERE user_id IS :userId")
-    fun getAllUserCategories(userId : Long) : List<CategorySQL>
+    fun getAllUserCategoriesSQL(userId : Long) : List<CategorySQL>
 
-    @Query("SELECT categories.*, colors.value AS color, icons.value AS icon FROM categories JOIN colors ON colors.id = categories.color_id JOIN icons ON icons.id = categories.icon_id WHERE user_id IS :userId")
-    fun getAllUserBindedCategories(userId : Long) : List<BindedCategorySQL>
+    @Query("SELECT categories.*, colors.value AS color, icons.value AS icon " +
+            "FROM categories " +
+            "JOIN colors ON colors.id = categories.color_id " +
+            "JOIN icons ON icons.id = categories.icon_id " +
+            "WHERE user_id IS :userId")
+    fun getAllUserBindedCategoriesSQL(userId : Long) : List<BindedCategorySQL>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertCategory(categorySQL: CategorySQL)
+    fun insertCategorySQL(categorySQL: CategorySQL)
 
     @Delete()
-    fun deleteCategory(categorySQL: CategorySQL)
+    fun deleteCategorySQL(categorySQL: CategorySQL)
 
 }

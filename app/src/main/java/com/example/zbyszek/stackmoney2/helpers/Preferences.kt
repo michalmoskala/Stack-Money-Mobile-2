@@ -1,4 +1,4 @@
-package com.example.zbyszek.stackmoney2.model
+package com.example.zbyszek.stackmoney2.helpers
 
 import android.content.Context
 
