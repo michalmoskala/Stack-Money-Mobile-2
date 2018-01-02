@@ -22,6 +22,7 @@
     <string name="action_sign_in">Zaloguj</string>>
     <string name="action_sign_up">Zarejestruj</string>
     <string name="action_settings">Settings</string>
+    <string name="action_add">Dodaj</string>
 
     <string name="section_format">Hello World from section: %1$d</string>
 
@@ -37,4 +38,11 @@
     <string name="title_accounts">Konta</string>
     <string name="title_patterns">Szablony</string>
     <string name="title_planned">Zaplanowane</string>
+
+    <string name="operation_ammount">Kwota</string>
+    <string name="operation_title">Nazwa</string>
+    <string name="operation_description">Opis</string>
+    <string name="operation_isExpence">Czy dochód</string>
+
+
 </resources>
