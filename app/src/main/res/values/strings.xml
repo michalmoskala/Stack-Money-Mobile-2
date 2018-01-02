@@ -42,8 +42,8 @@
     <string name="title_expenses">Wydatki</string>
     <string name="title_incomes">Wpływy</string>
   
-    <string name="operation_ammount">Kwota</string>
+    <string name="operation_amount">Kwota</string>
     <string name="operation_title">Nazwa</string>
     <string name="operation_description">Opis</string>
-    <string name="operation_isExpence">Czy dochód</string>
+    <string name="operation_isExpense">Czy dochód</string>
 </resources>

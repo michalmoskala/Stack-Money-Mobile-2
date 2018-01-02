@@ -45,7 +45,7 @@ class ExpenseCategoriesFragment : Fragment() {
                 expenseLinearLayoutManager = LinearLayoutManager(activity)
                 recyclerview_expense_categories.layoutManager = expenseLinearLayoutManager
 
-                expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList)
+                expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, context)
                 recyclerview_expense_categories.adapter = expenseAdapter
             }
         }

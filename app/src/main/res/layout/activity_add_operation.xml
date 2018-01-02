@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/operation_isExpence"
+                android:text="@string/operation_isExpense"
                 android:textSize="18sp" />
 
             <android.support.design.widget.TextInputLayout
@@ -40,10 +40,10 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/ammount_input"
+                    android:id="@+id/amount_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/operation_ammount"
+                    android:hint="@string/operation_amount"
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true" />

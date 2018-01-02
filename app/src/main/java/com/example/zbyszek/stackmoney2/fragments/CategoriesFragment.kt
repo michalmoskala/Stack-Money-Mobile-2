@@ -2,10 +2,12 @@ package com.example.zbyszek.stackmoney2.fragments
 
 import android.os.Bundle
 import android.app.Fragment
+import android.content.Intent
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
@@ -58,10 +60,10 @@ class CategoriesFragment : Fragment() {
                 incomeLinearLayoutManager = LinearLayoutManager(activity)
                 recyclerview_income_categories.layoutManager = incomeLinearLayoutManager
 
-                expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList)
+                expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, context)
                 recyclerview_expense_categories.adapter = expenseAdapter
 
-                incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList)
+                incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, context)
                 recyclerview_income_categories.adapter = incomeAdapter
             }
         }
@@ -90,6 +92,13 @@ class CategoriesFragment : Fragment() {
         runOnUiThread {
             this.expenseCategoriesArrayList[0].subCategories.add(0, newSubCategory)
             this.expenseAdapter.notifyItemChanged(0)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+//        val operation = data.getSerializableExtra("new_operation")
+        runOnUiThread {
+            Toast.makeText(context, "GITARSON", Toast.LENGTH_SHORT).show()
         }
     }
 
