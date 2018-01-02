@@ -12,13 +12,13 @@
         android:layout_height="match_parent">
 
         <ScrollView
-            android:id="@+id/login_form"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:orientation="vertical">
 
@@ -26,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="Wydatki"/>
+                    android:text="@string/title_expenses"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_expense_categories"
@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="16dp"
-                    android:text="Wpływy"/>
+                    android:text="@string/title_incomes"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_income_categories"

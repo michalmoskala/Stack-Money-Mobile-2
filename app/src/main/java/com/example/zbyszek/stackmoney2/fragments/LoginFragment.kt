@@ -155,7 +155,8 @@ class LoginFragment : Fragment() {
         }
 
         private fun finish(){
-            val intent: Intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, MainActivity::class.java)
+            intent.putExtra("page_id", 1)
             startActivity(intent)
         }
     }

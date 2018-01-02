@@ -47,7 +47,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
-        onNavigationItemSelected(nav_view.menu.getItem(0))
+        val b = intent.extras
+        var value = -1 // or other values
+        if (b != null)
+            value = b.getInt("key")
+
+        if (value == -1)
+            onNavigationItemSelected(nav_view.menu.getItem(0))
+        else
+            onNavigationItemSelected(nav_view.menu.getItem(value))
     }
 
     fun databaseConnection(){
