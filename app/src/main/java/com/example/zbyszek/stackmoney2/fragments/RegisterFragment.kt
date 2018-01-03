@@ -30,9 +30,9 @@ class RegisterFragment : Fragment() {
     private var mAuthTask: UserRegisterTask? = null
     lateinit var database : AppDatabase
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view =  inflater!!.inflate(R.layout.fragment_register, container, false)
+        val view =  inflater.inflate(R.layout.fragment_register, container, false)
 
         view.email_sign_up_button.setOnClickListener { attemptRegister() }
         databaseConnection()
@@ -41,7 +41,7 @@ class RegisterFragment : Fragment() {
     }
 
     fun databaseConnection(){
-        database = AppDatabase.getInMemoryDatabase(context)
+        database = AppDatabase.getInMemoryDatabase(context!!)
     }
 
 
@@ -226,7 +226,7 @@ class RegisterFragment : Fragment() {
 
                 uiThread {
                     if (result != null){
-                        Preferences.setUserId(result, activity)
+                        Preferences.setUserId(result, activity!!)
                         finish()
                     }
                 }

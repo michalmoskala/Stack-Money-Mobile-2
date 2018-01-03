@@ -28,16 +28,16 @@ class categoryWithSubCategories_list_row : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mParam1 = arguments.getString(ARG_PARAM1)
-            mParam2 = arguments.getString(ARG_PARAM2)
+        arguments?.let { args ->
+            mParam1 = args.getString(ARG_PARAM1)
+            mParam2 = args.getString(ARG_PARAM2)
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_category_with_sub_categories_list_row, container, false)
+        return inflater.inflate(R.layout.fragment_category_with_sub_categories_list_row, container, false)
     }
 
     // TODO: Rename method, update argument and hook method into UI event

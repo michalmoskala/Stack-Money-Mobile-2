@@ -29,9 +29,9 @@ class LoginFragment : Fragment() {
     private var mAuthTask: UserLoginTask? = null
     lateinit var database : AppDatabase
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view =  inflater!!.inflate(R.layout.fragment_login, container, false)
+        val view =  inflater.inflate(R.layout.fragment_login, container, false)
 
         view.email_sign_in_button.setOnClickListener { attemptLogin() }
         databaseConnection()
@@ -105,7 +105,7 @@ class LoginFragment : Fragment() {
     }
 
     fun databaseConnection(){
-        database = AppDatabase.getInMemoryDatabase(context)
+        database = AppDatabase.getInMemoryDatabase(context!!)
     }
 
     /**
@@ -123,7 +123,7 @@ class LoginFragment : Fragment() {
 
                 uiThread {
                     if (result){
-                        Preferences.setUserId(user!!.id, activity)
+                        Preferences.setUserId(user!!.id, activity!!)
                         finish()
                     }
                     else {
