@@ -28,14 +28,14 @@ class ExpenseCategoriesFragment : Fragment() {
     private lateinit var expenseLinearLayoutManager: LinearLayoutManager
     private lateinit var expenseAdapter: CategoryListAdapter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater!!.inflate(R.layout.fragment_expense_categories, container, false)
+        val view = inflater.inflate(R.layout.fragment_expense_categories, container, false)
         databaseConnection()
 
         doAsync {
-            val userId = Preferences.getUserId(activity)
+            val userId = Preferences.getUserId(activity!!)
             val sqlCategories = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
             val expenseCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInExpenses(sqlCategories)
 
@@ -64,21 +64,21 @@ class ExpenseCategoriesFragment : Fragment() {
     }
 
     fun receivedNewCategory(newCategory: CategoryWithSubCategories) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             this.expenseCategoriesArrayList.add(0, newCategory)
             this.expenseAdapter.notifyItemInserted(0)
         }
     }
 
     fun receivedNewCategory(newSubCategory: ICategory) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             this.expenseCategoriesArrayList[0].subCategories.add(0, newSubCategory)
             this.expenseAdapter.notifyItemChanged(0)
         }
     }
 
     fun databaseConnection(){
-        database = AppDatabase.getInMemoryDatabase(activity)
+        database = AppDatabase.getInMemoryDatabase(activity!!)
     }
 
     companion object {

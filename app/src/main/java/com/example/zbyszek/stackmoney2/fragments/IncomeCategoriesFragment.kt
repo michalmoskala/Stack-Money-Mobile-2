@@ -27,14 +27,15 @@ class IncomeCategoriesFragment : Fragment() {
     private lateinit var incomeLinearLayoutManager: LinearLayoutManager
     private lateinit var incomeAdapter: CategoryListAdapter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater!!.inflate(R.layout.fragment_income_categories, container, false)
+        val view = inflater.inflate(R.layout.fragment_income_categories, container, false)
+
         databaseConnection()
 
         doAsync {
-            val userId = Preferences.getUserId(activity)
+            val userId = Preferences.getUserId(activity!!)
             val sqlCategories = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
             val incomeCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInIncomes(sqlCategories)
 
@@ -63,21 +64,21 @@ class IncomeCategoriesFragment : Fragment() {
     }
 
     fun receivedNewCategory(newCategory: CategoryWithSubCategories) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             this.incomeCategoriesArrayList.add(0, newCategory)
             this.incomeAdapter.notifyItemInserted(0)
         }
     }
 
     fun receivedNewCategory(newSubCategory: ICategory) {
-        activity.runOnUiThread {
+        activity?.runOnUiThread {
             this.incomeCategoriesArrayList[0].subCategories.add(0, newSubCategory)
             this.incomeAdapter.notifyItemChanged(0)
         }
     }
 
     fun databaseConnection(){
-        database = AppDatabase.getInMemoryDatabase(activity)
+        database = AppDatabase.getInMemoryDatabase(activity!!)
     }
 
     companion object {
