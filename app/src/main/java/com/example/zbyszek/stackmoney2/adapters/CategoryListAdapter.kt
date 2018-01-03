@@ -12,11 +12,12 @@ import android.view.ViewGroup
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddOperation
 import com.example.zbyszek.stackmoney2.helpers.FontManager
+import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.category.CategoryWithSubCategories
 import kotlinx.android.synthetic.main.fragment_category_with_sub_categories_list_row.view.*
 import org.jetbrains.anko.textColor
 
-class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubCategories>, var fragment: Fragment) : RecyclerView.Adapter<CategoryListAdapter.CategoryHolder>(){
+class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubCategories>, var fragment: SuperFragment) : RecyclerView.Adapter<CategoryListAdapter.CategoryHolder>(){
 
     override fun onBindViewHolder(holder: CategoryHolder, position: Int) {
         val itemPhoto = categoriesList[position]

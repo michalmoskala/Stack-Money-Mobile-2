@@ -30,12 +30,7 @@ class AddOperation : AppCompatActivity() {
             bundle.putSerializable("new_operation", operation)
 
             intent.putExtras(bundle)
-//            setResult(0, intent)
-            if (parent == null) {
-                setResult(0, intent)
-            } else {
-                parent.setResult(0, intent)
-            }
+            setResult(0, intent)
             finish()
         }
     }

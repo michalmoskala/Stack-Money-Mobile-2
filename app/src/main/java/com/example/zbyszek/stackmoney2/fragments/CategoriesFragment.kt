@@ -13,6 +13,7 @@ import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
 import com.example.zbyszek.stackmoney2.model.category.*
 import com.example.zbyszek.stackmoney2.helpers.CategoriesHelper
+import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kotlinx.android.synthetic.main.fragment_categories.view.*
@@ -21,7 +22,7 @@ import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.uiThread
 
 
-class CategoriesFragment : Fragment() {
+class CategoriesFragment : SuperFragment() {
 
     lateinit var database : AppDatabase
 
@@ -97,6 +98,13 @@ class CategoriesFragment : Fragment() {
 //        val operation = data.getSerializableExtra("new_operation")
         runOnUiThread {
             Toast.makeText(this.context, "GITARSON", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onDialogResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onDialogResult(requestCode, resultCode, data)
+        runOnUiThread {
+            Toast.makeText(this.context, "onDialogResult", Toast.LENGTH_SHORT).show()
         }
     }
 
