@@ -20,6 +20,8 @@ import kotlinx.android.synthetic.main.fragment_categories.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.uiThread
+import java.lang.Integer.parseInt
+import java.util.regex.Pattern
 
 
 class CategoriesFragment : SuperFragment() {
@@ -101,10 +103,16 @@ class CategoriesFragment : SuperFragment() {
         }
     }
 
-    override fun onDialogResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
         super.onDialogResult(requestCode, resultCode, data)
         runOnUiThread {
-            Toast.makeText(this.context, "onDialogResult", Toast.LENGTH_SHORT).show()
+            if (resultCode == 20){
+                val czo: List<Int> = data.split("\\s+".toRegex()).map { parseInt(it) }
+                expenseCategoriesArrayList[czo[0]].subCategories.removeAt(czo[1])
+            }
+            else if (resultCode == 10){
+                expenseCategoriesArrayList.removeAt(parseInt(data.trim()))
+            }
         }
     }
 

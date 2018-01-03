@@ -9,6 +9,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.afollestad.materialdialogs.MaterialDialog
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddOperation
 import com.example.zbyszek.stackmoney2.helpers.FontManager
@@ -41,8 +42,18 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         override fun onClick(v: View) {
-            val intent = Intent(fragment.context, AddOperation::class.java)
-            fragment.startActivityForResult(intent, 0)
+
+            MaterialDialog.Builder(fragment.context)
+                    .title("Usunąć kategorię?")
+                    .content("Zostaną również usunięte wszystkie subkategoie")
+                    .positiveText("Tak")
+                    .negativeText("Anuluj")
+                    .onPositive{ dialog, which ->
+                        fragment.onDialogResult(0,10, adapterPosition.toString())
+                        notifyItemRemoved(adapterPosition)
+                        notifyItemRangeChanged(adapterPosition, itemCount)
+                    }
+                    .show()
         }
 
 //        companion object {
@@ -57,7 +68,7 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
             itemView.icon.text = Html.fromHtml(item.category.icon)
 
             itemView.recyclerview_sub.layoutManager = LinearLayoutManager(itemView.context)
-            itemView.recyclerview_sub.adapter = SubCategoryListAdapter(item.subCategories, fragment)
+            itemView.recyclerview_sub.adapter = SubCategoryListAdapter(item.subCategories, fragment, this)
         }
     }
 }
