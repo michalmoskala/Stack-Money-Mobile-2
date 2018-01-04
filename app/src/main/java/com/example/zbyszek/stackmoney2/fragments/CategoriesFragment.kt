@@ -5,9 +5,7 @@ import android.app.Fragment
 import android.content.Intent
 import android.content.res.Configuration
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.helpers.Preferences
@@ -15,6 +13,8 @@ import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
 import com.example.zbyszek.stackmoney2.model.category.*
 import com.example.zbyszek.stackmoney2.helpers.CategoriesHelper
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
+import com.example.zbyszek.stackmoney2.model.RequestCodes
+import com.example.zbyszek.stackmoney2.model.ResultCodes
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kotlinx.android.synthetic.main.fragment_categories.view.*
@@ -22,6 +22,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.uiThread
 import java.lang.Integer.parseInt
+import java.lang.Long.parseLong
 import java.util.regex.Pattern
 
 
@@ -106,14 +107,31 @@ class CategoriesFragment : SuperFragment() {
 
     override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
         super.onDialogResult(requestCode, resultCode, data)
+
+//        expenseCategoriesArrayList.on
         runOnUiThread {
-            if (resultCode == 20){
-                val czo: List<Int> = data.split("\\s+".toRegex()).map { parseInt(it) }
-                expenseCategoriesArrayList[czo[0]].subCategories.removeAt(czo[1])
+            if (resultCode == ResultCodes.DELETE_OK){
+                val index = parseLong(data.trim())
+                if (requestCode == RequestCodes.DELETE_CATEGORY){
+                    expenseCategoriesArrayList.removeAll { it.category.id == index }
+                    expenseAdapter.notifyDataSetChanged()
+                    incomeCategoriesArrayList.removeAll { it.category.id == index }
+                    incomeAdapter.notifyDataSetChanged()
+                }
+                else if (requestCode == RequestCodes.DELETE_SUBCATEGORY){
+                    expenseCategoriesArrayList.forEach{it.subCategories.removeAll { it.id == index }}
+                    expenseAdapter.notifyDataSetChanged()
+                    incomeCategoriesArrayList.forEach{it.subCategories.removeAll { it.id == index }}
+                    incomeAdapter.notifyDataSetChanged()
+                }
             }
-            else if (resultCode == 10){
-                expenseCategoriesArrayList.removeAt(parseInt(data.trim()))
-            }
+//            if (resultCode == 20){
+//                val czo: List<Int> = data.split("\\s+".toRegex()).map { parseInt(it) }
+//                expenseCategoriesArrayList[czo[0]].subCategories.removeAt(czo[1])
+//            }
+//            else if (resultCode == 10){
+//                expenseCategoriesArrayList.removeAt(parseInt(data.trim()))
+//            }
         }
     }
 
@@ -121,7 +139,18 @@ class CategoriesFragment : SuperFragment() {
         database = AppDatabase.getInMemoryDatabase(activity)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-    }
+//    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+//        super.onCreateContextMenu(menu, v, menuInfo)
+//
+//        val inflater: MenuInflater = activity.menuInflater
+//
+//        when (v){
+//            LayoutInflater.from(context).inflate(R.layout.fragment_sub_category_list_row, null) -> {
+//                inflater.inflate(R.menu.sub_category_list_item_menu, menu)
+//            }
+//            LayoutInflater.from(context).inflate(R.layout.fragment_category_with_sub_categories_list_row, null) -> {
+//                inflater.inflate(R.menu.category_list_item_menu, menu)
+//            }
+//        }
+//    }
 }// Required empty public constructor

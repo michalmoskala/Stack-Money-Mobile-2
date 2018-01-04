@@ -16,6 +16,8 @@ import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddOperation
 import com.example.zbyszek.stackmoney2.helpers.FontManager
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
+import com.example.zbyszek.stackmoney2.model.RequestCodes
+import com.example.zbyszek.stackmoney2.model.ResultCodes
 import com.example.zbyszek.stackmoney2.model.category.CategoryWithSubCategories
 import kotlinx.android.synthetic.main.fragment_category_with_sub_categories_list_row.view.*
 import org.jetbrains.anko.textColor
@@ -41,9 +43,11 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
 
         init {
             itemView.setOnClickListener(this)
+//            fragment.registerForContextMenu(itemView)
         }
 
         override fun onClick(v: View) {
+//            itemView.showContextMenu()
             showPopup(v)
         }
 
@@ -79,9 +83,10 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
                     .positiveText("Tak")
                     .negativeText("Anuluj")
                     .onPositive{ dialog, which ->
-                        fragment.onDialogResult(0,10, adapterPosition.toString())
-                        notifyItemRemoved(adapterPosition)
-                        notifyItemRangeChanged(adapterPosition, itemCount)
+//                        fragment.onDialogResult(0,10, adapterPosition.toString())
+                        fragment.onDialogResult(RequestCodes.DELETE_CATEGORY, ResultCodes.DELETE_OK, categoryWithSubCategories!!.category.id.toString())
+//                        notifyItemRemoved(adapterPosition)
+//                        notifyItemRangeChanged(adapterPosition, itemCount)
                     }
                     .show()
         }
