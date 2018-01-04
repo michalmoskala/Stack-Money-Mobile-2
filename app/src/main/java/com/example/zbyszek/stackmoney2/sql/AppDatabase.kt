@@ -96,6 +96,12 @@ abstract class AppDatabase : RoomDatabase() {
                          "END;")
 
                 db.execSQL("CREATE TRIGGER validate_parent_account_before_insert_account BEFORE INSERT ON accounts BEGIN SELECT CASE WHEN NEW.parent_account_id IS NULL AND LOWER(TRIM(NEW.name)) IN (SELECT LOWER(TRIM(name)) FROM accounts WHERE parent_account_id IS NULL AND user_id = NEW.user_id) THEN RAISE (ABORT, 'Account with that name already exists') WHEN NEW.parent_account_id IS NOT NULL AND LOWER(TRIM(NEW.name)) IN (SELECT LOWER(TRIM(name)) FROM accounts WHERE parent_account_id == NEW.parent_account_id AND user_id = NEW.user_id) THEN RAISE (ABORT, 'Subaccount with that name already exists') END; END;")
+
+                db.execSQL("INSERT INTO users (login, password) VALUES ('admin','admin');")
+                db.execSQL("INSERT INTO questions (user_id, question, answer) VALUES (1,'poproszę','sól');")
+                db.execSQL("INSERT INTO categories (user_id, color_id, icon_id, parent_category_id, name, visible_in_incomes, visible_in_expenses) VALUES (1, 4, 6, NULL, 'Jedzenie', 0, 1), (1, 7, 6, 1, 'McDonalds', 0, 1), (1, 9, 6, 1, 'KFC', 0, 1);")
+                db.execSQL("INSERT INTO accounts (user_id, color_id, parent_account_id, name) VALUES (1, 6, NULL, 'Gotówka'), (1, 4, NULL, 'BZ WBK'), (1, 4, 2, 'Karta Visa');")
+                db.execSQL("INSERT INTO operations (user_id, account_id, category_id, title, cost, is_expense, visible_in_statistics, description, date) VALUES (1, 1, 2, 'Dwa Hamburgery', 699, 1, 1, 'Przy PWr', '2017-11-29');")
             }
         }
     }

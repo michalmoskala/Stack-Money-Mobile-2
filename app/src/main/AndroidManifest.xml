@@ -28,6 +28,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.AddOperation"></activity>
     </application>

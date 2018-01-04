@@ -3,6 +3,7 @@ package com.example.zbyszek.stackmoney2.fragments
 import android.os.Bundle
 import android.app.Fragment
 import android.content.Intent
+import android.content.res.Configuration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -55,10 +56,10 @@ class CategoriesFragment : SuperFragment() {
             incomeCategoriesArrayList = ArrayList(incomeCategoriesList)
 
             uiThread {
-                expenseLinearLayoutManager = LinearLayoutManager(context)
+                expenseLinearLayoutManager = LinearLayoutManager(fragment.context)
                 recyclerview_expense_categories.layoutManager = expenseLinearLayoutManager
 
-                incomeLinearLayoutManager = LinearLayoutManager(context)
+                incomeLinearLayoutManager = LinearLayoutManager(fragment.context)
                 recyclerview_income_categories.layoutManager = incomeLinearLayoutManager
 
                 expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, fragment)
@@ -118,5 +119,9 @@ class CategoriesFragment : SuperFragment() {
 
     fun databaseConnection(){
         database = AppDatabase.getInMemoryDatabase(activity)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
     }
 }// Required empty public constructor

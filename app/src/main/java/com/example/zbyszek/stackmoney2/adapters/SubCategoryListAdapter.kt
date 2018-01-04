@@ -3,9 +3,6 @@ package com.example.zbyszek.stackmoney2.adapters
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.text.Html
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.helpers.FontManager
@@ -13,6 +10,14 @@ import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.category.ICategory
 import kotlinx.android.synthetic.main.fragment_sub_category_list_row.view.*
 import org.jetbrains.anko.textColor
+import android.widget.PopupMenu
+import android.widget.Toast
+import android.view.*
+
+
+
+
+
 
 class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>, var fragment: SuperFragment, var categoryHolder: CategoryListAdapter.CategoryHolder) : RecyclerView.Adapter<SubCategoryListAdapter.SubCategoryHolder>(){
 
@@ -38,7 +43,39 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
         }
 
         override fun onClick(v: View) {
+            showPopup(v)
+        }
 
+        private fun showPopup(v: View) {
+            val popup = PopupMenu(fragment.context, v)
+            popup.menuInflater.inflate(R.menu.sub_category_list_item_menu, popup.menu)
+            popup.setOnMenuItemClickListener({item -> onMenuItemClick(item)})
+            popup.show()
+        }
+
+        private fun onMenuItemClick(item: MenuItem): Boolean {
+            when(item.itemId){
+                R.id.action_edit -> showEditDialog()
+                R.id.action_delete -> showDeleteDialog()
+            }
+            return true
+        }
+
+        private fun showEditDialog(){
+            MaterialDialog.Builder(fragment.context)
+                    .title("Edycja podkategorii")
+//                    .content("Ty stara kurwo zmarnowałaś mi 20 lat życia")
+                    .positiveText("Edytuj")
+                    .negativeText("Anuluj")
+                    .onPositive{ dialog, which ->
+//                        fragment.onDialogResult(0,20, categoryHolder.adapterPosition.toString() + " " + adapterPosition.toString())
+//                        notifyItemRemoved(adapterPosition)
+//                        notifyItemRangeChanged(adapterPosition, itemCount)
+                    }
+                    .show()
+        }
+
+        private fun showDeleteDialog(){
             MaterialDialog.Builder(fragment.context)
                     .title("Usunąć podkategorię?")
 //                    .content("Ty stara kurwo zmarnowałaś mi 20 lat życia")
@@ -51,7 +88,6 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
                     }
                     .show()
         }
-
 //        companion object {
 //            private val PHOTO_KEY = "PHOTO"
 //        }

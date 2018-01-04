@@ -7,8 +7,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddOperation
@@ -42,7 +44,35 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         override fun onClick(v: View) {
+            showPopup(v)
+        }
 
+        private fun showPopup(v: View) {
+            val popup = PopupMenu(fragment.context, v)
+            popup.menuInflater.inflate(R.menu.category_list_item_menu, popup.menu)
+            popup.setOnMenuItemClickListener({item -> onMenuItemClick(item)})
+            popup.show()
+        }
+
+        private fun onMenuItemClick(item: MenuItem): Boolean {
+            when(item.itemId){
+                R.id.action_edit -> showEditDialog()
+                R.id.action_delete -> showDeleteDialog()
+                R.id.action_add_sub_category -> showAddSubCategoryDialog()
+            }
+            return true
+        }
+
+        private fun showEditDialog(){
+            MaterialDialog.Builder(fragment.context)
+                    .title("Edycja kategorii")
+                    .positiveText("Edytuj")
+                    .negativeText("Anuluj")
+                    .onPositive{ dialog, which -> }
+                    .show()
+        }
+
+        private fun showDeleteDialog(){
             MaterialDialog.Builder(fragment.context)
                     .title("Usunąć kategorię?")
                     .content("Zostaną również usunięte wszystkie subkategoie")
@@ -53,6 +83,16 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
                         notifyItemRemoved(adapterPosition)
                         notifyItemRangeChanged(adapterPosition, itemCount)
                     }
+                    .show()
+        }
+
+        private fun showAddSubCategoryDialog(){
+            MaterialDialog.Builder(fragment.context)
+                    .title("Dodawanie kategorii")
+                    .content("Id głownej kategori: ${categoryWithSubCategories!!.category.id}")
+                    .positiveText("Dodaj")
+                    .negativeText("Anuluj")
+                    .onPositive{ dialog, which -> }
                     .show()
         }
 

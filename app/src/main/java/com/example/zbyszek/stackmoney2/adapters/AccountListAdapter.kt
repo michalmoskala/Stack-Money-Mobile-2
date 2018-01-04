@@ -49,6 +49,7 @@ class AccountListAdapter(private var categoriesList: ArrayList<AccountWithSubAcc
             itemView.name.text = item.account.name
             itemView.icon.typeface = FontManager.getTypeface(itemView.context, FontManager.FONTAWESOME)
             itemView.icon.textColor = Color.parseColor(item.account.color)
+            itemView.balance.text = "${"%.2f".format(item.balance / 100.0)} zł"
 
             itemView.recyclerview_sub_accounts.layoutManager = LinearLayoutManager(itemView.context)
             itemView.recyclerview_sub_accounts.adapter = SubAccountListAdapter(item.subAccounts)

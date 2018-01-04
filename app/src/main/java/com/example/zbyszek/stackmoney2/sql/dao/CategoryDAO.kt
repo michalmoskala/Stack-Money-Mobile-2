@@ -26,4 +26,24 @@ interface CategoryDAO {
     @Delete()
     fun deleteCategorySQL(categorySQL: CategorySQL)
 
+    @Query("SELECT * FROM categories WHERE user_id IS :userId AND parent_category_id IS NULL LIMIT 1")
+    fun defaultCategory(userId : Long): CategorySQL
+
+    @Query("UPDATE operations " +
+           "SET category_id = :newId " +
+           "WHERE user_id IS :userId AND account_id IN (:oldId, (SELECT DISTINCT id FROM accounts WHERE parent_account_id = :oldId))")
+    fun changeCategoryIdInOperations(userId : Long, oldId: Long, newId: Long)
+
+    @Query("UPDATE operation_patterns " +
+            "SET category_id = :newId " +
+            "WHERE user_id IS :userId AND account_id IN (:oldId, (SELECT DISTINCT id FROM accounts WHERE parent_account_id = :oldId))")
+    fun changeCategoryIdInOperationPatterns(userId : Long, oldId: Long, newId: Long)
+
+//    @Transaction
+//    open fun onDeleteCategory(userId: Long, id: Long) {
+//        val defaultCategory = defaultCategory(userId)
+//        changeCategoryIdInOperations(userId, id, defaultCategory.id)
+//        changeCategoryIdInOperationPatterns(userId, id, defaultCategory.id)
+//        ////        deleteCategorySQL()
+//    }
 }
