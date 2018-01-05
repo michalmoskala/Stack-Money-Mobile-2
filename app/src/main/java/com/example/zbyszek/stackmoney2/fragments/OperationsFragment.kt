@@ -9,6 +9,7 @@ import android.content.Intent
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddOperation
+import com.example.zbyszek.stackmoney2.model.RequestCodes
 import kotlinx.android.synthetic.main.fragment_operations.view.*
 import org.jetbrains.anko.runOnUiThread
 
@@ -32,7 +33,7 @@ class OperationsFragment : Fragment() {
 
         view.floatingActionButton_addOperation.setOnClickListener {
             val intent = Intent(context, AddOperation::class.java)
-            startActivityForResult(intent, 0)
+            startActivityForResult(intent, RequestCodes.ADD)
         }
 
         return view

@@ -3,6 +3,7 @@ package com.example.zbyszek.stackmoney2.adapters
 import android.app.Fragment
 import android.content.Intent
 import android.graphics.Color
+import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Html
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.activities.AddOperation
 import com.example.zbyszek.stackmoney2.helpers.FontManager
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
@@ -89,13 +91,15 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         private fun showAddSubCategoryDialog(){
-            MaterialDialog.Builder(fragment.context!!)
-                    .title("Dodawanie kategorii")
-                    .content("Id głownej kategori: ${categoryWithSubCategories!!.category.id}")
-                    .positiveText("Dodaj")
-                    .negativeText("Anuluj")
-                    .onPositive{ dialog, which -> }
-                    .show()
+            val intent = Intent(fragment.context, AddCategory::class.java)
+            fragment.startActivityForResult(intent, RequestCodes.ADD)
+//            MaterialDialog.Builder(fragment.context!!)
+//                    .title("Dodawanie kategorii")
+//                    .content("Id głownej kategori: ${categoryWithSubCategories!!.category.id}")
+//                    .positiveText("Dodaj")
+//                    .negativeText("Anuluj")
+//                    .onPositive{ dialog, which -> }
+//                    .show()
         }
 
         fun bind(item: CategoryWithSubCategories) {

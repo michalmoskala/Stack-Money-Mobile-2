@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
 import com.example.zbyszek.stackmoney2.model.category.*
@@ -76,6 +77,11 @@ class CategoriesFragment : SuperFragment() {
             receivedNewCategory(CategoryWithSubCategories(category, arrayListOf()))
         }
 
+        view.floatingActionButton_addCategory.setOnClickListener {
+            val intent = Intent(context, AddCategory::class.java)
+            startActivityForResult(intent, RequestCodes.ADD)
+        }
+
         view.floatingActionButton4.setOnClickListener {
             val subCategory = Category(10,1,3,4,true,true,"Nowe")
             receivedNewCategory(subCategory)
@@ -99,9 +105,9 @@ class CategoriesFragment : SuperFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-//        val operation = data.getSerializableExtra("new_operation")
+        val operation = data.getSerializableExtra("new_category")
         activity!!.runOnUiThread {
-            Toast.makeText(this.context, "GITARSON", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, operation.toString(), Toast.LENGTH_LONG).show()
         }
     }
 

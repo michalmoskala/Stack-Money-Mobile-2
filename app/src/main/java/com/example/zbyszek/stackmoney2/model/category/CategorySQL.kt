@@ -5,6 +5,7 @@ import com.example.zbyszek.stackmoney2.model.Color
 import com.example.zbyszek.stackmoney2.model.Icon
 import com.example.zbyszek.stackmoney2.model.User
 import com.example.zbyszek.stackmoney2.model.account.SubCategory
+import java.io.Serializable
 
 @Entity(
         tableName = "categories",
@@ -25,7 +26,7 @@ import com.example.zbyszek.stackmoney2.model.account.SubCategory
                         onDelete = ForeignKey.CASCADE)
         )
 )
-data class CategorySQL(
+data class CategorySQL (
         @ColumnInfo(name = "user_id")
         var userId : Long,
 
@@ -46,7 +47,7 @@ data class CategorySQL(
 
         @ColumnInfo(name = "name")
         var name : String
-) {
+) :Serializable{
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
