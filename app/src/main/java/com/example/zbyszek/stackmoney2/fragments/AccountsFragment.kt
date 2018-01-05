@@ -1,7 +1,7 @@
 package com.example.zbyszek.stackmoney2.fragments
 
 import android.os.Bundle
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -34,14 +34,14 @@ class AccountsFragment : Fragment() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var accountsAdapter: AccountListAdapter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val view = inflater!!.inflate(R.layout.fragment_accounts, container, false)
+        val view = inflater.inflate(R.layout.fragment_accounts, container, false)
         databaseConnection()
 
         doAsync {
-            val userId = Preferences.getUserId(activity)
+            val userId = Preferences.getUserId(context!!)
             val sqlAccounts = database.accountDAO().getAllUserBindedAccountsSQL(userId)
             val sqlBalances = database.accountDAO().getAllUserAccountsBalances(userId)
             val accountsList = AccountsHelper.getAccountsWithSubAccounts( sqlAccounts, sqlBalances.associateBy( {it.id}, {it.balance} ) )
@@ -62,6 +62,6 @@ class AccountsFragment : Fragment() {
     }
 
     fun databaseConnection(){
-        database = AppDatabase.getInMemoryDatabase(activity)
+        database = AppDatabase.getInMemoryDatabase(context!!)
     }
 }// Required empty public constructor

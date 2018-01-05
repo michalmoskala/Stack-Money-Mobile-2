@@ -62,7 +62,7 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
         }
 
         private fun showEditDialog(){
-            MaterialDialog.Builder(fragment.context)
+            MaterialDialog.Builder(fragment.context!!)
                     .title("Edycja podkategorii")
 //                    .content("Ty stara kurwo zmarnowałaś mi 20 lat życia")
                     .positiveText("Edytuj")
@@ -76,7 +76,7 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
         }
 
         private fun showDeleteDialog(){
-            MaterialDialog.Builder(fragment.context)
+            MaterialDialog.Builder(fragment.context!!)
                     .title("Usunąć podkategorię?")
 //                    .content("Ty stara kurwo zmarnowałaś mi 20 lat życia")
                     .positiveText("Tak")

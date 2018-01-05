@@ -68,7 +68,7 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         private fun showEditDialog(){
-            MaterialDialog.Builder(fragment.context)
+            MaterialDialog.Builder(fragment.context!!)
                     .title("Edycja kategorii")
                     .positiveText("Edytuj")
                     .negativeText("Anuluj")
@@ -77,7 +77,7 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         private fun showDeleteDialog(){
-            MaterialDialog.Builder(fragment.context)
+            MaterialDialog.Builder(fragment.context!!)
                     .title("Usunąć kategorię?")
                     .content("Zostaną również usunięte wszystkie subkategoie")
                     .positiveText("Tak")
@@ -92,7 +92,7 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         private fun showAddSubCategoryDialog(){
-            MaterialDialog.Builder(fragment.context)
+            MaterialDialog.Builder(fragment.context!!)
                     .title("Dodawanie kategorii")
                     .content("Id głownej kategori: ${categoryWithSubCategories!!.category.id}")
                     .positiveText("Dodaj")
