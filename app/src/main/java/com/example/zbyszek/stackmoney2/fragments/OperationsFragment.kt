@@ -42,7 +42,7 @@ class OperationsFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         val operation = data.getSerializableExtra("new_operation")
         runOnUiThread {
-            Toast.makeText(context, operation.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, operation.toString(), Toast.LENGTH_LONG).show()
         }
     }
 }// Required empty public constructor

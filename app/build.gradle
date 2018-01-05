@@ -7,7 +7,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.zbyszek.stackmoney2"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -38,4 +38,7 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:1.0.0"
 
     compile "org.jetbrains.anko:anko:0.10.3"
+
+
+    compile 'com.wdullaer:materialdatetimepicker:2.3.0'
 }

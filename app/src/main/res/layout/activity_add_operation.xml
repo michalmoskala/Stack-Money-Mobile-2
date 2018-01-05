@@ -28,11 +28,19 @@
 
 
             <Switch
-                android:id="@+id/isExpence_input"
+                android:id="@+id/isExpense_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/operation_isExpense"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/visibleInStatistics_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/operation_visibleInStatistics"
                 android:textSize="18sp" />
 
             <android.support.design.widget.TextInputLayout
@@ -66,6 +74,13 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <Button
+                android:id="@+id/date_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Data"
+                android:onClick="showTimePickerDialog" />
+
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -92,12 +107,36 @@
                 android:textStyle="bold" />
 
 
-            <TextView
-                android:id="@+id/textView1"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="//Kalendarz,kategoria i podkategoria TODO" />
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/category_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/operation_category"
+                    android:inputType="text"
+                    android:maxLines="6"
+                    android:singleLine="false" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/account_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/operation_account"
+                    android:inputType="text"
+                    android:maxLines="6"
+                    android:singleLine="false" />
+
+            </android.support.design.widget.TextInputLayout>
+
 
 
 

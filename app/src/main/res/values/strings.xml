@@ -42,8 +42,13 @@
     <string name="title_expenses">Wydatki</string>
     <string name="title_incomes">Wpływy</string>
   
-    <string name="operation_amount">Kwota</string>
+    <string name="operation_amount">Kwota(poki co liczba groszy)</string>
     <string name="operation_title">Nazwa</string>
+    <string name="operation_date">Data</string>
     <string name="operation_description">Opis</string>
-    <string name="operation_isExpense">Czy dochód</string>
+    <string name="operation_isExpense">Czy wydatek</string>
+    <string name="operation_visibleInStatistics">Czy widoczne w statystykach</string>
+    <string name="operation_account">id konta</string>
+    <string name="operation_category">id kategorii</string>
+
 </resources>
