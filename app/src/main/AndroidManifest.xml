@@ -31,7 +31,8 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.AddOperation" />
-        <activity android:name=".activities.AddCategory"></activity>
+        <activity android:name=".activities.AddCategory" />
+        <activity android:name=".activities.AddAccount"></activity>
     </application>
 
 </manifest>

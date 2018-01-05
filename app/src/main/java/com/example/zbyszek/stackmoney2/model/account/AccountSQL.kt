@@ -3,6 +3,7 @@ package com.example.zbyszek.stackmoney2.model.account
 import android.arch.persistence.room.*
 import com.example.zbyszek.stackmoney2.model.Color
 import com.example.zbyszek.stackmoney2.model.User
+import java.io.Serializable
 
 @Entity(
         tableName = "accounts",
@@ -32,7 +33,7 @@ data class AccountSQL(
 
         @ColumnInfo(name = "name")
         var name : String
-) {
+) : Serializable {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
