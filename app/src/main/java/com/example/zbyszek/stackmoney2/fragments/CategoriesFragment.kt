@@ -84,14 +84,14 @@ class CategoriesFragment : SuperFragment() {
         return view
     }
 
-    fun receivedNewCategory(newCategory: CategoryWithSubCategories) {
+    private fun receivedNewCategory(newCategory: CategoryWithSubCategories) {
         runOnUiThread {
             this.expenseCategoriesArrayList.add(0, newCategory)
             this.expenseAdapter.notifyItemInserted(0)
         }
     }
 
-    fun receivedNewCategory(newSubCategory: ICategory) {
+    private fun receivedNewCategory(newSubCategory: ICategory) {
         runOnUiThread {
             this.expenseCategoriesArrayList[0].subCategories.add(0, newSubCategory)
             this.expenseAdapter.notifyItemChanged(0)
@@ -108,34 +108,53 @@ class CategoriesFragment : SuperFragment() {
     override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
         super.onDialogResult(requestCode, resultCode, data)
 
-//        expenseCategoriesArrayList.on
         runOnUiThread {
-            if (resultCode == ResultCodes.DELETE_OK){
-                val index = parseLong(data.trim())
-                if (requestCode == RequestCodes.DELETE_CATEGORY){
-                    expenseCategoriesArrayList.removeAll { it.category.id == index }
-                    expenseAdapter.notifyDataSetChanged()
-                    incomeCategoriesArrayList.removeAll { it.category.id == index }
-                    incomeAdapter.notifyDataSetChanged()
-                }
-                else if (requestCode == RequestCodes.DELETE_SUBCATEGORY){
-                    expenseCategoriesArrayList.forEach{it.subCategories.removeAll { it.id == index }}
-                    expenseAdapter.notifyDataSetChanged()
-                    incomeCategoriesArrayList.forEach{it.subCategories.removeAll { it.id == index }}
-                    incomeAdapter.notifyDataSetChanged()
+            when(resultCode) {
+                ResultCodes.DELETE_OK -> {
+                    val id = parseLong(data.trim())
+                    when(requestCode) {
+                        RequestCodes.DELETE_CATEGORY -> deleteCategory(id)
+                        RequestCodes.DELETE_SUBCATEGORY -> deleteSubCategory(id)
+                    }
                 }
             }
-//            if (resultCode == 20){
-//                val czo: List<Int> = data.split("\\s+".toRegex()).map { parseInt(it) }
-//                expenseCategoriesArrayList[czo[0]].subCategories.removeAt(czo[1])
-//            }
-//            else if (resultCode == 10){
-//                expenseCategoriesArrayList.removeAt(parseInt(data.trim()))
-//            }
         }
     }
 
-    fun databaseConnection(){
+    private fun deleteCategory(id: Long) {
+        val expenseIndex = expenseCategoriesArrayList.indexOfFirst { it.category.id == id }
+        if(expenseIndex != -1){
+            expenseCategoriesArrayList.removeAt(expenseIndex)
+            expenseAdapter.notifyItemRemoved(expenseIndex)
+        }
+
+        val incomeIndex = incomeCategoriesArrayList.indexOfFirst { it.category.id == id }
+        if(incomeIndex != -1){
+            incomeCategoriesArrayList.removeAt(incomeIndex)
+            incomeAdapter.notifyItemRemoved(incomeIndex)
+        }
+    }
+
+    private fun deleteSubCategory(id: Long) {
+        expenseCategoriesArrayList.forEachIndexed lit@ { i, category ->
+            val index = category.subCategories.indexOfFirst { it.id == id }
+            if (index != -1) {
+                category.subCategories.removeAt(index)
+                expenseAdapter.notifyItemChanged(i)
+                return@lit
+            }
+        }
+        incomeCategoriesArrayList.forEachIndexed lite@ { i, categoryWithSubCategories ->
+            val index = categoryWithSubCategories.subCategories.indexOfFirst { it.id == id }
+            if (index != -1) {
+                categoryWithSubCategories.subCategories.removeAt(index)
+                incomeAdapter.notifyItemChanged(i)
+                return@lite
+            }
+        }
+    }
+
+    private fun databaseConnection(){
         database = AppDatabase.getInMemoryDatabase(activity)
     }
 
