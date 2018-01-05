@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.zbyszek.stackmoney2.fragments.ExpenseCategoriesFragment">
+    tools:context="com.example.zbyszek.stackmoney2.fragments.CategoriesRecyclerViewFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_expense_categories"
+            android:id="@+id/recyclerview_income_categories"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

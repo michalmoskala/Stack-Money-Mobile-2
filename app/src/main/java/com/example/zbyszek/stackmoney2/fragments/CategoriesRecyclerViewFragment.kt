@@ -8,29 +8,27 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
-import com.example.zbyszek.stackmoney2.model.category.CategoryWithSubCategories
-import kotlinx.android.synthetic.main.fragment_expense_categories.view.*
+import kotlinx.android.synthetic.main.fragment_categories_recycler_view.view.*
 
-class ExpenseCategoriesFragment : Fragment() {
+class CategoriesRecyclerViewFragment : Fragment() {
 
-    private var arrayList: ArrayList<CategoryWithSubCategories> = ArrayList()
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var adapter: CategoryListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_expense_categories, container, false)
+        val view = inflater.inflate(R.layout.fragment_categories_recycler_view, container, false)
 
-        view.recyclerview_expense_categories.layoutManager = linearLayoutManager
-        view.recyclerview_expense_categories.adapter = adapter
+        view.recyclerview_income_categories.layoutManager = linearLayoutManager
+        view.recyclerview_income_categories.adapter = adapter
 
         return view
     }
 
     companion object {
-        fun newInstance(adapter: CategoryListAdapter, linearLayoutManager: LinearLayoutManager): ExpenseCategoriesFragment {
-            val fragment = ExpenseCategoriesFragment()
+        fun newInstance(adapter: CategoryListAdapter, linearLayoutManager: LinearLayoutManager): CategoriesRecyclerViewFragment {
+            val fragment = CategoriesRecyclerViewFragment()
             fragment.adapter = adapter
             fragment.linearLayoutManager = linearLayoutManager
             return fragment

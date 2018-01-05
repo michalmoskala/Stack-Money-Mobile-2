@@ -1,9 +1,7 @@
 package com.example.zbyszek.stackmoney2.fragments
 
 import android.os.Bundle
-import android.app.Fragment
 import android.content.Intent
-import android.content.res.Configuration
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -22,11 +20,8 @@ import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kotlinx.android.synthetic.main.fragment_categories.view.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.uiThread
-import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
-import java.util.regex.Pattern
 
 
 class CategoriesFragment : SuperFragment() {
@@ -63,24 +58,13 @@ class CategoriesFragment : SuperFragment() {
 
             uiThread {
                 expenseLinearLayoutManager = LinearLayoutManager(fragment.context)
-//                recyclerview_expense_categories.layoutManager = expenseLinearLayoutManager
-//
                 incomeLinearLayoutManager = LinearLayoutManager(fragment.context)
-//                recyclerview_income_categories.layoutManager = incomeLinearLayoutManager
 
                 expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, fragment)
-//                recyclerview_expense_categories.adapter = expenseAdapter
-
                 incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, fragment)
-//                recyclerview_income_categories.adapter = incomeAdapter
 
-                // Create the adapter that will return a fragment for each of the three
-                // primary sections of the activity.
                 mSectionsPagerAdapter = SectionsPagerAdapter(activity!!.supportFragmentManager)
-
-                // Set up the ViewPager with the sections adapter.
                 tabContainer.adapter = mSectionsPagerAdapter
-
                 tabContainer.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
                 tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(tabContainer))
             }
@@ -176,16 +160,12 @@ class CategoriesFragment : SuperFragment() {
     inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): android.support.v4.app.Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-//            return PlaceholderFragment.newInstance(position + 1)
             if (position == 1)
-                return IncomeCategoriesFragment.newInstance(incomeAdapter, incomeLinearLayoutManager)
-            return ExpenseCategoriesFragment.newInstance(expenseAdapter, expenseLinearLayoutManager)
+                return CategoriesRecyclerViewFragment.newInstance(incomeAdapter, LinearLayoutManager(context))
+            return CategoriesRecyclerViewFragment.newInstance(expenseAdapter, LinearLayoutManager(context))
         }
 
         override fun getCount(): Int {
-            // Show 2 total pages.
             return 2
         }
     }
