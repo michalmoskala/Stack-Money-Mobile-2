@@ -41,7 +41,7 @@
 
     <string name="title_expenses">Wydatki</string>
     <string name="title_incomes">Wpływy</string>
-  
+
     <string name="operation_amount">Kwota(poki co liczba groszy)</string>
     <string name="operation_title">Nazwa</string>
     <string name="operation_date">Data</string>
@@ -50,5 +50,14 @@
     <string name="operation_visibleInStatistics">Czy widoczne w statystykach</string>
     <string name="operation_account">id konta</string>
     <string name="operation_category">id kategorii</string>
+
+    <string name="category_title">Nazwa kategorii</string>
+    <string name="category_isExpense">Czy wydatek</string>
+    <string name="category_isIncome">Czy dochod</string>
+    <string name="category_parentCategory">ID Nadkategorii</string>
+    <string name="category_colorID">ID koloru</string>
+    <string name="category_iconID">ID ikony</string>
+
+
 
 </resources>

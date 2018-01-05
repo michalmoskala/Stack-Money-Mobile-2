@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
 import com.example.zbyszek.stackmoney2.model.category.*
@@ -75,6 +76,11 @@ class CategoriesFragment : SuperFragment() {
             receivedNewCategory(CategoryWithSubCategories(category, arrayListOf()))
         }
 
+        view.floatingActionButton_addCategory.setOnClickListener {
+            val intent = Intent(context, AddCategory::class.java)
+            startActivityForResult(intent, 0)
+        }
+
         view.floatingActionButton4.setOnClickListener {
             val subCategory = Category(10,1,3,4,true,true,"Nowe")
             receivedNewCategory(subCategory)
@@ -98,11 +104,17 @@ class CategoriesFragment : SuperFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-//        val operation = data.getSerializableExtra("new_operation")
-        runOnUiThread {
-            Toast.makeText(this.context, "GITARSON", Toast.LENGTH_SHORT).show()
+
+            val operation = data.getSerializableExtra("new_category")
+            runOnUiThread {
+                Toast.makeText(context, operation.toString(), Toast.LENGTH_LONG).show()
+            }
         }
-    }
+
+
+
+
+
 
     override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
         super.onDialogResult(requestCode, resultCode, data)

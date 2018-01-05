@@ -12,12 +12,12 @@
 
 
     <ScrollView
-        android:id="@+id/operation_form"
+        android:id="@+id/category_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/operation_input_form"
+            android:id="@+id/category_input_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
@@ -25,32 +25,15 @@
 
 
 
-
-            <Switch
-                android:id="@+id/operation_isExpense_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/operation_isExpense"
-                android:textSize="18sp" />
-
-            <Switch
-                android:id="@+id/operation_visibleInStatistics_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/operation_visibleInStatistics"
-                android:textSize="18sp" />
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/operation_amount_input"
+                    android:id="@+id/category_name_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/operation_amount"
+                    android:hint="@string/category_title"
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -58,81 +41,72 @@
             </android.support.design.widget.TextInputLayout>
 
 
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/operation_name_input"
+                    android:id="@+id/category_parentCategory_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/operation_title"
+                    android:hint="@string/category_parentCategory"
                     android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:maxLines="6"
+                    android:singleLine="false" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/operation_date_input"
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/category_colorId_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/category_colorID"
+                    android:inputType="text"
+                    android:maxLines="6"
+                    android:singleLine="false" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/category_iconId_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/category_iconID"
+                    android:inputType="text"
+                    android:maxLines="6"
+                    android:singleLine="false" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <Switch
+                android:id="@+id/category_isExpense_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorAccent"
-                android:hint="@string/operation_date"
-                android:onClick="showTimePickerDialog" />
+                android:layout_weight="1"
+                android:text="@string/category_isExpense"
+                android:textSize="18sp" />
 
-
-            <android.support.design.widget.TextInputLayout
+            <Switch
+                android:id="@+id/category_isIncome_input"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <AutoCompleteTextView
-                    android:id="@+id/operation_description_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/operation_description"
-                    android:inputType="text"
-                    android:maxLines="6"
-                    android:singleLine="false" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <AutoCompleteTextView
-                    android:id="@+id/operation_category_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/operation_category"
-                    android:inputType="text"
-                    android:maxLines="6"
-                    android:singleLine="false" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <AutoCompleteTextView
-                    android:id="@+id/operation_account_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/operation_account"
-                    android:inputType="text"
-                    android:maxLines="6"
-                    android:singleLine="false" />
-
-            </android.support.design.widget.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/category_isIncome"
+                android:textSize="18sp" />
 
 
             <Button
-                android:id="@+id/operation_button_confirm_new_operation"
+                android:id="@+id/button_confirm_new_category"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -13,34 +13,13 @@ import android.widget.Button
 import java.util.*
 import android.widget.DatePicker
 import android.widget.Toast
+import com.example.zbyszek.stackmoney2.fragments.DatePickerFragment
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.model.operation.Operation
 import kotlinx.android.synthetic.main.activity_add_operation.view.*
 
 
-class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
-
-        return DatePickerDialog(context, this, year, month, day)
-    }
-
-    override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-
-        val dateString = "%04d-%02d-%02d".format(year,month+1,day)
-
-        Toast.makeText(context, dateString, Toast.LENGTH_SHORT).show()
-        val b:Button=activity!!.findViewById(R.id.date_input)
-
-        b.text = dateString
-
-    }
-
-}
 
 class AddOperation() : AppCompatActivity() {
 
@@ -59,19 +38,19 @@ class AddOperation() : AppCompatActivity() {
 
 
 
-        button_confirm_new_operation.setOnClickListener {
+        operation_button_confirm_new_operation.setOnClickListener {
             val intent = Intent()
 
             val userId = Preferences.getUserId(this)
-            val title = name_input.text.toString()
+            val title = operation_name_input.text.toString()
             //val cost = (amount_input.text.toString().toDouble() * 100).toInt()
-            val cost=amount_input.text.toString().toInt()
-            val isExpense = isExpense_input.isChecked
-            val description = description_input.text.toString()
-            val account = account_input.text.toString().toLong()
-            val category = category_input.text.toString().toLong()
-            val visibleInStatistics=visibleInStatistics_input.isChecked
-            val date=date_input.text.toString()
+            val cost=operation_amount_input.text.toString().toInt()
+            val isExpense = operation_isExpense_input.isChecked
+            val description = operation_description_input.text.toString()
+            val account = operation_account_input.text.toString().toLong()
+            val category = operation_category_input.text.toString().toLong()
+            val visibleInStatistics=operation_visibleInStatistics_input.isChecked
+            val date=operation_date_input.text.toString()
 
             val operation = Operation(userId, account, category, title, cost, isExpense, visibleInStatistics, description,date )
             val bundle = Bundle()
