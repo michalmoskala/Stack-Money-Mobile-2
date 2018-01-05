@@ -1,9 +1,11 @@
 package com.example.zbyszek.stackmoney2.fragments
 
 import android.os.Bundle
-import android.app.Fragment
 import android.content.Intent
-import android.content.res.Configuration
+import android.support.design.widget.TabLayout
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.widget.Toast
@@ -19,11 +21,8 @@ import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kotlinx.android.synthetic.main.fragment_categories.view.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.runOnUiThread
 import org.jetbrains.anko.uiThread
-import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
-import java.util.regex.Pattern
 
 
 class CategoriesFragment : SuperFragment() {
@@ -39,15 +38,17 @@ class CategoriesFragment : SuperFragment() {
     private lateinit var expenseAdapter: CategoryListAdapter
     private lateinit var incomeAdapter: CategoryListAdapter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    private var mSectionsPagerAdapter: CategoriesFragment.SectionsPagerAdapter? = null
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater!!.inflate(R.layout.fragment_categories, container, false)
+        val view = inflater.inflate(R.layout.fragment_categories, container, false)
         databaseConnection()
 
         val fragment = this
         doAsync {
-            val userId = Preferences.getUserId(context)
+            val userId = Preferences.getUserId(context!!)
             val sqlCategories = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
 
             val expenseCategoriesList = CategoriesHelper.getCategoriesWithSubCategoriesInExpenses(sqlCategories)
@@ -58,16 +59,15 @@ class CategoriesFragment : SuperFragment() {
 
             uiThread {
                 expenseLinearLayoutManager = LinearLayoutManager(fragment.context)
-                recyclerview_expense_categories.layoutManager = expenseLinearLayoutManager
-
                 incomeLinearLayoutManager = LinearLayoutManager(fragment.context)
-                recyclerview_income_categories.layoutManager = incomeLinearLayoutManager
 
                 expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, fragment)
-                recyclerview_expense_categories.adapter = expenseAdapter
-
                 incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, fragment)
-                recyclerview_income_categories.adapter = incomeAdapter
+
+                mSectionsPagerAdapter = SectionsPagerAdapter(activity!!.supportFragmentManager)
+                view.tabContainer.adapter = mSectionsPagerAdapter
+                view.tabContainer.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(view.categoryTabs))
+                view.categoryTabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(view.tabContainer))
             }
         }
 
@@ -85,14 +85,14 @@ class CategoriesFragment : SuperFragment() {
     }
 
     private fun receivedNewCategory(newCategory: CategoryWithSubCategories) {
-        runOnUiThread {
+        activity!!.runOnUiThread {
             this.expenseCategoriesArrayList.add(0, newCategory)
             this.expenseAdapter.notifyItemInserted(0)
         }
     }
 
     private fun receivedNewCategory(newSubCategory: ICategory) {
-        runOnUiThread {
+        activity!!.runOnUiThread {
             this.expenseCategoriesArrayList[0].subCategories.add(0, newSubCategory)
             this.expenseAdapter.notifyItemChanged(0)
         }
@@ -100,7 +100,7 @@ class CategoriesFragment : SuperFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
 //        val operation = data.getSerializableExtra("new_operation")
-        runOnUiThread {
+        activity!!.runOnUiThread {
             Toast.makeText(this.context, "GITARSON", Toast.LENGTH_SHORT).show()
         }
     }
@@ -108,7 +108,7 @@ class CategoriesFragment : SuperFragment() {
     override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
         super.onDialogResult(requestCode, resultCode, data)
 
-        runOnUiThread {
+        activity!!.runOnUiThread {
             when(resultCode) {
                 ResultCodes.DELETE_OK -> {
                     val id = parseLong(data.trim())
@@ -155,7 +155,20 @@ class CategoriesFragment : SuperFragment() {
     }
 
     private fun databaseConnection(){
-        database = AppDatabase.getInMemoryDatabase(activity)
+        database = AppDatabase.getInMemoryDatabase(context!!)
+    }
+
+    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+
+        override fun getItem(position: Int): android.support.v4.app.Fragment {
+            if (position == 1)
+                return CategoriesRecyclerViewFragment.newInstance(incomeAdapter, LinearLayoutManager(context))
+            return CategoriesRecyclerViewFragment.newInstance(expenseAdapter, LinearLayoutManager(context))
+        }
+
+        override fun getCount(): Int {
+            return 2
+        }
     }
 
 //    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {

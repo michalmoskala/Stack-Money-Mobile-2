@@ -40,10 +40,6 @@ class SubAccountListAdapter(private var subAccountsArrayList: ArrayList<IAccount
             Toast.makeText(itemView.context, subAccount!!.name, Toast.LENGTH_SHORT).show()
         }
 
-        companion object {
-            private val PHOTO_KEY = "PHOTO"
-        }
-
         fun bind(item: IAccount) {
             this.subAccount = item
             itemView.name.text = item.name

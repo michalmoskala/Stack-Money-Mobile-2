@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import android.content.Intent
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
@@ -25,10 +25,10 @@ class OperationsFragment : Fragment() {
 
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val view = inflater!!.inflate(R.layout.fragment_operations, container, false)
+        val view = inflater.inflate(R.layout.fragment_operations, container, false)
 
         view.floatingActionButton_addOperation.setOnClickListener {
             val intent = Intent(context, AddOperation::class.java)
@@ -41,7 +41,7 @@ class OperationsFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         val operation = data.getSerializableExtra("new_operation")
-        runOnUiThread {
+        activity!!.runOnUiThread {
             Toast.makeText(context, operation.toString(), Toast.LENGTH_SHORT).show()
         }
     }

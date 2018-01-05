@@ -1,6 +1,6 @@
 package com.example.zbyszek.stackmoney2.activities
 
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -92,8 +92,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun swapFragments(fragment: Fragment){
+    private fun swapFragments(fragment: android.app.Fragment){
         fragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_frame, fragment)
+                .addToBackStack(null)
+                .commit()
+    }
+
+    private fun swapFragments(fragment: android.support.v4.app.Fragment){
+        supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_frame, fragment)
                 .addToBackStack(null)

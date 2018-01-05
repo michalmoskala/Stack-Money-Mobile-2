@@ -68,7 +68,7 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         private fun showEditDialog(){
-            MaterialDialog.Builder(fragment.context)
+            MaterialDialog.Builder(fragment.context!!)
                     .title("Edycja kategorii")
                     .positiveText("Edytuj")
                     .negativeText("Anuluj")
@@ -77,22 +77,19 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         private fun showDeleteDialog(){
-            MaterialDialog.Builder(fragment.context)
+            MaterialDialog.Builder(fragment.context!!)
                     .title("Usunąć kategorię?")
                     .content("Zostaną również usunięte wszystkie subkategoie")
                     .positiveText("Tak")
                     .negativeText("Anuluj")
                     .onPositive{ dialog, which ->
-//                        fragment.onDialogResult(0,10, adapterPosition.toString())
                         fragment.onDialogResult(RequestCodes.DELETE_CATEGORY, ResultCodes.DELETE_OK, categoryWithSubCategories!!.category.id.toString())
-//                        notifyItemRemoved(adapterPosition)
-//                        notifyItemRangeChanged(adapterPosition, itemCount)
                     }
                     .show()
         }
 
         private fun showAddSubCategoryDialog(){
-            MaterialDialog.Builder(fragment.context)
+            MaterialDialog.Builder(fragment.context!!)
                     .title("Dodawanie kategorii")
                     .content("Id głownej kategori: ${categoryWithSubCategories!!.category.id}")
                     .positiveText("Dodaj")
@@ -100,10 +97,6 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
                     .onPositive{ dialog, which -> }
                     .show()
         }
-
-//        companion object {
-//            private val PHOTO_KEY = "PHOTO"
-//        }
 
         fun bind(item: CategoryWithSubCategories) {
             this.categoryWithSubCategories = item
