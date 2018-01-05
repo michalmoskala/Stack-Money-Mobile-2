@@ -105,23 +105,11 @@ class CategoriesFragment : SuperFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-<<<<<<< HEAD
-
-            val operation = data.getSerializableExtra("new_category")
-            runOnUiThread {
-                Toast.makeText(context, operation.toString(), Toast.LENGTH_LONG).show()
-            }
-=======
-//        val operation = data.getSerializableExtra("new_operation")
+        val operation = data.getSerializableExtra("new_category")
         activity!!.runOnUiThread {
-            Toast.makeText(this.context, "GITARSON", Toast.LENGTH_SHORT).show()
->>>>>>> master
+            Toast.makeText(context, operation.toString(), Toast.LENGTH_LONG).show()
         }
-
-
-
-
-
+    }
 
     override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
         super.onDialogResult(requestCode, resultCode, data)

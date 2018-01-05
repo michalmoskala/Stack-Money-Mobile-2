@@ -41,13 +41,8 @@ class OperationsFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         val operation = data.getSerializableExtra("new_operation")
-<<<<<<< HEAD
-        runOnUiThread {
-            Toast.makeText(context, operation.toString(), Toast.LENGTH_LONG).show()
-=======
         activity!!.runOnUiThread {
             Toast.makeText(context, operation.toString(), Toast.LENGTH_SHORT).show()
->>>>>>> master
         }
     }
 }// Required empty public constructor
