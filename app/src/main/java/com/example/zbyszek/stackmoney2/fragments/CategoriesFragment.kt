@@ -79,7 +79,7 @@ class CategoriesFragment : SuperFragment() {
 
         view.floatingActionButton_addCategory.setOnClickListener {
             val intent = Intent(context, AddCategory::class.java)
-            startActivityForResult(intent, 0)
+            startActivityForResult(intent, RequestCodes.ADD)
         }
 
         view.floatingActionButton4.setOnClickListener {

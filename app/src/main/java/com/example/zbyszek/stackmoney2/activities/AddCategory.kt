@@ -12,6 +12,9 @@ import kotlinx.android.synthetic.main.activity_add_category.*
 
 class AddCategory() : AppCompatActivity() {
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
