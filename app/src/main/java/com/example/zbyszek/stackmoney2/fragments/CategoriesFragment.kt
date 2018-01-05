@@ -4,17 +4,19 @@ import android.os.Bundle
 import android.app.Fragment
 import android.content.Intent
 import android.content.res.Configuration
+import android.support.v7.util.SortedList
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
-import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
+import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.model.category.*
 import com.example.zbyszek.stackmoney2.helpers.CategoriesHelper
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.ResultCodes
+import com.example.zbyszek.stackmoney2.model.account.SubCategory
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kotlinx.android.synthetic.main.fragment_categories.view.*
@@ -63,10 +65,12 @@ class CategoriesFragment : SuperFragment() {
                 incomeLinearLayoutManager = LinearLayoutManager(fragment.context)
                 recyclerview_income_categories.layoutManager = incomeLinearLayoutManager
 
-                expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, fragment)
+                expenseAdapter = CategoryListAdapter(fragment)
+                expenseAdapter.addAll(expenseCategoriesArrayList)
                 recyclerview_expense_categories.adapter = expenseAdapter
 
-                incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, fragment)
+                incomeAdapter = CategoryListAdapter(fragment)
+                incomeAdapter.addAll(incomeCategoriesArrayList)
                 recyclerview_income_categories.adapter = incomeAdapter
             }
         }
@@ -77,7 +81,7 @@ class CategoriesFragment : SuperFragment() {
         }
 
         view.floatingActionButton4.setOnClickListener {
-            val subCategory = Category(10,1,3,4,true,true,"Nowe")
+            val subCategory = SubCategory(10,1,3,4,1, true,true,"Nowe")
             receivedNewCategory(subCategory)
         }
 
@@ -86,15 +90,23 @@ class CategoriesFragment : SuperFragment() {
 
     fun receivedNewCategory(newCategory: CategoryWithSubCategories) {
         runOnUiThread {
-            this.expenseCategoriesArrayList.add(0, newCategory)
-            this.expenseAdapter.notifyItemInserted(0)
+            expenseAdapter.add(newCategory)
+//            this.expenseCategoriesArrayList.add(0, newCategory)
+//            expenseAdapter.notifyDataSetChanged()
+//            this.expenseAdapter.notifyItemInserted(0)
         }
     }
 
-    fun receivedNewCategory(newSubCategory: ICategory) {
+    fun receivedNewCategory(newSubCategory: SubCategory) {
         runOnUiThread {
+//            expenseAdapter.addCategory(newCategory)
+//            expenseCategoriesArrayList.firstOrNull { it.category.id == newSubCategory.parentCategoryId }.subCategories.add(0, newSubCategory)
             this.expenseCategoriesArrayList[0].subCategories.add(0, newSubCategory)
+            this.incomeCategoriesArrayList[0].subCategories.add(0, newSubCategory)
+//            expenseAdapter.notifyDataSetChanged()
             this.expenseAdapter.notifyItemChanged(0)
+            this.incomeAdapter.notifyItemChanged(0)
+//            expenseAdapter.add(newSubCategory)
         }
     }
 
@@ -114,15 +126,15 @@ class CategoriesFragment : SuperFragment() {
                 val index = parseLong(data.trim())
                 if (requestCode == RequestCodes.DELETE_CATEGORY){
                     expenseCategoriesArrayList.removeAll { it.category.id == index }
-                    expenseAdapter.notifyDataSetChanged()
+//                    expenseAdapter.notifyDataSetChanged()
                     incomeCategoriesArrayList.removeAll { it.category.id == index }
-                    incomeAdapter.notifyDataSetChanged()
+//                    incomeAdapter.notifyDataSetChanged()
                 }
                 else if (requestCode == RequestCodes.DELETE_SUBCATEGORY){
                     expenseCategoriesArrayList.forEach{it.subCategories.removeAll { it.id == index }}
-                    expenseAdapter.notifyDataSetChanged()
+//                    expenseAdapter.notifyDataSetChanged()
                     incomeCategoriesArrayList.forEach{it.subCategories.removeAll { it.id == index }}
-                    incomeAdapter.notifyDataSetChanged()
+//                    incomeAdapter.notifyDataSetChanged()
                 }
             }
 //            if (resultCode == 20){

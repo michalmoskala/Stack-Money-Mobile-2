@@ -17,7 +17,7 @@ import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.ResultCodes
 
 
-class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>, var fragment: SuperFragment, var categoryHolder: CategoryListAdapter.CategoryHolder) : RecyclerView.Adapter<SubCategoryListAdapter.SubCategoryHolder>(){
+class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>, var fragment: SuperFragment, var categoryHolder: CategoryListAdapter.ViewHolder) : RecyclerView.Adapter<SubCategoryListAdapter.SubCategoryHolder>(){
 
     override fun onBindViewHolder(holder: SubCategoryHolder, position: Int) {
         val subCategory = subCategoriesList[position]
