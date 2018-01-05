@@ -83,10 +83,7 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
                     .positiveText("Tak")
                     .negativeText("Anuluj")
                     .onPositive{ dialog, which ->
-//                        fragment.onDialogResult(0,10, adapterPosition.toString())
                         fragment.onDialogResult(RequestCodes.DELETE_CATEGORY, ResultCodes.DELETE_OK, categoryWithSubCategories!!.category.id.toString())
-//                        notifyItemRemoved(adapterPosition)
-//                        notifyItemRangeChanged(adapterPosition, itemCount)
                     }
                     .show()
         }
@@ -100,10 +97,6 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
                     .onPositive{ dialog, which -> }
                     .show()
         }
-
-//        companion object {
-//            private val PHOTO_KEY = "PHOTO"
-//        }
 
         fun bind(item: CategoryWithSubCategories) {
             this.categoryWithSubCategories = item

@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.adapters.AccountListAdapter
 import com.example.zbyszek.stackmoney2.helpers.AccountsHelper
@@ -48,8 +47,6 @@ class AccountsFragment : Fragment() {
             accountsArrayList = ArrayList(accountsList)
 
             uiThread {
-//                Toast.makeText(activity, "Dalej nie wywaliło się", Toast.LENGTH_SHORT).show()
-
                 linearLayoutManager = LinearLayoutManager(activity)
                 recyclerview_accounts.layoutManager = linearLayoutManager
 
@@ -61,7 +58,7 @@ class AccountsFragment : Fragment() {
         return view
     }
 
-    fun databaseConnection(){
+    private fun databaseConnection(){
         database = AppDatabase.getInMemoryDatabase(context!!)
     }
 }// Required empty public constructor

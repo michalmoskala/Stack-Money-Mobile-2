@@ -11,7 +11,6 @@ import com.example.zbyszek.stackmoney2.model.category.ICategory
 import kotlinx.android.synthetic.main.fragment_sub_category_list_row.view.*
 import org.jetbrains.anko.textColor
 import android.widget.PopupMenu
-import android.widget.Toast
 import android.view.*
 import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.ResultCodes
@@ -64,34 +63,22 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
         private fun showEditDialog(){
             MaterialDialog.Builder(fragment.context!!)
                     .title("Edycja podkategorii")
-//                    .content("Ty stara kurwo zmarnowałaś mi 20 lat życia")
                     .positiveText("Edytuj")
                     .negativeText("Anuluj")
-                    .onPositive{ dialog, which ->
-//                        fragment.onDialogResult(0,20, categoryHolder.adapterPosition.toString() + " " + adapterPosition.toString())
-//                        notifyItemRemoved(adapterPosition)
-//                        notifyItemRangeChanged(adapterPosition, itemCount)
-                    }
+                    .onPositive{ dialog, which -> }
                     .show()
         }
 
         private fun showDeleteDialog(){
             MaterialDialog.Builder(fragment.context!!)
                     .title("Usunąć podkategorię?")
-//                    .content("Ty stara kurwo zmarnowałaś mi 20 lat życia")
                     .positiveText("Tak")
                     .negativeText("Anuluj")
                     .onPositive{ dialog, which ->
-//                        fragment.onDialogResult(0,20, categoryHolder.adapterPosition.toString() + " " + adapterPosition.toString())
                         fragment.onDialogResult(RequestCodes.DELETE_SUBCATEGORY, ResultCodes.DELETE_OK, subCategory!!.id.toString())
-//                        notifyItemRemoved(adapterPosition)
-//                        notifyItemRangeChanged(adapterPosition, itemCount)
                     }
                     .show()
         }
-//        companion object {
-//            private val PHOTO_KEY = "PHOTO"
-//        }
 
         fun bind(item: ICategory) {
             this.subCategory = item

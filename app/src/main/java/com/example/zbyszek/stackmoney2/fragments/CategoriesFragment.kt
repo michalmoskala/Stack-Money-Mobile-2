@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.widget.Toast
@@ -64,9 +65,9 @@ class CategoriesFragment : SuperFragment() {
                 incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, fragment)
 
                 mSectionsPagerAdapter = SectionsPagerAdapter(activity!!.supportFragmentManager)
-                tabContainer.adapter = mSectionsPagerAdapter
-                tabContainer.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
-                tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(tabContainer))
+                view.tabContainer.adapter = mSectionsPagerAdapter
+                view.tabContainer.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(view.categoryTabs))
+                view.categoryTabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(view.tabContainer))
             }
         }
 
@@ -157,7 +158,7 @@ class CategoriesFragment : SuperFragment() {
         database = AppDatabase.getInMemoryDatabase(context!!)
     }
 
-    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+    inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
         override fun getItem(position: Int): android.support.v4.app.Fragment {
             if (position == 1)
