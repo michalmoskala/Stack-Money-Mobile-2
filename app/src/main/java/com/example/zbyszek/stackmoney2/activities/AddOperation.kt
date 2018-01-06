@@ -65,7 +65,7 @@ class AddOperation() : AppCompatActivity() {
         //val cost = (amount_input.text.toString().toDouble() * 100).toInt()
 //            val cost = operation_amount_input.text.toString().toInt()
         val cost = (operation_amount_input.text.toString().toDouble() * 100).toInt()
-        val isExpense = operation_isExpense_input.isChecked
+        val isExpense = radio_isExpense.isChecked
         val description = operation_description_input.text.toString()
         val accountId = operation_account_input.text.toString().toLong()
         val categoryId = operation_category_input.text.toString().toLong()
