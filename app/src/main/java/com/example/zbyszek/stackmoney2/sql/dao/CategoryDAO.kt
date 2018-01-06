@@ -21,7 +21,7 @@ interface CategoryDAO {
     fun getAllUserBindedCategoriesSQL(userId : Long) : List<BindedCategorySQL>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertCategorySQL(categorySQL: CategorySQL)
+    fun insertCategorySQL(categorySQL: CategorySQL) : Long
 
     @Delete()
     fun deleteCategorySQL(categorySQL: CategorySQL)

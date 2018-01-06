@@ -1,6 +1,8 @@
 package com.example.zbyszek.stackmoney2.model.category
 
-interface ICategory {
+import java.io.Serializable
+
+interface ICategory: Serializable {
     var id : Long
     var userId : Long
     var colorId : Int

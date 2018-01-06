@@ -42,4 +42,8 @@ data class BindedCategorySQL(
         else
             SubCategory(id, userId, colorId, iconId,parentCategoryId ?: 0, visibleInExpenses, visibleInIncomes, name, color, icon)
     }
+
+    fun convertToCategorySQL(): CategorySQL {
+        return CategorySQL(userId, colorId, iconId, parentCategoryId, visibleInExpenses, visibleInIncomes, name)
+    }
 }
