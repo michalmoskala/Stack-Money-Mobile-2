@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 finish()
             else
                 onNavigationItemSelected(nav_view.menu.getItem(0))
-//                super.onBackPressed()
         }
     }
 
@@ -88,10 +87,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            R.id.action_logout -> logout()
+            else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun logout(): Boolean {
+        Preferences.resetUserId(this)
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        return true
     }
 
 //    private fun swapFragments(fragment: android.app.Fragment){

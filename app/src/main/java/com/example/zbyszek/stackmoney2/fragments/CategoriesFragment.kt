@@ -121,7 +121,6 @@ class CategoriesFragment : SuperFragment() {
                     addCategory(iCategory)
                 else if (iCategory is SubCategory)
                     addSubCategory(iCategory)
-//                }
             }
         }
     }
@@ -143,6 +142,10 @@ class CategoriesFragment : SuperFragment() {
     }
 
     private fun deleteCategory(id: Long) {
+        doAsync {
+//            database.categoryDAO().
+        }
+
         val expenseIndex = expenseCategoriesArrayList.indexOfFirst { it.category.id == id }
         if(expenseIndex != -1){
             expenseCategoriesArrayList.removeAt(expenseIndex)

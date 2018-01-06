@@ -23,6 +23,7 @@
     <string name="action_sign_up">Zarejestruj</string>
     <string name="action_add">Dodaj</string>
     <string name="action_settings">Ustawienia</string>
+    <string name="action_logout">Wyloguj</string>>
 
     <string name="section_format">Hello World from section: %1$d</string>
 
@@ -45,7 +46,7 @@
     <string name="title_addCategory">Dodaj kategorię</string>
     <string name="title_addOperation">Dodaj operację</string>
 
-    <string name="operation_amount">Kwota(poki co liczba groszy)</string>
+    <string name="operation_amount">Kwota</string>
     <string name="operation_title">Nazwa</string>
     <string name="operation_date">Data</string>
     <string name="operation_description">Opis</string>

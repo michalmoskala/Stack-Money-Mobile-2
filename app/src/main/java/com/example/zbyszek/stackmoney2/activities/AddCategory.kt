@@ -37,12 +37,6 @@ class AddCategory : AppCompatActivity() {
         }
     }
 
-//    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-//        return if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            false
-//        } else super.onKeyDown(keyCode, event)
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_category)
@@ -60,7 +54,7 @@ class AddCategory : AppCompatActivity() {
         }
     }
 
-    fun addButtonOnClick(){
+    private fun addButtonOnClick(){
         val intent = Intent()
 
         val colorId = category_colorId_input.text.toString().toInt()
@@ -73,11 +67,10 @@ class AddCategory : AppCompatActivity() {
         val visibleInIncomes = category_isIncome_input.isChecked
 
         val bindedCategorySQL = BindedCategorySQL(userId, colorId, iconId, colors[colorId]!!, icons[iconId]!!, parentCategoryId,visibleInExpenses,visibleInIncomes,name)
-        var id = 0L
         doAsync {
-            val categorySQL = bindedCategorySQL.convertToCategorySQL()
             try {
-                id = database.categoryDAO().insertCategorySQL(categorySQL)
+                val id = database.categoryDAO().insertCategorySQL(bindedCategorySQL.convertToCategorySQL())
+                bindedCategorySQL.id = id
             } catch (e: Exception){
                 runOnUiThread {
                     Toast.makeText(
@@ -90,10 +83,7 @@ class AddCategory : AppCompatActivity() {
             }
             finally {
                 val bundle = Bundle()
-                val category = bindedCategorySQL.convertToCategory()
-                category.id = id
-                bundle.putSerializable("new_category", category)
-
+                bundle.putSerializable("new_category", bindedCategorySQL.convertToCategory())
                 intent.putExtras(bundle)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
