@@ -1,5 +1,6 @@
 package com.example.zbyszek.stackmoney2.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -7,12 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.adapters.AccountListAdapter
 import com.example.zbyszek.stackmoney2.helpers.AccountsHelper
 import com.example.zbyszek.stackmoney2.helpers.Preferences
+import com.example.zbyszek.stackmoney2.helpers.SuperFragment
+import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.account.AccountWithSubAccounts
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_accounts.*
+import kotlinx.android.synthetic.main.fragment_accounts.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -25,7 +30,7 @@ import org.jetbrains.anko.uiThread
  * Use the [AccountsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AccountsFragment : Fragment() {
+class AccountsFragment : SuperFragment() {
 
     lateinit var database : AppDatabase
 
@@ -39,6 +44,7 @@ class AccountsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_accounts, container, false)
         databaseConnection()
 
+        val fragment = this
         doAsync {
             val userId = Preferences.getUserId(context!!)
             val sqlAccounts = database.accountDAO().getAllUserBindedAccountsSQL(userId)
@@ -50,9 +56,14 @@ class AccountsFragment : Fragment() {
                 linearLayoutManager = LinearLayoutManager(activity)
                 recyclerview_accounts.layoutManager = linearLayoutManager
 
-                accountsAdapter = AccountListAdapter(accountsArrayList)
+                accountsAdapter = AccountListAdapter(accountsArrayList, fragment)
                 recyclerview_accounts.adapter = accountsAdapter
             }
+        }
+
+        view.floatingActionButton_addAccount.setOnClickListener {
+            val intent = Intent(fragment.context, AddCategory::class.java)
+            fragment.startActivityForResult(intent, RequestCodes.ADD)
         }
 
         return view

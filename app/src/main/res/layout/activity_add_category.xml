@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/category_isExpense"
+                android:text="@string/category_visibleInExpenses"
                 android:textSize="18sp" />
 
             <Switch
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/category_isIncome"
+                android:text="@string/category_visibleInIncomes"
                 android:textSize="18sp" />
 
 
@@ -113,7 +113,6 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_add"
                 android:textStyle="bold" />
-
 
         </LinearLayout>
     </ScrollView>

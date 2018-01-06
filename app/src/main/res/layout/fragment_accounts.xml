@@ -9,20 +9,24 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview_accounts"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:layout_margin="16dp">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_accounts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/floatingActionButton3"
+            android:id="@+id/floatingActionButton_addAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
             android:clickable="true"
             android:src="@android:drawable/ic_menu_add"
             app:layout_constraintBottom_toBottomOf="parent"

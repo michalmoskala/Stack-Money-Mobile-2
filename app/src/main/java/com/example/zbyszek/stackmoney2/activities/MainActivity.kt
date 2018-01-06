@@ -20,6 +20,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.runOnUiThread
 
 
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 finish()
             else
                 onNavigationItemSelected(nav_view.menu.getItem(0))
+//                super.onBackPressed()
         }
     }
 
@@ -92,13 +94,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun swapFragments(fragment: android.app.Fragment){
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_frame, fragment)
-                .addToBackStack(null)
-                .commit()
-    }
+//    private fun swapFragments(fragment: android.app.Fragment){
+//        fragmentManager
+//                .beginTransaction()
+//                .replace(R.id.fragment_frame, fragment)
+//                .addToBackStack(null)
+//                .commit()
+//    }
 
     private fun swapFragments(fragment: android.support.v4.app.Fragment){
         supportFragmentManager

@@ -93,13 +93,6 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         private fun showAddSubCategoryDialog(){
             val intent = Intent(fragment.context, AddCategory::class.java)
             fragment.startActivityForResult(intent, RequestCodes.ADD)
-//            MaterialDialog.Builder(fragment.context!!)
-//                    .title("Dodawanie kategorii")
-//                    .content("Id głownej kategori: ${categoryWithSubCategories!!.category.id}")
-//                    .positiveText("Dodaj")
-//                    .negativeText("Anuluj")
-//                    .onPositive{ dialog, which -> }
-//                    .show()
         }
 
         fun bind(item: CategoryWithSubCategories) {

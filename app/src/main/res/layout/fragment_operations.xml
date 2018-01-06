@@ -6,6 +6,7 @@
     tools:context="com.example.zbyszek.stackmoney2.fragments.OperationsFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -14,17 +15,12 @@
             android:id="@+id/floatingActionButton_addOperation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
             android:clickable="true"
             android:src="@android:drawable/ic_menu_add"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </android.support.constraint.ConstraintLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Operations" />
 
 </FrameLayout>
