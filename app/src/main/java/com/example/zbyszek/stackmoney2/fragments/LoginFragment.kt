@@ -44,7 +44,7 @@ class LoginFragment : Fragment() {
             return
         }
         // Store values at the time of the login attempt.
-        val loginStr = login.text.toString()
+        val loginStr = login.text.toString().trim()
         val passwordStr = password.text.toString()
 
         var cancel = false

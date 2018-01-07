@@ -58,7 +58,7 @@ class AddCategory : AppCompatActivity() {
 
         val colorId = category_colorId_input.text.toString().toInt()
         val iconId = category_iconId_input.text.toString().toInt()
-        val name = category_name_input.text.toString()
+        val name = category_name_input.text.toString().trim()
         val parentCategoryIdString = category_parentCategory_input.text.toString()
         val parentCategoryId = if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
         val userId = Preferences.getUserId(this)

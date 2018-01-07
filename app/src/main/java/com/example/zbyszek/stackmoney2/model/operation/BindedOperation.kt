@@ -35,7 +35,16 @@ data class BindedOperation(
         var color : String,
 
         @ColumnInfo(name = "icon")
-        var icon : String
+        var icon : String,
+
+        @ColumnInfo(name = "account_color")
+        var accountColor : String,
+
+        @ColumnInfo(name = "category_name")
+        var categoryName : String,
+
+        @ColumnInfo(name = "sub_category_name")
+        var subCategoryName : String?
 ): Serializable {
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)

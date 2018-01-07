@@ -56,7 +56,7 @@ class AddOperation : AppCompatActivity() {
         val intent = Intent()
 
         val userId = Preferences.getUserId(this)
-        val title = operation_name_input.text.toString()
+        val title = operation_name_input.text.toString().trim()
         val cost = (operation_amount_input.currencyDouble * 100).toInt()//(operation_amount_input.text.toString().toDouble() * 100).toInt()
         val isExpense = radio_isExpense.isChecked
         val description = operation_description_input.text.toString()

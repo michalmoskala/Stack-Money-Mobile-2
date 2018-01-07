@@ -58,7 +58,7 @@ class RegisterFragment : Fragment() {
         question_answer.error = null
 
         // Store values at the time of the login attempt.
-        val loginStr = login.text.toString()
+        val loginStr = login.text.toString().trim()
         val passwordStr = password.text.toString()
         val passwordRepeatStr = password_repeat.text.toString()
         val questionStr = question.text.toString()

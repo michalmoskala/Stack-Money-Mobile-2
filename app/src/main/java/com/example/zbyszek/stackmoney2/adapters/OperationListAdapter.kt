@@ -93,10 +93,20 @@ class OperationListAdapter(private var operationsList: ArrayList<BindedOperation
 
         fun bind(item: BindedOperation) {
             this.operation = item
-            itemView.title.text = item.title
+            itemView.title.text =   if (item.title.isNullOrBlank())
+                                        if(item.subCategoryName != null)
+                                            item.subCategoryName
+                                        else item.categoryName
+                                    else item.title
+
+            itemView.category_name.text = item.categoryName
+            if(!item.subCategoryName.isNullOrEmpty())
+                itemView.sub_category_name.text = item.subCategoryName
+
             itemView.icon.typeface = FontManager.getTypeface(itemView.context, FontManager.FONTAWESOME)
             itemView.icon.textColor = Color.parseColor(item.color)
             itemView.icon.text = Html.fromHtml(item.icon)
+
             itemView.cost.text = "%.2f zł".format((if (item.isExpense) -item.cost else item.cost) / 100.0)
         }
     }

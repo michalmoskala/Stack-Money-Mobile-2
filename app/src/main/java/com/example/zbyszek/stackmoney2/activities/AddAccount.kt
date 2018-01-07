@@ -54,7 +54,7 @@ class AddAccount : AppCompatActivity() {
     private fun addButtonOnClick(){
         val intent = Intent()
 
-        val name = account_name_input.text.toString()
+        val name = account_name_input.text.toString().trim()
         val colorId = account_colorId_input.text.toString().toInt()
         val parentAccountIdString = account_parentAccount_input.text.toString()
         val parentAccountId = if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
