@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -14,6 +15,7 @@ import com.example.zbyszek.stackmoney2.model.operation.Operation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_operation.*
 import org.jetbrains.anko.doAsync
+import java.lang.Math.round
 
 
 class AddOperation : AppCompatActivity() {
@@ -53,20 +55,59 @@ class AddOperation : AppCompatActivity() {
     }
 
     private fun addButtonOnClick() {
-        val intent = Intent()
+        var cancel = false
+        var focusView: View? = null
+
+//        if(operation_amount_input.currencyText.isNullOrEmpty()){
+//            operation_amount_input.error = getString(R.string.error_field_required)
+//            focusView = operation_amount_input
+//            cancel = true
+//        }
 
         val userId = Preferences.getUserId(this)
         val title = operation_name_input.text.toString().trim()
-        val cost = (operation_amount_input.currencyDouble * 100).toInt()//(operation_amount_input.text.toString().toDouble() * 100).toInt()
+        val cost =  if(operation_amount_input.currencyText.isNullOrEmpty()) 0
+                    else round(operation_amount_input.currencyDouble * 100.0).toInt()
         val isExpense = radio_isExpense.isChecked
         val description = operation_description_input.text.toString()
-        val accountId = operation_account_input.text.toString().toLong()
-        val categoryId = operation_category_input.text.toString().toLong()
+        val accountId = operation_account_input.text.toString()
+        val categoryId = operation_category_input.text.toString()
         val visibleInStatistics = operation_visibleInStatistics_input.isChecked
         val date = operation_date_input.text.toString()
 
-        val operation = Operation( userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description, date )
+        if(cost == 0){
+            operation_amount_input.error = "Wartość nie może być zerowa"//getString()
+            focusView = operation_amount_input
+            cancel = true
+        }
 
+        if (TextUtils.isEmpty(accountId)) {
+            operation_account_input.error = getString(R.string.error_field_required)
+            focusView = operation_account_input
+            cancel = true
+        }
+
+        if (TextUtils.isEmpty(categoryId)) {
+            operation_category_input.error = getString(R.string.error_field_required)
+            focusView = operation_category_input
+            cancel = true
+        }
+
+        if (cancel) {
+            focusView?.requestFocus()
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+//            showProgress(true)
+//            mAuthTask = UserLoginTask(loginStr, passwordStr)
+//            mAuthTask!!.execute(null as Void?)
+            val operation = Operation( userId, accountId.toLong(), categoryId.toLong(), title, cost, isExpense, visibleInStatistics, description, date )
+            addOperation(operation)
+        }
+    }
+
+    private fun addOperation(operation: Operation){
+        val intent = Intent()
         doAsync {
             try {
                 val id = database.operationDAO().insertOperation(operation)
