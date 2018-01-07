@@ -25,7 +25,7 @@ import com.example.zbyszek.stackmoney2.sql.dao.*
                 Operation::class,
                 OperationPattern::class
         ),
-        version = 3
+        version = 11
 )
 
 abstract class AppDatabase : RoomDatabase() {

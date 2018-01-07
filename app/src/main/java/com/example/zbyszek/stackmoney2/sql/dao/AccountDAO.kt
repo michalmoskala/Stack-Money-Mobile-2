@@ -26,6 +26,9 @@ interface AccountDAO {
     @Delete()
     fun deleteAccountSQL(accountSQL : AccountSQL)
 
+    @Query("DELETE FROM accounts WHERE id IS :id")
+    fun deleteAccountSQL(id: Long)
+
     @Query("SELECT " +
                 "MAIN.id, " +
                 "(SELECT TOTAL(CASE WHEN is_expense THEN -cost ELSE cost END) FROM operations WHERE user_id IS :userId AND account_id IN (MAIN.id, (SELECT DISTINCT id FROM accounts WHERE user_id IS :userId AND parent_account_id = MAIN.id)) AND date != '' AND date <= date('now', '+1 day')) AS balance " +

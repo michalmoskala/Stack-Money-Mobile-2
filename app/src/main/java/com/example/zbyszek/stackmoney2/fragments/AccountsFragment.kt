@@ -15,6 +15,7 @@ import com.example.zbyszek.stackmoney2.helpers.AccountsHelper
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
+import com.example.zbyszek.stackmoney2.model.ResultCodes
 import com.example.zbyszek.stackmoney2.model.account.*
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_accounts.*
@@ -93,6 +94,25 @@ class AccountsFragment : SuperFragment() {
         }
     }
 
+    override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
+        super.onDialogResult(requestCode, resultCode, data)
+
+        activity!!.runOnUiThread {
+            when(resultCode) {
+                ResultCodes.DELETE_OK -> {
+                    val id = java.lang.Long.parseLong(data.trim())
+                    doAsync {
+                        database.accountDAO().deleteAccountSQL(id)
+                    }
+                    when(requestCode) {
+                        RequestCodes.DELETE_CATEGORY -> deleteAccount(id)
+                        RequestCodes.DELETE_SUBCATEGORY -> deleteSubAccount(id)
+                    }
+                }
+            }
+        }
+    }
+
     private fun addAccount(account: IAccount, initBalance: Long = 0){
             accountsArrayList.add(0, AccountWithSubAccounts(account, initBalance, arrayListOf()))
             accountsAdapter.notifyItemInserted(0)
@@ -103,6 +123,25 @@ class AccountsFragment : SuperFragment() {
         if (index != -1){
             accountsArrayList[index].subAccounts.add(0, subAccount)
             accountsAdapter.notifyItemChanged(index)
+        }
+    }
+
+    private fun deleteAccount(id: Long) {
+        val index = accountsArrayList.indexOfFirst { it.account.id == id }
+        if(index != -1){
+            accountsArrayList.removeAt(index)
+            accountsAdapter.notifyItemRemoved(index)
+        }
+    }
+
+    private fun deleteSubAccount(id: Long) {
+        accountsArrayList.forEachIndexed lit@ { i, account ->
+            val index = account.subAccounts.indexOfFirst { it.id == id }
+            if (index != -1) {
+                account.subAccounts.removeAt(index)
+                accountsAdapter.notifyItemChanged(i)
+                return@lit
+            }
         }
     }
 }// Required empty public constructor

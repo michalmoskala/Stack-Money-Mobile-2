@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
@@ -37,9 +38,6 @@ class CategoriesFragment : SuperFragment() {
     private var expenseCategoriesArrayList: ArrayList<CategoryWithSubCategories> = ArrayList()
     private var incomeCategoriesArrayList: ArrayList<CategoryWithSubCategories> = ArrayList()
 
-    private lateinit var expenseLinearLayoutManager: LinearLayoutManager
-    private lateinit var incomeLinearLayoutManager: LinearLayoutManager
-
     private lateinit var expenseAdapter: CategoryListAdapter
     private lateinit var incomeAdapter: CategoryListAdapter
 
@@ -63,9 +61,6 @@ class CategoriesFragment : SuperFragment() {
             incomeCategoriesArrayList = ArrayList(incomeCategoriesList)
 
             uiThread {
-                expenseLinearLayoutManager = LinearLayoutManager(activity)
-                incomeLinearLayoutManager = LinearLayoutManager(activity)
-
                 expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, fragment)
                 incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, fragment)
 
@@ -117,6 +112,7 @@ class CategoriesFragment : SuperFragment() {
             Activity.RESULT_CANCELED -> return
             Activity.RESULT_OK -> {
                 val iCategory = data.getSerializableExtra("new_category") as ICategory
+                Toast.makeText(context, iCategory.toString(), Toast.LENGTH_LONG).show()
                 if (iCategory is Category)
                     addCategory(iCategory)
                 else if (iCategory is SubCategory)
@@ -132,6 +128,9 @@ class CategoriesFragment : SuperFragment() {
             when(resultCode) {
                 ResultCodes.DELETE_OK -> {
                     val id = parseLong(data.trim())
+                    doAsync {
+                        database.categoryDAO().onDeleteCategory(Preferences.getUserId(context!!), id)
+                    }
                     when(requestCode) {
                         RequestCodes.DELETE_CATEGORY -> deleteCategory(id)
                         RequestCodes.DELETE_SUBCATEGORY -> deleteSubCategory(id)

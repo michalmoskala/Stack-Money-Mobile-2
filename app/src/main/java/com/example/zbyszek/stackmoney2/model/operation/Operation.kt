@@ -20,8 +20,7 @@ import java.io.Serializable
                         onDelete = ForeignKey.CASCADE),
                 ForeignKey(entity = CategorySQL::class,
                         parentColumns = arrayOf("id"),
-                        childColumns = arrayOf("category_id"),
-                        onDelete = ForeignKey.CASCADE)
+                        childColumns = arrayOf("category_id"))
         )
 )
 data class Operation(
