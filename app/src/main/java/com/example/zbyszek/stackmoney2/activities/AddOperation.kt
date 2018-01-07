@@ -10,23 +10,14 @@ import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.fragments.DatePickerFragment
 import com.example.zbyszek.stackmoney2.helpers.Preferences
-import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
 import com.example.zbyszek.stackmoney2.model.operation.Operation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_operation.*
 import org.jetbrains.anko.doAsync
 
 
-class AddOperation() : AppCompatActivity() {
+class AddOperation : AppCompatActivity() {
     lateinit var database : AppDatabase
-
-    fun showTimePickerDialog(v: View) {
-
-        val newFragment = DatePickerFragment()
-        newFragment.show(supportFragmentManager, "timePicker")
-
-
-    }
 
     override fun onBackPressed() {
         val intent = Intent()
@@ -56,14 +47,17 @@ class AddOperation() : AppCompatActivity() {
         }
     }
 
+    fun showTimePickerDialog(v: View) {
+        val newFragment = DatePickerFragment()
+        newFragment.show(supportFragmentManager, "timePicker")
+    }
+
     private fun addButtonOnClick() {
         val intent = Intent()
 
         val userId = Preferences.getUserId(this)
         val title = operation_name_input.text.toString()
-        //val cost = (amount_input.text.toString().toDouble() * 100).toInt()
-//            val cost = operation_amount_input.text.toString().toInt()
-        val cost = (operation_amount_input.text.toString().toDouble() * 100).toInt()
+        val cost = (operation_amount_input.currencyDouble * 100).toInt()//(operation_amount_input.text.toString().toDouble() * 100).toInt()
         val isExpense = radio_isExpense.isChecked
         val description = operation_description_input.text.toString()
         val accountId = operation_account_input.text.toString().toLong()

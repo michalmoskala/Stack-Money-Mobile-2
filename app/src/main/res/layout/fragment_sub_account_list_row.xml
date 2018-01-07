@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="8dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.zbyszek.stackmoney2.fragments.elements.categoryWithSubCategories_list_row">
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout

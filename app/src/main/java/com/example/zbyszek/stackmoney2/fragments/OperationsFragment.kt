@@ -10,18 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
-import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.activities.AddOperation
-import com.example.zbyszek.stackmoney2.adapters.AccountListAdapter
-import com.example.zbyszek.stackmoney2.helpers.AccountsHelper
+import com.example.zbyszek.stackmoney2.adapters.OperationListAdapter
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
-import com.example.zbyszek.stackmoney2.model.account.AccountWithSubAccounts
+import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
 import com.example.zbyszek.stackmoney2.model.operation.Operation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
-import kotlinx.android.synthetic.main.fragment_accounts.*
-import kotlinx.android.synthetic.main.fragment_accounts.view.*
 import kotlinx.android.synthetic.main.fragment_operations.*
 import kotlinx.android.synthetic.main.fragment_operations.view.*
 import org.jetbrains.anko.doAsync
@@ -36,14 +32,34 @@ import org.jetbrains.anko.uiThread
  * Use the [OperationsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class OperationsFragment : Fragment() {
+class OperationsFragment : SuperFragment() {
+
+    lateinit var database : AppDatabase
+
+    private var operationsArrayList: ArrayList<BindedOperation> = ArrayList()
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var operationsAdapter: OperationListAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_operations, container, false)
+        databaseConnection()
 
         val fragment = this
+        doAsync {
+            val userId = Preferences.getUserId(context!!)
+            val operations = database.operationDAO().getAllUserBindedOperationsOfCertainMonth(userId,"01","2018")
+            operationsArrayList = ArrayList(operations)
+
+            uiThread {
+                linearLayoutManager = LinearLayoutManager(activity)
+                view.recyclerview_operations.layoutManager = linearLayoutManager
+
+                operationsAdapter = OperationListAdapter(operationsArrayList, fragment)
+                view.recyclerview_operations.adapter = operationsAdapter
+            }
+        }
 
 
         view.floatingActionButton_addOperation.setOnClickListener {
@@ -64,5 +80,9 @@ class OperationsFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun databaseConnection(){
+        database = AppDatabase.getInMemoryDatabase(context!!)
     }
 }// Required empty public constructor

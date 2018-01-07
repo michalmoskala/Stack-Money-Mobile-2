@@ -21,7 +21,7 @@ interface OperationDAO {
             "JOIN categories ON categories.id = operations.category_id " +
             "JOIN colors ON colors.id = categories.color_id " +
             "JOIN icons ON icons.id = categories.icon_id " +
-            "WHERE operations.user_id IS :userId AND date LIKE :month || '-' || :year || '%'")
+            "WHERE operations.user_id IS :userId AND date LIKE :year || '-' || :month || '%'")
     fun getAllUserBindedOperationsOfCertainMonth(userId : Long, month: String, year: String) : List<BindedOperation>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
