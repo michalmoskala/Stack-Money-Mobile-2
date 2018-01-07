@@ -21,7 +21,7 @@ interface AccountDAO {
     fun getAllUserBindedAccountsSQL(userId : Long) : List<BindedAccountSQL>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertAccountSQL(accountSQL : AccountSQL) : Long?
+    fun insertAccountSQL(accountSQL : AccountSQL) : Long
 
     @Delete()
     fun deleteAccountSQL(accountSQL : AccountSQL)

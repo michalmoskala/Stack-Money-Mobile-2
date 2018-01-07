@@ -12,12 +12,12 @@
 
 
     <ScrollView
-        android:id="@+id/category_form"
+        android:id="@+id/account_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/category_input_form"
+            android:id="@+id/account_input_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|center_horizontal"
@@ -30,10 +30,10 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/category_name_input"
+                    android:id="@+id/account_name_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/category_title"
+                    android:hint="@string/account_title"
                     android:inputType="text"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -47,10 +47,10 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/category_parentCategory_input"
+                    android:id="@+id/account_parentAccount_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/category_parentCategory"
+                    android:hint="@string/account_parentAccount"
                     android:inputType="text"
                     android:maxLines="6"
                     android:singleLine="false" />
@@ -62,55 +62,26 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/category_colorId_input"
+                    android:id="@+id/account_colorId_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/category_colorID"
+                    android:hint="@string/account_colorID"
                     android:inputType="text"
                     android:maxLines="6"
                     android:singleLine="false" />
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <AutoCompleteTextView
-                    android:id="@+id/category_iconId_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/category_iconID"
-                    android:inputType="text"
-                    android:maxLines="6"
-                    android:singleLine="false" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Switch
-                android:id="@+id/category_isExpense_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/category_visibleInExpenses"
-                android:textSize="18sp" />
-
-            <Switch
-                android:id="@+id/category_isIncome_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/category_visibleInIncomes"
-                android:textSize="18sp" />
 
             <Button
-                android:id="@+id/button_confirm_new_category"
+                android:id="@+id/button_confirm_new_account"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_add"
                 android:textStyle="bold" />
+
 
         </LinearLayout>
     </ScrollView>

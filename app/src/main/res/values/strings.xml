@@ -45,6 +45,7 @@
 
     <string name="title_addCategory">Dodaj kategorię</string>
     <string name="title_addOperation">Dodaj operację</string>
+    <string name="title_addAccount">Dodaj konto</string>
 
     <string name="operation_amount">Kwota</string>
     <string name="operation_title">Nazwa</string>
@@ -61,5 +62,9 @@
     <string name="category_parentCategory">Kategoria nadrzędna (ID)</string>
     <string name="category_colorID">Kolor (ID)</string>
     <string name="category_iconID">Ikona (ID)</string>
+
+    <string name="account_title">Nazwa Konta</string>
+    <string name="account_parentAccount">ID Konta nadrzędnego</string>
+    <string name="account_colorID">ID koloru</string>
 
 </resources>

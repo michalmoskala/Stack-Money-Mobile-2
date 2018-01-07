@@ -30,7 +30,6 @@ class AddOperation() : AppCompatActivity() {
 
     override fun onBackPressed() {
         val intent = Intent()
-        intent.putExtra("","")
         setResult(Activity.RESULT_CANCELED, intent)
         finish()
     }
