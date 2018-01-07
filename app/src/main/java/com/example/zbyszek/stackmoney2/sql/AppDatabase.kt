@@ -5,11 +5,11 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import android.widget.Toast
 import com.example.zbyszek.stackmoney2.model.*
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
 import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 import com.example.zbyszek.stackmoney2.model.operation.Operation
+import com.example.zbyszek.stackmoney2.model.operationPattern.OperationPattern
 import com.example.zbyszek.stackmoney2.sql.dao.*
 
 @Database(

@@ -18,10 +18,11 @@ import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
 import com.example.zbyszek.stackmoney2.model.operation.Operation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
-import kotlinx.android.synthetic.main.fragment_operations.*
 import kotlinx.android.synthetic.main.fragment_operations.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.joda.time.DateTime
+import java.util.*
 
 
 /**
@@ -37,37 +38,61 @@ class OperationsFragment : SuperFragment() {
     lateinit var database : AppDatabase
 
     private var operationsArrayList: ArrayList<BindedOperation> = ArrayList()
-    private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var operationsAdapter: OperationListAdapter
+
+    private var actualDate = DateTime.now()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_operations, container, false)
+
+        view.recyclerview_operations.layoutManager = LinearLayoutManager(activity)
+        operationsAdapter = OperationListAdapter(operationsArrayList, this)
+        view.recyclerview_operations.adapter = operationsAdapter
+
         databaseConnection()
+        onActualMonthChanged(view)
 
-        val fragment = this
-        doAsync {
-            val userId = Preferences.getUserId(context!!)
-            val operations = database.operationDAO().getAllUserBindedOperationsOfCertainMonth(userId,"01","2018")
-            operationsArrayList = ArrayList(operations)
-
-            uiThread {
-                linearLayoutManager = LinearLayoutManager(activity)
-                view.recyclerview_operations.layoutManager = linearLayoutManager
-
-                operationsAdapter = OperationListAdapter(operationsArrayList, fragment)
-                view.recyclerview_operations.adapter = operationsAdapter
-            }
-        }
-
-
-        view.floatingActionButton_addOperation.setOnClickListener {
-            val intent = Intent(fragment.context, AddOperation::class.java)
-            fragment.startActivityForResult(intent, RequestCodes.ADD)
-        }
+        view.prev_month_button.setOnClickListener { shiftActualMonth(-1) }
+        view.next_month_button.setOnClickListener { shiftActualMonth(1) }
+        view.floatingActionButton_addOperation.setOnClickListener { addOperationButtonOnClick() }
 
         return view
+    }
+
+    fun addOperationButtonOnClick(){
+        val intent = Intent(this.context, AddOperation::class.java)
+        this.startActivityForResult(intent, RequestCodes.ADD)
+    }
+
+    private fun shiftActualMonth(offset: Int){
+        actualDate = actualDate.minusMonths(-offset)
+        onActualMonthChanged(view)
+    }
+
+    private fun setActualMonthTitle(view: View){
+        val monthString = actualDate.toString("MMMM", Locale.forLanguageTag("pl-pl"))
+        val year = actualDate.year
+        view.month_name.text =  if (year != DateTime.now().year) monthString + " " + year
+                                else monthString
+    }
+
+    private fun onActualMonthChanged(view: View?){
+        setActualMonthTitle(view!!)
+//        val month = actualDate.get(MONTH) + 1
+//        val year = actualDate.get(YEAR)
+
+        doAsync {
+            val userId = Preferences.getUserId(context!!)
+            val operations = database.operationDAO().getAllUserBindedOperationsOfCertainMonth(userId, "%02d".format(actualDate.monthOfYear), "%04d".format(actualDate.year))
+
+            uiThread {
+                operationsArrayList.clear()
+                operationsArrayList.addAll(operations)
+                operationsAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {

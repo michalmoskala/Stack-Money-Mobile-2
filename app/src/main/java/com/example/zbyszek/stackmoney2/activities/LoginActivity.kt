@@ -13,6 +13,7 @@ import com.example.zbyszek.stackmoney2.fragments.LoginFragment
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.fragments.RegisterFragment
 import kotlinx.android.synthetic.main.activity_login.*
+import net.danlew.android.joda.JodaTimeAndroid
 
 class LoginActivity : AppCompatActivity() {
 
@@ -28,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        JodaTimeAndroid.init(this)
         setContentView(R.layout.activity_login)
 
 //        setSupportActionBar(toolbar)

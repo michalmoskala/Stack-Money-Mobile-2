@@ -1,7 +1,8 @@
 package com.example.zbyszek.stackmoney2.sql.dao
 
 import android.arch.persistence.room.*
-import com.example.zbyszek.stackmoney2.model.OperationPattern
+import com.example.zbyszek.stackmoney2.model.operationPattern.BindedOperationPattern
+import com.example.zbyszek.stackmoney2.model.operationPattern.OperationPattern
 
 @Dao
 interface OperationPatternDAO {
@@ -17,5 +18,23 @@ interface OperationPatternDAO {
 
     @Delete()
     fun deleteOperationPattern(operationPattern: OperationPattern)
+
+    @Query("SELECT " +
+            "operation_patterns.*, " +
+            "Color.value AS color, " +
+            "icons.value AS icon, " +
+            "AccountColor.value AS account_color, " +
+            "CASE WHEN NOT Categories.name THEN Subcategories.name ELSE NULL END sub_category_name, " +
+            "CASE WHEN NOT Categories.name THEN Categories.name ELSE Subcategories.name END category_name " +
+            "FROM operation_patterns " +
+            "JOIN categories Subcategories ON Subcategories.id = operation_patterns.category_id " +
+            "LEFT JOIN categories Categories ON Categories.id = Subcategories.parent_category_id " +
+            "JOIN colors Color ON Color.id = Subcategories.color_id " +
+            "JOIN icons ON icons.id = Subcategories.icon_id " +
+            "JOIN accounts ON accounts.id = operation_patterns.account_id " +
+            "JOIN colors AccountColor ON AccountColor.id = accounts.color_id " +
+            "WHERE operation_patterns.user_id IS :userId " +
+            "ORDER BY operation_patterns.id DESC")
+    fun getAllUserBindedOperationPatterns(userId : Long) : List<BindedOperationPattern>
 
 }
