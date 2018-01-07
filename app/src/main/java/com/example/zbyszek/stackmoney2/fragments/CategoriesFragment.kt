@@ -1,25 +1,29 @@
 package com.example.zbyszek.stackmoney2.fragments
 
-import android.os.Bundle
+
+import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.widget.LinearLayoutManager
-import android.view.*
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddCategory
-import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
-import com.example.zbyszek.stackmoney2.model.category.*
 import com.example.zbyszek.stackmoney2.helpers.CategoriesHelper
+import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.ResultCodes
+import com.example.zbyszek.stackmoney2.model.account.SubCategory
+import com.example.zbyszek.stackmoney2.model.category.Category
+import com.example.zbyszek.stackmoney2.model.category.CategoryWithSubCategories
+import com.example.zbyszek.stackmoney2.model.category.ICategory
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
-import kotlinx.android.synthetic.main.fragment_categories.*
 import kotlinx.android.synthetic.main.fragment_categories.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -59,55 +63,65 @@ class CategoriesFragment : SuperFragment() {
             incomeCategoriesArrayList = ArrayList(incomeCategoriesList)
 
             uiThread {
-                expenseLinearLayoutManager = LinearLayoutManager(fragment.context)
-                incomeLinearLayoutManager = LinearLayoutManager(fragment.context)
+                expenseLinearLayoutManager = LinearLayoutManager(activity)
+                incomeLinearLayoutManager = LinearLayoutManager(activity)
 
                 expenseAdapter = CategoryListAdapter(expenseCategoriesArrayList, fragment)
                 incomeAdapter = CategoryListAdapter(incomeCategoriesArrayList, fragment)
 
-                mSectionsPagerAdapter = SectionsPagerAdapter(activity!!.supportFragmentManager)
+                mSectionsPagerAdapter = SectionsPagerAdapter(fragment.activity!!.supportFragmentManager)
                 view.tabContainer.adapter = mSectionsPagerAdapter
                 view.tabContainer.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(view.categoryTabs))
                 view.categoryTabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(view.tabContainer))
             }
         }
 
-        view.floatingActionButton2.setOnClickListener {
-            val category = Category(10,1,3,4,true,true,"Nowe")
-            receivedNewCategory(CategoryWithSubCategories(category, arrayListOf()))
-        }
-
         view.floatingActionButton_addCategory.setOnClickListener {
-            val intent = Intent(context, AddCategory::class.java)
-            startActivityForResult(intent, RequestCodes.ADD)
-        }
-
-        view.floatingActionButton4.setOnClickListener {
-            val subCategory = Category(10,1,3,4,true,true,"Nowe")
-            receivedNewCategory(subCategory)
+            val intent = Intent(fragment.context, AddCategory::class.java)
+            fragment.startActivityForResult(intent, RequestCodes.ADD)
         }
 
         return view
     }
 
-    private fun receivedNewCategory(newCategory: CategoryWithSubCategories) {
-        activity!!.runOnUiThread {
-            this.expenseCategoriesArrayList.add(0, newCategory)
-            this.expenseAdapter.notifyItemInserted(0)
+    private fun addCategory(category: ICategory){
+        if(category.visibleInExpenses){
+            expenseCategoriesArrayList.add(0, CategoryWithSubCategories(category, arrayListOf()))
+            expenseAdapter.notifyItemInserted(0)
+        }
+        if(category.visibleInIncomes){
+            incomeCategoriesArrayList.add(0, CategoryWithSubCategories(category, arrayListOf()))
+            incomeAdapter.notifyItemInserted(0)
         }
     }
 
-    private fun receivedNewCategory(newSubCategory: ICategory) {
-        activity!!.runOnUiThread {
-            this.expenseCategoriesArrayList[0].subCategories.add(0, newSubCategory)
-            this.expenseAdapter.notifyItemChanged(0)
+    private fun addSubCategory(subCategory: SubCategory){
+        if(subCategory.visibleInExpenses){
+            val index = expenseCategoriesArrayList.indexOfFirst{it.category.id == subCategory.parentCategoryId}
+            if (index != -1){
+                expenseCategoriesArrayList[index].subCategories.add(0, subCategory)
+                expenseAdapter.notifyItemChanged(index)
+            }
+        }
+        if(subCategory.visibleInIncomes){
+            val index = incomeCategoriesArrayList.indexOfFirst{it.category.id == subCategory.parentCategoryId}
+            if (index != -1){
+                incomeCategoriesArrayList[index].subCategories.add(0, subCategory)
+                incomeAdapter.notifyItemChanged(index)
+            }
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        val operation = data.getSerializableExtra("new_category")
-        activity!!.runOnUiThread {
-            Toast.makeText(context, operation.toString(), Toast.LENGTH_LONG).show()
+        when(resultCode) {
+            Activity.RESULT_CANCELED -> return
+            Activity.RESULT_OK -> {
+                val iCategory = data.getSerializableExtra("new_category") as ICategory
+                if (iCategory is Category)
+                    addCategory(iCategory)
+                else if (iCategory is SubCategory)
+                    addSubCategory(iCategory)
+            }
         }
     }
 
@@ -128,6 +142,10 @@ class CategoriesFragment : SuperFragment() {
     }
 
     private fun deleteCategory(id: Long) {
+        doAsync {
+//            database.categoryDAO().
+        }
+
         val expenseIndex = expenseCategoriesArrayList.indexOfFirst { it.category.id == id }
         if(expenseIndex != -1){
             expenseCategoriesArrayList.removeAt(expenseIndex)
@@ -176,19 +194,4 @@ class CategoriesFragment : SuperFragment() {
             return 2
         }
     }
-
-//    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-//        super.onCreateContextMenu(menu, v, menuInfo)
-//
-//        val inflater: MenuInflater = activity.menuInflater
-//
-//        when (v){
-//            LayoutInflater.from(context).inflate(R.layout.fragment_sub_category_list_row, null) -> {
-//                inflater.inflate(R.menu.sub_category_list_item_menu, menu)
-//            }
-//            LayoutInflater.from(context).inflate(R.layout.fragment_category_with_sub_categories_list_row, null) -> {
-//                inflater.inflate(R.menu.category_list_item_menu, menu)
-//            }
-//        }
-//    }
-}// Required empty public constructor
+}

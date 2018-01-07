@@ -10,7 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.zbyszek.stackmoney2.fragments.LoginFragment">
 
-
     <ScrollView
         android:id="@+id/operation_form"
         android:layout_width="match_parent"
@@ -23,24 +22,23 @@
             android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical">
 
-
-
-
-            <Switch
-                android:id="@+id/operation_isExpense_input"
-                android:layout_width="match_parent"
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/operation_isExpense"
-                android:textSize="18sp" />
-
-            <Switch
-                android:id="@+id/operation_visibleInStatistics_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/operation_visibleInStatistics"
-                android:textSize="18sp" />
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+                <RadioButton android:id="@+id/radio_isExpense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:layout_margin="8dp"
+                    android:text="Wydatek" />
+                <RadioButton android:id="@+id/radio_isIncome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="Wpływ" />
+            </RadioGroup>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -56,7 +54,6 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -80,25 +77,6 @@
                 android:backgroundTint="@color/colorAccent"
                 android:hint="@string/operation_date"
                 android:onClick="showTimePickerDialog" />
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <AutoCompleteTextView
-                    android:id="@+id/operation_description_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/operation_description"
-                    android:inputType="text"
-                    android:maxLines="6"
-                    android:singleLine="false" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -130,6 +108,28 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/operation_description_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/operation_description"
+                    android:inputType="text"
+                    android:maxLines="6"
+                    android:singleLine="false" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Switch
+                android:id="@+id/operation_visibleInStatistics_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/operation_visibleInStatistics"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/operation_button_confirm_new_operation"
@@ -139,9 +139,6 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_add"
                 android:textStyle="bold" />
-
-
         </LinearLayout>
     </ScrollView>
-
 </FrameLayout>

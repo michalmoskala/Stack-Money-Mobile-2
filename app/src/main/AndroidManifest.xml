@@ -32,7 +32,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.AddOperation" />
         <activity android:name=".activities.AddCategory" />
-        <activity android:name=".activities.AddAccount"></activity>
+        <activity android:name=".activities.AddAccount" />
     </application>
 
 </manifest>

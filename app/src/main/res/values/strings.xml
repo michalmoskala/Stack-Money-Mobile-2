@@ -23,6 +23,7 @@
     <string name="action_sign_up">Zarejestruj</string>
     <string name="action_add">Dodaj</string>
     <string name="action_settings">Ustawienia</string>
+    <string name="action_logout">Wyloguj</string>>
 
     <string name="section_format">Hello World from section: %1$d</string>
 
@@ -42,25 +43,28 @@
     <string name="title_expenses">Wydatki</string>
     <string name="title_incomes">Wpływy</string>
 
-    <string name="operation_amount">Kwota(poki co liczba groszy)</string>
+    <string name="title_addCategory">Dodaj kategorię</string>
+    <string name="title_addOperation">Dodaj operację</string>
+    <string name="title_addAccount">Dodaj konto</string>
+
+    <string name="operation_amount">Kwota</string>
     <string name="operation_title">Nazwa</string>
     <string name="operation_date">Data</string>
     <string name="operation_description">Opis</string>
-    <string name="operation_isExpense">Czy wydatek</string>
-    <string name="operation_visibleInStatistics">Czy widoczne w statystykach</string>
-    <string name="operation_account">id konta</string>
-    <string name="operation_category">id kategorii</string>
+    <string name="operation_isExpense">Wydatek</string>
+    <string name="operation_visibleInStatistics">Widoczna w statystykach</string>
+    <string name="operation_account">Konto (ID)</string>
+    <string name="operation_category">Kategoria (ID)</string>
 
     <string name="category_title">Nazwa kategorii</string>
-    <string name="category_isExpense">Widoczna w wydatkach</string>
-    <string name="category_isIncome">Widoczna w dochodach</string>
-    <string name="category_parentCategory">ID kategorii nadrzędnej</string>
-    <string name="category_colorID">ID koloru</string>
-    <string name="category_iconID">ID ikony</string>
+    <string name="category_visibleInExpenses">Widoczna w wydatkach</string>
+    <string name="category_visibleInIncomes">Widoczna we wpływach</string>
+    <string name="category_parentCategory">Kategoria nadrzędna (ID)</string>
+    <string name="category_colorID">Kolor (ID)</string>
+    <string name="category_iconID">Ikona (ID)</string>
 
     <string name="account_title">Nazwa Konta</string>
     <string name="account_parentAccount">ID Konta nadrzędnego</string>
     <string name="account_colorID">ID koloru</string>
-
 
 </resources>

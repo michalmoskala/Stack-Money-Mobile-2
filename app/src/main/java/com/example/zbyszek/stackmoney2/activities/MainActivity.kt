@@ -20,6 +20,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import kotlinx.android.synthetic.main.nav_header_main.view.*
+import org.jetbrains.anko.activityManager
 import org.jetbrains.anko.runOnUiThread
 
 
@@ -86,19 +87,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        when (item.itemId) {
-            R.id.action_settings -> return true
-            else -> return super.onOptionsItemSelected(item)
+        return when (item.itemId) {
+            R.id.action_settings -> true
+            R.id.action_logout -> logout()
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun swapFragments(fragment: android.app.Fragment){
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_frame, fragment)
-                .addToBackStack(null)
-                .commit()
+    private fun logout(): Boolean {
+        Preferences.resetUserId(this)
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        return true
     }
+
+//    private fun swapFragments(fragment: android.app.Fragment){
+//        fragmentManager
+//                .beginTransaction()
+//                .replace(R.id.fragment_frame, fragment)
+//                .addToBackStack(null)
+//                .commit()
+//    }
 
     private fun swapFragments(fragment: android.support.v4.app.Fragment){
         supportFragmentManager

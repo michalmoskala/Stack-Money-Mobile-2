@@ -21,25 +21,17 @@ interface AccountDAO {
     fun getAllUserBindedAccountsSQL(userId : Long) : List<BindedAccountSQL>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertAccountSQL(accountSQL : AccountSQL) : Long?
+    fun insertAccountSQL(accountSQL : AccountSQL) : Long
 
     @Delete()
     fun deleteAccountSQL(accountSQL : AccountSQL)
 
     @Query("SELECT " +
-            "MAIN.id AS id, " +
-            "(SELECT TOTAL(CASE WHEN is_expense THEN -cost " +
-            "ELSE cost END) AS balance " +
-            "FROM operations " +
-            "WHERE user_id IS :userId AND account_id IN (MAIN.id, " +
-            "(SELECT DISTINCT id " +
-            "FROM accounts " +
-            "Where user_id IS :userId AND parent_account_id = MAIN.id)) " +
-            "AND date != '' " +
-            "AND date <= date('now')) / 100.0 AS Balance " +
+                "MAIN.id, " +
+                "(SELECT TOTAL(CASE WHEN is_expense THEN -cost ELSE cost END) FROM operations WHERE user_id IS :userId AND account_id IN (MAIN.id, (SELECT DISTINCT id FROM accounts WHERE user_id IS :userId AND parent_account_id = MAIN.id)) AND date != '' AND date <= date('now', '+1 day')) AS balance " +
             "FROM accounts MAIN " +
             "WHERE MAIN.user_id IS :userId AND MAIN.parent_account_id IS NULL " +
-            "ORDER BY MAIN.name\n")
+            "ORDER BY MAIN.name")
     fun getAllUserAccountsBalances(userId : Long) : List<Balance>
 
 }

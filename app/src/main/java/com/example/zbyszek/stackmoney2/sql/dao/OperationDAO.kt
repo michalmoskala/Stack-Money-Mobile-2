@@ -25,7 +25,7 @@ interface OperationDAO {
     fun getAllUserBindedOperationsOfCertainMonth(userId : Long, month: String, year: String) : List<BindedOperation>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOperation(operation : Operation)
+    fun insertOperation(operation : Operation) : Long
 
     @Delete()
     fun deleteOperation(operation : Operation)

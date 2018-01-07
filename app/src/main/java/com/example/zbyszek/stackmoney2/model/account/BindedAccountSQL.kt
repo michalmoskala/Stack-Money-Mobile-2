@@ -49,4 +49,8 @@ data class BindedAccountSQL(
         else
             SubAccount(id, userId, colorId, parentAccountId ?: 0, name, color)
     }
+
+    fun convertToAccountSQL(): AccountSQL {
+        return AccountSQL(userId, colorId, parentAccountId, name)
+    }
 }
