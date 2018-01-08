@@ -69,7 +69,7 @@ class AccountsFragment : SuperFragment() {
             intent.action = RequestCodes.ADD.toString()
             startActivityForResult(intent,  RequestCodes.ADD)
         }
-        
+
         return view
     }
 
@@ -128,8 +128,8 @@ class AccountsFragment : SuperFragment() {
     }
 
     private fun addAccount(account: IAccount, initBalance: Long = 0){
-            accountsArrayList.add(0, AccountWithSubAccounts(account, initBalance, arrayListOf()))
-            accountsAdapter.notifyItemInserted(0)
+        accountsArrayList.add(0, AccountWithSubAccounts(account, initBalance, arrayListOf()))
+        accountsAdapter.notifyItemInserted(0)
     }
 
     private fun addSubAccount(subAccount: SubAccount){

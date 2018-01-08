@@ -46,7 +46,7 @@ class AddAccount : AppCompatActivity() {
 
 
     private fun onCreateEdit(){
-        supportActionBar!!.setTitle(R.string.title_editCategory)
+        supportActionBar!!.setTitle(R.string.title_editAccount)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         editedAccount = intent.getSerializableExtra("account") as AccountSQL
 
@@ -62,7 +62,7 @@ class AddAccount : AppCompatActivity() {
     }
 
     private fun onCreateSubAccount(){
-        supportActionBar!!.setTitle(R.string.title_addCategory)
+        supportActionBar!!.setTitle(R.string.title_addAccount)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         button_confirm_new_account.setOnClickListener {
@@ -71,7 +71,7 @@ class AddAccount : AppCompatActivity() {
     }
 
     private fun onCreateAddAccount(){
-        supportActionBar!!.setTitle(R.string.title_addCategory)
+        supportActionBar!!.setTitle(R.string.title_addAccount)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         button_confirm_new_account.setOnClickListener {

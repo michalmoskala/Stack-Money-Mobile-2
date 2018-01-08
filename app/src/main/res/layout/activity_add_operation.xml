@@ -28,13 +28,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal">
-                <RadioButton android:id="@+id/radio_isExpense"
+                <RadioButton android:id="@+id/operation_radio_isExpense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
                     android:layout_margin="8dp"
                     android:text="Wydatek" />
-                <RadioButton android:id="@+id/radio_isIncome"
+                <RadioButton android:id="@+id/operation_radio_isIncome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"

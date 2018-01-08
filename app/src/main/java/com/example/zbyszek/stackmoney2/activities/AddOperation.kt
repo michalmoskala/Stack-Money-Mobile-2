@@ -2,6 +2,7 @@ package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -11,11 +12,11 @@ import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.fragments.DatePickerFragment
 import com.example.zbyszek.stackmoney2.helpers.Preferences
-import com.example.zbyszek.stackmoney2.model.account.AccountSQL
+import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.account.BindedAccountSQL
 import com.example.zbyszek.stackmoney2.model.category.BindedCategorySQL
-import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
+import com.example.zbyszek.stackmoney2.model.operation.Operation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_operation.*
 import org.jetbrains.anko.doAsync
@@ -28,6 +29,9 @@ class AddOperation : AppCompatActivity() {
     lateinit var icons : Map<Int, String>
     lateinit var existCategories : List<BindedCategorySQL>
     lateinit var existAccounts : List<BindedAccountSQL>
+
+    lateinit var action: String
+    lateinit var editedOperation: Operation
 
     override fun onBackPressed() {
         val intent = Intent()
@@ -45,12 +49,42 @@ class AddOperation : AppCompatActivity() {
         }
     }
 
+
+    private fun onCreateEdit(){
+        supportActionBar!!.setTitle(R.string.title_editOperation)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        editedOperation = intent.getSerializableExtra("operation") as Operation
+
+        operation_name_input.setText(editedOperation.title)
+        operation_account_input.setText(editedOperation.accountId.toString())
+        operation_category_input.setText(editedOperation.categoryId.toString())
+        operation_amount_input.setText(editedOperation.cost.toString())
+        operation_description_input.setText(editedOperation.description ?: "")
+        operation_visibleInStatistics_input.isChecked = editedOperation.visibleInStatistics
+        operation_radio_isIncome.isChecked = !editedOperation.isExpense
+        operation_date_input.text = editedOperation.date ?: ""
+
+        operation_button_confirm_new_operation.setOnClickListener {
+//            editButtonOnClick()
+        }
+
+        operation_create_pattern.visibility = View.GONE
+    }
+
+    private fun onCreateAdd(){
+        supportActionBar!!.setTitle(R.string.title_addOperation)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        operation_button_confirm_new_operation.setOnClickListener {
+            addButtonOnClick()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_operation)
-        supportActionBar!!.setTitle(R.string.title_addOperation)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         databaseConnection()
+        action = intent.action
 
         val userId = Preferences.getUserId(applicationContext)
         doAsync {
@@ -60,8 +94,9 @@ class AddOperation : AppCompatActivity() {
             existAccounts = database.accountDAO().getAllUserBindedAccountsSQL(userId)
         }
 
-        operation_button_confirm_new_operation.setOnClickListener {
-            addButtonOnClick()
+        when(action){
+            RequestCodes.EDIT.toString() -> onCreateEdit()
+            else -> onCreateAdd()
         }
     }
 
@@ -74,17 +109,11 @@ class AddOperation : AppCompatActivity() {
         var cancel = false
         var focusView: View? = null
 
-//        if(operation_amount_input.currencyText.isNullOrEmpty()){
-//            operation_amount_input.error = getString(R.string.error_field_required)
-//            focusView = operation_amount_input
-//            cancel = true
-//        }
-
         val userId = Preferences.getUserId(this)
         val title = operation_name_input.text.toString().trim()
         val cost =  if(operation_amount_input.currencyText.isNullOrEmpty()) 0
                     else round(operation_amount_input.currencyDouble * 100.0).toInt()
-        val isExpense = radio_isExpense.isChecked
+        val isExpense = operation_radio_isExpense.isChecked
         val description = operation_description_input.text.toString()
         val accountId = operation_account_input.text.toString()
         val categoryId = operation_category_input.text.toString()
@@ -112,11 +141,6 @@ class AddOperation : AppCompatActivity() {
         if (cancel) {
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-//            showProgress(true)
-//            mAuthTask = UserLoginTask(loginStr, passwordStr)
-//            mAuthTask!!.execute(null as Void?)
             val category =  existCategories.firstOrNull{it.id == categoryId.toLong() && it.parentCategoryId == null}
                             ?: existCategories.first { it.id == existCategories.first { it.id == categoryId.toLong() }.parentCategoryId }
 
