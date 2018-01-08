@@ -11,7 +11,11 @@ import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.fragments.DatePickerFragment
 import com.example.zbyszek.stackmoney2.helpers.Preferences
-import com.example.zbyszek.stackmoney2.model.operation.Operation
+import com.example.zbyszek.stackmoney2.model.account.AccountSQL
+import com.example.zbyszek.stackmoney2.model.account.BindedAccountSQL
+import com.example.zbyszek.stackmoney2.model.category.BindedCategorySQL
+import com.example.zbyszek.stackmoney2.model.category.CategorySQL
+import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_operation.*
 import org.jetbrains.anko.doAsync
@@ -20,6 +24,10 @@ import java.lang.Math.round
 
 class AddOperation : AppCompatActivity() {
     lateinit var database : AppDatabase
+    lateinit var colors : Map<Int, String>
+    lateinit var icons : Map<Int, String>
+    lateinit var existCategories : List<BindedCategorySQL>
+    lateinit var existAccounts : List<BindedAccountSQL>
 
     override fun onBackPressed() {
         val intent = Intent()
@@ -43,6 +51,14 @@ class AddOperation : AppCompatActivity() {
         supportActionBar!!.setTitle(R.string.title_addOperation)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         databaseConnection()
+
+        val userId = Preferences.getUserId(applicationContext)
+        doAsync {
+            colors = database.colorDAO().getAllColors().associateBy ( {it.id}, {it.value} )
+            icons = database.iconDAO().getAllIcons().associateBy ( {it.id}, {it.value} )
+            existCategories = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
+            existAccounts = database.accountDAO().getAllUserBindedAccountsSQL(userId)
+        }
 
         operation_button_confirm_new_operation.setOnClickListener {
             addButtonOnClick()
@@ -101,17 +117,36 @@ class AddOperation : AppCompatActivity() {
 //            showProgress(true)
 //            mAuthTask = UserLoginTask(loginStr, passwordStr)
 //            mAuthTask!!.execute(null as Void?)
-            val operation = Operation( userId, accountId.toLong(), categoryId.toLong(), title, cost, isExpense, visibleInStatistics, description, date )
+            val category =  existCategories.firstOrNull{it.id == categoryId.toLong() && it.parentCategoryId == null}
+                            ?: existCategories.first { it.id == existCategories.first { it.id == categoryId.toLong() }.parentCategoryId }
+
+            val subCategory = existCategories.firstOrNull { it.id == categoryId.toLong() && it.parentCategoryId != null }
+
+            val operation = BindedOperation(
+                    userId,
+                    accountId.toLong(),
+                    categoryId.toLong(),
+                    title,
+                    cost,
+                    isExpense,
+                    visibleInStatistics,
+                    description,
+                    date,
+                    accountColor = existAccounts.first { it.id == accountId.toLong() }.color,
+                    categoryName = category.name,
+                    subCategoryName = subCategory?.name,
+                    color = subCategory?.color ?: category.color,
+                    icon = subCategory?.icon ?: category.icon )
             addOperation(operation)
         }
     }
 
-    private fun addOperation(operation: Operation){
+    private fun addOperation(bindedOperation: BindedOperation){
         val intent = Intent()
         doAsync {
             try {
-                val id = database.operationDAO().insertOperation(operation)
-                operation.id = id
+                val id = database.operationDAO().insertOperation(bindedOperation.convertToOperation())
+                bindedOperation.id = id
             } catch (e: Exception){
                 runOnUiThread {
                     Toast.makeText(
@@ -124,7 +159,7 @@ class AddOperation : AppCompatActivity() {
             }
             finally {
                 val bundle = Bundle()
-                bundle.putSerializable("new_operation", operation)
+                bundle.putSerializable("new_operation", bindedOperation)
                 intent.putExtras(bundle)
                 setResult(Activity.RESULT_OK, intent)
                 finish()

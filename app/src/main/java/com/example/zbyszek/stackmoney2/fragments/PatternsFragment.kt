@@ -1,5 +1,7 @@
 package com.example.zbyszek.stackmoney2.fragments
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -10,12 +12,14 @@ import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.adapters.OperationPatternListAdapter
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
+import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.operationPattern.BindedOperationPattern
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_patterns.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.support.v4.uiThread
+import java.lang.Long
 
 
 /**
@@ -53,6 +57,39 @@ class PatternsFragment : SuperFragment() {
         }
 
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (resultCode != Activity.RESULT_OK)
+            return
+        when(requestCode){
+            RequestCodes.ADD -> {
+                val bindedOperationPattern = data.getSerializableExtra("new_operation_pattern") as BindedOperationPattern
+                patternsArrayList.add(0, bindedOperationPattern)
+                patternsAdapter.notifyItemInserted(0)
+            }
+            RequestCodes.EDIT -> {
+                // TODO: Edit
+            }
+        }
+    }
+
+    override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
+        if (resultCode != Activity.RESULT_OK )
+            return
+        when (requestCode) {
+            RequestCodes.DELETE -> {
+                val id = data.trim().toLong()
+                doAsync {
+                    database.operationPatternDAO().deleteOperationPattern(Preferences.getUserId(context!!), id)
+                }
+                val index = patternsArrayList.indexOfFirst { it.id == id }
+                if (index != -1) {
+                    patternsArrayList.removeAt(index)
+                    patternsAdapter.notifyItemRemoved(index)
+                }
+            }
+        }
     }
 
     private fun databaseConnection(){

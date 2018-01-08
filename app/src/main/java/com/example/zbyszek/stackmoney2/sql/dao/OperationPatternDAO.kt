@@ -37,4 +37,6 @@ interface OperationPatternDAO {
             "ORDER BY operation_patterns.id DESC")
     fun getAllUserBindedOperationPatterns(userId : Long) : List<BindedOperationPattern>
 
+    @Query("DELETE FROM operation_patterns WHERE id IS :id AND user_id IS :userId")
+    fun deleteOperationPattern(userId: Long, id: Long)
 }

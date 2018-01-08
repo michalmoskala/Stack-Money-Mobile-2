@@ -44,7 +44,11 @@ data class BindedOperationPattern(
         @ColumnInfo(name = "sub_category_name")
         var subCategoryName : String?
 ): Serializable {
-    @ColumnInfo(name = "id")
-    @PrimaryKey(autoGenerate = true)
-    var id : Long = 0
+        @ColumnInfo(name = "id")
+        @PrimaryKey(autoGenerate = true)
+        var id : Long = 0
+
+        fun convertToOperationPattern(): OperationPattern {
+                return OperationPattern(userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description)
+        }
 }

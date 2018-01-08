@@ -100,7 +100,7 @@ class AccountsFragment : SuperFragment() {
         activity!!.runOnUiThread {
             when(resultCode) {
                 ResultCodes.DELETE_OK -> {
-                    val id = java.lang.Long.parseLong(data.trim())
+                    val id = data.trim().toLong()
                     doAsync {
                         database.accountDAO().deleteAccountSQL(id)
                     }

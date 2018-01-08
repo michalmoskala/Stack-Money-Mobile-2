@@ -15,6 +15,7 @@ import com.example.zbyszek.stackmoney2.adapters.OperationListAdapter
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
+import com.example.zbyszek.stackmoney2.model.ResultCodes
 import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
 import com.example.zbyszek.stackmoney2.model.operation.Operation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_operations.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
+import java.lang.Long.parseLong
 import java.util.*
 
 
@@ -96,12 +98,35 @@ class OperationsFragment : SuperFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        when(resultCode) {
-            Activity.RESULT_CANCELED -> return
-            Activity.RESULT_OK -> {
-                val operation = data.getSerializableExtra("new_operation") as Operation
-                activity!!.runOnUiThread {
-                    Toast.makeText(context, operation.toString(), Toast.LENGTH_SHORT).show()
+        if (resultCode != Activity.RESULT_OK)
+            return
+        when(requestCode){
+            RequestCodes.ADD -> {
+                val bindedOperation = data.getSerializableExtra("new_operation") as BindedOperation
+                if(bindedOperation.date!!.startsWith(actualDate.toString("YYYY-MM"))){
+                    operationsArrayList.add(0, bindedOperation)
+                    operationsAdapter.notifyItemInserted(0)
+                }
+            }
+            RequestCodes.EDIT -> {
+                // TODO: Edit
+            }
+        }
+    }
+
+    override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
+        if (resultCode != Activity.RESULT_OK )
+            return
+        when (requestCode) {
+            RequestCodes.DELETE -> {
+                val id = data.trim().toLong()
+                doAsync {
+                    database.operationDAO().deleteOperation(Preferences.getUserId(context!!), id)
+                }
+                val index = operationsArrayList.indexOfFirst { it.id == id }
+                if (index != -1) {
+                    operationsArrayList.removeAt(index)
+                    operationsAdapter.notifyItemRemoved(index)
                 }
             }
         }

@@ -66,6 +66,6 @@ interface OperationDAO {
     @Delete()
     fun deleteOperation(operation : Operation)
 
-    @Query("DELETE FROM operations WHERE id IS :id")
-    fun deleteOperation(id: Long)
+    @Query("DELETE FROM operations WHERE id IS :id AND user_id IS :userId")
+    fun deleteOperation(userId: Long, id: Long)
 }

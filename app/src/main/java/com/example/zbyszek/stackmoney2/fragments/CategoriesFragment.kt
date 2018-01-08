@@ -127,7 +127,7 @@ class CategoriesFragment : SuperFragment() {
         activity!!.runOnUiThread {
             when(resultCode) {
                 ResultCodes.DELETE_OK -> {
-                    val id = parseLong(data.trim())
+                    val id = data.trim().toLong()
                     doAsync {
                         database.categoryDAO().onDeleteCategory(Preferences.getUserId(context!!), id)
                     }
@@ -141,10 +141,6 @@ class CategoriesFragment : SuperFragment() {
     }
 
     private fun deleteCategory(id: Long) {
-        doAsync {
-//            database.categoryDAO().
-        }
-
         val expenseIndex = expenseCategoriesArrayList.indexOfFirst { it.category.id == id }
         if(expenseIndex != -1){
             expenseCategoriesArrayList.removeAt(expenseIndex)

@@ -46,7 +46,11 @@ data class BindedOperation(
         @ColumnInfo(name = "sub_category_name")
         var subCategoryName : String?
 ): Serializable {
-    @ColumnInfo(name = "id")
-    @PrimaryKey(autoGenerate = true)
-    var id : Long = 0
+        @ColumnInfo(name = "id")
+        @PrimaryKey(autoGenerate = true)
+        var id : Long = 0
+
+        fun convertToOperation(): Operation {
+                return Operation(userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description, date)
+        }
 }

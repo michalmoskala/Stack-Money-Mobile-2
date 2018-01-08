@@ -8,5 +8,6 @@ class RequestCodes {
         val ADD = 4
         val ADD_CATEGORY = 5
         val ADD_SUBCATEGORY = 6
+        val EDIT = 7
     }
 }

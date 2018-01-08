@@ -1,5 +1,6 @@
 package com.example.zbyszek.stackmoney2.adapters
 
+import android.app.Activity
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.text.Html
@@ -71,12 +72,11 @@ class OperationListAdapter(private var operationsList: ArrayList<BindedOperation
 
         private fun showDeleteDialog(){
             MaterialDialog.Builder(fragment.context!!)
-                    .title("Usunąć kategorię?")
-                    .content("Zostaną również usunięte wszystkie subkategoie")
+                    .title("Usunąć operację?")
                     .positiveText("Tak")
                     .negativeText("Anuluj")
                     .onPositive{ dialog, which ->
-                        fragment.onDialogResult(RequestCodes.DELETE_CATEGORY, ResultCodes.DELETE_OK, operation!!.id.toString())
+                        fragment.onDialogResult(RequestCodes.DELETE, Activity.RESULT_OK, operation!!.id.toString())
                     }
                     .show()
         }

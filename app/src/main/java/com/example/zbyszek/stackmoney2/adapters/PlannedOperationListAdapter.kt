@@ -1,5 +1,6 @@
 package com.example.zbyszek.stackmoney2.adapters
 
+import android.app.Activity
 import android.graphics.Color
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -68,12 +69,11 @@ class PlannedOperationListAdapter(private var operationsList: ArrayList<BindedOp
 
         private fun showDeleteDialog(){
             MaterialDialog.Builder(fragment.context!!)
-                    .title("Usunąć kategorię?")
-                    .content("Zostaną również usunięte wszystkie subkategoie")
+                    .title("Usunąć planowaną operację?")
                     .positiveText("Tak")
                     .negativeText("Anuluj")
                     .onPositive{ dialog, which ->
-                        fragment.onDialogResult(RequestCodes.DELETE_CATEGORY, ResultCodes.DELETE_OK, operation!!.id.toString())
+                        fragment.onDialogResult(RequestCodes.DELETE, Activity.RESULT_OK, operation!!.id.toString())
                     }
                     .show()
         }

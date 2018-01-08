@@ -1,5 +1,7 @@
 package com.example.zbyszek.stackmoney2.fragments
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -10,6 +12,7 @@ import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.adapters.PlannedOperationListAdapter
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
+import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_planned.view.*
@@ -52,6 +55,34 @@ class PlannedFragment : SuperFragment() {
         }
 
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        if (resultCode != Activity.RESULT_OK)
+            return
+        when(requestCode){
+            RequestCodes.EDIT -> {
+                // TODO: Edit
+            }
+        }
+    }
+
+    override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
+        if (resultCode != Activity.RESULT_OK )
+            return
+        when (requestCode) {
+            RequestCodes.DELETE -> {
+                val id = data.trim().toLong()
+                doAsync {
+                    database.operationDAO().deleteOperation(Preferences.getUserId(context!!), id)
+                }
+                val index = plannedArrayList.indexOfFirst { it.id == id }
+                if (index != -1) {
+                    plannedArrayList.removeAt(index)
+                    plannedAdapter.notifyItemRemoved(index)
+                }
+            }
+        }
     }
 
     private fun databaseConnection(){
