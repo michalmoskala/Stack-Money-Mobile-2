@@ -1,6 +1,7 @@
 package com.example.zbyszek.stackmoney2.model.operation
 
 import android.arch.persistence.room.*
+import com.example.zbyszek.stackmoney2.model.operationPattern.OperationPattern
 import java.io.Serializable
 
 data class BindedOperation(
@@ -52,5 +53,9 @@ data class BindedOperation(
 
         fun convertToOperation(): Operation {
                 return Operation(userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description, date)
+        }
+
+        fun convertToOperationPattern(): OperationPattern {
+                return OperationPattern(userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description)
         }
 }

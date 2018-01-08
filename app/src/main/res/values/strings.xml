@@ -16,6 +16,8 @@
     <string name="error_incorrect_password">Błędne hasło</string>
     <string name="error_field_required">Wymagane pole</string>
     <string name="error_invalid_login">Niepoprawny login</string>
+    <string name="error_login_exists">Podany login już istnieje</string>
+    <string name="error_create_user">Wystąpił błąd podczas tworzenia użytkownika</string>
 
     <string name="action_sign_in_short">Zaloguj</string>
     <string name="action_sign_up_short">Zarejestruj</string>
@@ -55,6 +57,7 @@
     <string name="operation_visibleInStatistics">Widoczna w statystykach</string>
     <string name="operation_account">Konto (ID)</string>
     <string name="operation_category">Kategoria (ID)</string>
+    <string name="operation_create_pattern">Stwórz szablon</string>
 
     <string name="category_title">Nazwa kategorii</string>
     <string name="category_visibleInExpenses">Widoczna w wydatkach</string>

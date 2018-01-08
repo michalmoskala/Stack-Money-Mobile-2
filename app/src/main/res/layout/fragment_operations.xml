@@ -56,7 +56,55 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
 
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/multiple_actions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:longClickable="true"
+            android:src="@android:drawable/ic_menu_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:fab_addButtonColorNormal="@color/white"
+            app:fab_addButtonColorPressed="@color/white_pressed"
+            app:fab_addButtonPlusIconColor="@color/half_black"
+            app:fab_labelStyle="@style/menu_labels_style">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_add_transaction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/ic_menu_share"
+                app:fab_stroke_visible="false"
+                app:fab_size="mini"
+                app:fab_title="Nowa transakcja"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/white_pressed"
+                app:fab_addButtonColorNormal="@color/white"
+                app:fab_addButtonColorPressed="@color/white_pressed"
+                app:fab_addButtonPlusIconColor="@color/half_black"/>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/action_add_operation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_icon="@drawable/ic_menu_send"
+                app:fab_stroke_visible="false"
+                app:fab_size="mini"
+                app:fab_title="Nowa operacja"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/white_pressed"
+                app:fab_addButtonColorNormal="@color/white"
+                app:fab_addButtonColorPressed="@color/white_pressed"
+                app:fab_addButtonPlusIconColor="@color/half_black"/>
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
         <android.support.design.widget.FloatingActionButton
+            android:visibility="invisible"
             android:id="@+id/floatingActionButton_addOperation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

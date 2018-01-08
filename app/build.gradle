@@ -39,4 +39,5 @@ dependencies {
 //    compile 'com.github.blackcat27:library:2.0.2-SNAPSHOT'
     compile 'com.github.faranjit:currency-edittext:1.0.1'
     compile 'net.danlew:android.joda:2.9.9.1'
+    compile 'com.getbase:floatingactionbutton:1.10.1'
 }

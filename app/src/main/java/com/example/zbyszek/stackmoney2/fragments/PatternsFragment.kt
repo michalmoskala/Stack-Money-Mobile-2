@@ -3,7 +3,6 @@ package com.example.zbyszek.stackmoney2.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -18,18 +17,7 @@ import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_patterns.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.onUiThread
-import org.jetbrains.anko.support.v4.uiThread
-import java.lang.Long
 
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [PatternsFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [PatternsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PatternsFragment : SuperFragment() {
 
     lateinit var database : AppDatabase

@@ -9,8 +9,11 @@ interface UserDAO {
     @Query("SELECT * FROM users")
     fun getAllUsers() : List<User>
 
+    @Query("SELECT login FROM users")
+    fun getAllLogins() : List<String>
+
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertUser(user : User) : Long?
+    fun insertUser(user : User) : Long
 
     @Delete()
     fun deleteUser(user : User)

@@ -150,6 +150,15 @@
                 android:text="@string/operation_visibleInStatistics"
                 android:textSize="18sp" />
 
+            <Switch
+                android:id="@+id/operation_create_pattern"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:layout_weight="1"
+                android:text="@string/operation_create_pattern"
+                android:textSize="18sp" />
+
             <Button
                 android:id="@+id/operation_button_confirm_new_operation"
                 style="?android:textAppearanceSmall"

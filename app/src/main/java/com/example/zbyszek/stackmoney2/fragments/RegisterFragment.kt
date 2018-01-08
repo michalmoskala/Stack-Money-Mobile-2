@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.MainActivity
 import com.example.zbyszek.stackmoney2.helpers.Preferences
@@ -29,6 +30,7 @@ class RegisterFragment : Fragment() {
      */
     private var mAuthTask: UserRegisterTask? = null
     lateinit var database : AppDatabase
+    lateinit var loginNames : List<String>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -36,6 +38,10 @@ class RegisterFragment : Fragment() {
 
         view.email_sign_up_button.setOnClickListener { attemptRegister() }
         databaseConnection()
+
+        doAsync {
+            loginNames = database.userDAO().getAllLogins()
+        }
 
         return view
     }
@@ -70,6 +76,10 @@ class RegisterFragment : Fragment() {
         // Check for a valid email address.
         if (TextUtils.isEmpty(loginStr)) {
             login.error = getString(R.string.error_field_required)
+            focusView = login
+            cancel = true
+        } else if (!loginExist(loginStr)) {
+            login.error = getString(R.string.error_login_exists)
             focusView = login
             cancel = true
         } else if (!isLoginValid(loginStr)) {
@@ -141,17 +151,12 @@ class RegisterFragment : Fragment() {
     }
 
     private fun isLoginValid(login: String): Boolean {
-        //TODO: Replace this with your own logic
-//        return email.contains("@")
-        var result = true
-
-        doAsync {
-            result = database.userDAO().userLoginExists(login)
-        }
-
-        return login.length > 4 //&& !result
+        return login.length > 4
     }
 
+    private fun loginExist(login: String): Boolean {
+        return loginNames.none{it.trim().toLowerCase() == login.trim().toLowerCase()}
+    }
     private fun isPasswordValid(password: String): Boolean {
         //TODO: Replace this with your own logic
         return password.length > 4
@@ -175,7 +180,7 @@ class RegisterFragment : Fragment() {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
             login_form.visibility = if (show) View.GONE else View.VISIBLE
@@ -197,12 +202,12 @@ class RegisterFragment : Fragment() {
                             login_progress.visibility = if (show) View.VISIBLE else View.GONE
                         }
                     })
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_form.visibility = if (show) View.GONE else View.VISIBLE
-        }
+//        } else {
+//            // The ViewPropertyAnimator APIs are not available, so simply show
+//            // and hide the relevant UI components.
+//            login_progress.visibility = if (show) View.VISIBLE else View.GONE
+//            login_form.visibility = if (show) View.GONE else View.VISIBLE
+//        }
     }
 
     /**
@@ -218,16 +223,26 @@ class RegisterFragment : Fragment() {
             val user = User(mEmail, mPassword)
 
             doAsync {
-                val result = database.userDAO().insertUser(user)
-                if (result != null){
-                    val question = Question(result, mQuestion, mAnswer)
-                    database.questionDAO().insertQuestion(question)
+                var userId = -1L
+                try {
+                    userId = database.userDAO().insertUser(user)
+                    if (userId != -1L){
+                        val question = Question(userId, mQuestion, mAnswer)
+                        database.questionDAO().insertQuestion(question)
+                    }
+                } catch (e: Exception){
+                    uiThread {
+                        Toast.makeText(activity, getString(R.string.error_create_user), Toast.LENGTH_LONG).show()
+                        showProgress(false)
+                    }
                 }
-
-                uiThread {
-                    if (result != null){
-                        Preferences.setUserId(result, activity!!)
-                        finish()
+                finally {
+                    uiThread {
+                        showProgress(false)
+                        if (userId != -1L){
+                            Preferences.setUserId(userId, activity!!)
+                            finish()
+                        }
                     }
                 }
             }
@@ -237,14 +252,14 @@ class RegisterFragment : Fragment() {
 
         override fun onPostExecute(success: Boolean?) {
             mAuthTask = null
-            showProgress(false)
+//            showProgress(false)
 
-            if (success!!) {
-                finish()
-            } else {
-                password.error = getString(R.string.error_incorrect_password)
-                password.requestFocus()
-            }
+//            if (success!!) {
+//                finish()
+//            } else {
+//                password.error = getString(R.string.error_incorrect_password)
+//                password.requestFocus()
+//            }
         }
 
         override fun onCancelled() {
@@ -253,15 +268,14 @@ class RegisterFragment : Fragment() {
         }
 
         private fun finish(){
-            val intent: Intent = Intent(context, MainActivity::class.java)
+            val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
         }
     }
     
     companion object {
         fun newInstance(): RegisterFragment {
-            val fragment = RegisterFragment()
-            return fragment
+            return RegisterFragment()
         }
     }
 }

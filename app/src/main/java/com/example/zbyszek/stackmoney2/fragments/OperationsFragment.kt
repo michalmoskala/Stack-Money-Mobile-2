@@ -3,38 +3,25 @@ package com.example.zbyszek.stackmoney2.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddOperation
 import com.example.zbyszek.stackmoney2.adapters.OperationListAdapter
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
-import com.example.zbyszek.stackmoney2.model.ResultCodes
 import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
-import com.example.zbyszek.stackmoney2.model.operation.Operation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_operations.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import org.joda.time.DateTime
-import java.lang.Long.parseLong
+import java.text.SimpleDateFormat
 import java.util.*
 
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [OperationsFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [OperationsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class OperationsFragment : SuperFragment() {
 
     lateinit var database : AppDatabase
@@ -58,14 +45,19 @@ class OperationsFragment : SuperFragment() {
 
         view.prev_month_button.setOnClickListener { shiftActualMonth(-1) }
         view.next_month_button.setOnClickListener { shiftActualMonth(1) }
-        view.floatingActionButton_addOperation.setOnClickListener { addOperationButtonOnClick() }
+        view.action_add_operation.setOnClickListener { addOperationButtonOnClick() }
+        view.action_add_transaction.setOnClickListener { addTransactionButtonOnClick() }
 
         return view
     }
 
-    fun addOperationButtonOnClick(){
+    private fun addOperationButtonOnClick(){
         val intent = Intent(this.context, AddOperation::class.java)
         this.startActivityForResult(intent, RequestCodes.ADD)
+    }
+
+    private fun addTransactionButtonOnClick(){
+        // TODO: Transaction activity
     }
 
     private fun shiftActualMonth(offset: Int){
@@ -74,7 +66,12 @@ class OperationsFragment : SuperFragment() {
     }
 
     private fun setActualMonthTitle(view: View){
-        val monthString = actualDate.toString("MMMM", Locale.forLanguageTag("pl-pl"))
+        val monthString = SimpleDateFormat(
+                "LLLL",
+                Locale.forLanguageTag("pl-PL"))
+                .format(actualDate.toCalendar(Locale.forLanguageTag("pl-pl")).time)
+//        var datetimeformat = DateTimeFormat.patternForStyle("L", Locale.forLanguageTag("pl-pl"))
+//        val monthString = actualDate.toString("MMMM", Locale.forLanguageTag("pl-PL"))
         val year = actualDate.year
         view.month_name.text =  if (year != DateTime.now().year) monthString + " " + year
                                 else monthString

@@ -4,6 +4,7 @@ import android.arch.persistence.room.*
 import com.example.zbyszek.stackmoney2.model.User
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
 import com.example.zbyszek.stackmoney2.model.category.CategorySQL
+import com.example.zbyszek.stackmoney2.model.operationPattern.OperationPattern
 import java.io.Serializable
 
 @Entity(
@@ -54,4 +55,9 @@ data class Operation(
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
     var id : Long = 0
+
+
+    fun convertToOperationPattern(): OperationPattern {
+        return OperationPattern(userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description)
+    }
 }

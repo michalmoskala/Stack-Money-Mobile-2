@@ -147,6 +147,9 @@ class AddOperation : AppCompatActivity() {
             try {
                 val id = database.operationDAO().insertOperation(bindedOperation.convertToOperation())
                 bindedOperation.id = id
+                if(operation_create_pattern.isChecked){
+                    database.operationPatternDAO().insertOperationPattern(bindedOperation.convertToOperationPattern())
+                }
             } catch (e: Exception){
                 runOnUiThread {
                     Toast.makeText(
