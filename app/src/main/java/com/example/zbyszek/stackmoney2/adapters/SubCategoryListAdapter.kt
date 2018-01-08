@@ -61,12 +61,7 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
         }
 
         private fun showEditDialog(){
-            MaterialDialog.Builder(fragment.context!!)
-                    .title("Edycja podkategorii")
-                    .positiveText("Edytuj")
-                    .negativeText("Anuluj")
-                    .onPositive{ dialog, which -> }
-                    .show()
+            // TODO: Edit dialog
         }
 
         private fun showDeleteDialog(){

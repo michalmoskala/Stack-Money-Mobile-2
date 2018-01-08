@@ -1,7 +1,7 @@
 package com.example.zbyszek.stackmoney2.adapters
 
-import android.content.Intent
 import android.graphics.Color
+import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.zbyszek.stackmoney2.R
-import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.helpers.FontManager
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
@@ -40,36 +39,34 @@ class OperationPatternListAdapter(private var operationPatternsList: ArrayList<B
 
         init {
             itemView.setOnClickListener(this)
-//            fragment.registerForContextMenu(itemView)
         }
 
         override fun onClick(v: View) {
-//            itemView.showContextMenu()
             showPopup(v)
         }
 
         private fun showPopup(v: View) {
-//            val popup = PopupMenu(fragment.context, v)
-//            popup.menuInflater.inflate(R.menu.category_list_item_menu, popup.menu)
-//            popup.setOnMenuItemClickListener({item -> onMenuItemClick(item)})
-//            popup.show()
+            val popup = PopupMenu(fragment.context!!, v)
+            popup.menuInflater.inflate(R.menu.operation_list_item_menu, popup.menu)
+            popup.setOnMenuItemClickListener({item -> onMenuItemClick(item)})
+            popup.show()
         }
 
         private fun onMenuItemClick(item: MenuItem): Boolean {
             when(item.itemId){
+                R.id.action_details -> showDetailsDialog()
                 R.id.action_edit -> showEditDialog()
                 R.id.action_delete -> showDeleteDialog()
             }
             return true
         }
 
+        private fun showDetailsDialog(){
+            // TODO: Details dialog
+        }
+
         private fun showEditDialog(){
-            MaterialDialog.Builder(fragment.context!!)
-                    .title("Edycja kategorii")
-                    .positiveText("Edytuj")
-                    .negativeText("Anuluj")
-                    .onPositive{ dialog, which -> }
-                    .show()
+            // TODO: Edit dialog
         }
 
         private fun showDeleteDialog(){
@@ -82,11 +79,6 @@ class OperationPatternListAdapter(private var operationPatternsList: ArrayList<B
                         fragment.onDialogResult(RequestCodes.DELETE_CATEGORY, ResultCodes.DELETE_OK, operation!!.id.toString())
                     }
                     .show()
-        }
-
-        private fun showAddSubCategoryDialog(){
-            val intent = Intent(fragment.context, AddCategory::class.java)
-            fragment.startActivityForResult(intent, RequestCodes.ADD)
         }
 
         fun bind(item: BindedOperationPattern) {

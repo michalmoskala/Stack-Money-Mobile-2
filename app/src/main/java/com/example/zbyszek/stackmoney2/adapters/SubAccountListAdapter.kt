@@ -63,21 +63,11 @@ class SubAccountListAdapter(private var subAccountsArrayList: ArrayList<IAccount
         }
 
         private fun showBalanceDialog(){
-            MaterialDialog.Builder(fragment.context!!)
-                    .title("Wprowadź aktualny stan subkonta")
-                    .positiveText("Potwierdź")
-                    .negativeText("Anuluj")
-                    .onPositive{ dialog, which -> }
-                    .show()
+            // TODO: Balance dialog
         }
 
         private fun showEditDialog(){
-            MaterialDialog.Builder(fragment.context!!)
-                    .title("Edycja subkonta")
-                    .positiveText("Edytuj")
-                    .negativeText("Anuluj")
-                    .onPositive{ dialog, which -> }
-                    .show()
+            // TODO: Edit dialog
         }
 
         private fun showDeleteDialog(){

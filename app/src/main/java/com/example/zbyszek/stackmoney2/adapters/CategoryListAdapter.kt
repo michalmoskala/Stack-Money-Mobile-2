@@ -45,11 +45,9 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
 
         init {
             itemView.setOnClickListener(this)
-//            fragment.registerForContextMenu(itemView)
         }
 
         override fun onClick(v: View) {
-//            itemView.showContextMenu()
             showPopup(v)
         }
 
@@ -70,12 +68,7 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         private fun showEditDialog(){
-            MaterialDialog.Builder(fragment.context!!)
-                    .title("Edycja kategorii")
-                    .positiveText("Edytuj")
-                    .negativeText("Anuluj")
-                    .onPositive{ dialog, which -> }
-                    .show()
+            // TODO: Edit dialog
         }
 
         private fun showDeleteDialog(){
