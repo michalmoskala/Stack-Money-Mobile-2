@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.MainActivity
+import com.example.zbyszek.stackmoney2.helpers.HashUtils
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.model.Question
 import com.example.zbyszek.stackmoney2.model.User
@@ -66,9 +67,10 @@ class RegisterFragment : Fragment() {
         // Store values at the time of the login attempt.
         val loginStr = login.text.toString().trim()
         val passwordStr = password.text.toString()
-        val passwordRepeatStr = password_repeat.text.toString()
+        val passwordRepeatStr = password.text.toString()
         val questionStr = question.text.toString()
         val questionAnswerStr = question_answer.text.toString()
+
 
         var cancel = false
         var focusView: View? = null
@@ -145,7 +147,7 @@ class RegisterFragment : Fragment() {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
-            mAuthTask = UserRegisterTask(loginStr, passwordStr, questionStr, questionAnswerStr)
+            mAuthTask = UserRegisterTask(loginStr, HashUtils.sha256(passwordStr), questionStr, questionAnswerStr)
             mAuthTask!!.execute(null as Void?)
         }
     }

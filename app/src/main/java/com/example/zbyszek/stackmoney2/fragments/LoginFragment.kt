@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_login.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import com.example.zbyszek.stackmoney2.activities.MainActivity
+import com.example.zbyszek.stackmoney2.helpers.HashUtils
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 
 
@@ -118,8 +119,9 @@ class LoginFragment : Fragment() {
             // TODO: attempt authentication against a network service.
 
             doAsync {
-                val result = database.userDAO().userExists(mEmail, mPassword)
-                val user = database.userDAO().getUser(mEmail, mPassword)
+                var mPasswordo=HashUtils.sha256(mPassword)
+                val result = database.userDAO().userExists(mEmail, mPasswordo)
+                val user = database.userDAO().getUser(mEmail, mPasswordo)
 
                 uiThread {
                     if (result){
