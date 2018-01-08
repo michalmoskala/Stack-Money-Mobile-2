@@ -1,6 +1,8 @@
 package com.example.zbyszek.stackmoney2.adapters
 
+import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import com.afollestad.materialdialogs.MaterialDialog
@@ -12,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_sub_category_list_row.view.*
 import org.jetbrains.anko.textColor
 import android.widget.PopupMenu
 import android.view.*
+import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.ResultCodes
 
@@ -61,7 +64,12 @@ class SubCategoryListAdapter(private var subCategoriesList: ArrayList<ICategory>
         }
 
         private fun showEditDialog(){
-            // TODO: Edit dialog
+            val intent = Intent(fragment.context, AddCategory::class.java)
+            intent.action = RequestCodes.EDIT.toString()
+            val bundle = Bundle()
+            bundle.putSerializable("category", subCategory!!.toCategorySQL())
+            intent.putExtras(bundle)
+            fragment.startActivityForResult(intent, RequestCodes.EDIT)
         }
 
         private fun showDeleteDialog(){

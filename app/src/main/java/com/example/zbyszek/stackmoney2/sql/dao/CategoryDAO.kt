@@ -23,6 +23,9 @@ abstract class CategoryDAO {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     abstract fun insertCategorySQL(categorySQL: CategorySQL) : Long
 
+    @Update()
+    abstract fun updateCategorySQL(categorySQL: CategorySQL)
+
     @Delete()
     abstract fun deleteCategorySQL(categorySQL: CategorySQL)
 

@@ -1,5 +1,6 @@
 package com.example.zbyszek.stackmoney2.model.account
 
+import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 import com.example.zbyszek.stackmoney2.model.category.ICategory
 
 class SubCategory(
@@ -14,4 +15,9 @@ class SubCategory(
         override var color : String = "#2d5ac1",
         override var icon : String = "&#xF1B9;"
 ) : ICategory {
+    override fun toCategorySQL(): CategorySQL {
+        val category = CategorySQL(userId, colorId, iconId, parentCategoryId, visibleInExpenses, visibleInIncomes, name)
+        category.id = id
+        return category
+    }
 }

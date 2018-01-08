@@ -23,6 +23,9 @@ interface AccountDAO {
     @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertAccountSQL(accountSQL : AccountSQL) : Long
 
+    @Update()
+    fun updateAccountSQL(accountSQL : AccountSQL)
+
     @Delete()
     fun deleteAccountSQL(accountSQL : AccountSQL)
 

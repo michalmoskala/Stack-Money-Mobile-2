@@ -7,4 +7,9 @@ class Account(
         override var name : String,
         override var color : String = "#2d5ac1"
 ) : IAccount {
+    override fun toAccountSQL(): AccountSQL {
+        val category = AccountSQL(userId, colorId, null, name)
+        category.id = id
+        return category
+    }
 }

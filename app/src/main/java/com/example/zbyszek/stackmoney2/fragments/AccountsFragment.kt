@@ -45,11 +45,6 @@ class AccountsFragment : SuperFragment() {
 
         val view = inflater.inflate(R.layout.fragment_accounts, container, false)
 
-        view.floatingActionButton_addAccount.setOnClickListener {
-            val intent = Intent(context, AddAccount::class.java)
-            startActivityForResult(intent, 0)
-        }
-
         databaseConnection()
 
         val fragment = this
@@ -70,10 +65,11 @@ class AccountsFragment : SuperFragment() {
         }
 
         view.floatingActionButton_addAccount.setOnClickListener {
-            val intent = Intent(fragment.context, AddAccount::class.java)
-            fragment.startActivityForResult(intent, RequestCodes.ADD)
+            val intent = Intent(context, AddAccount::class.java)
+            intent.action = RequestCodes.ADD.toString()
+            startActivityForResult(intent,  RequestCodes.ADD)
         }
-
+        
         return view
     }
 
@@ -85,11 +81,17 @@ class AccountsFragment : SuperFragment() {
         when(resultCode) {
             Activity.RESULT_CANCELED -> return
             Activity.RESULT_OK -> {
-                val iAccount = data.getSerializableExtra("new_account") as IAccount
-                if (iAccount is Account)
-                    addAccount(iAccount)
-                else if (iAccount is SubAccount)
-                    addSubAccount(iAccount)
+                when(requestCode) {
+                    RequestCodes.EDIT -> {
+                        val iCategory = data.getSerializableExtra("edited_account") as IAccount
+                        deleteIAccount(iCategory.id)
+                        addIAccount(iCategory)
+                    }
+                    RequestCodes.ADD -> {
+                        val iAccount = data.getSerializableExtra("new_account") as IAccount
+                        addIAccount(iAccount)
+                    }
+                }
             }
         }
     }
@@ -105,12 +107,24 @@ class AccountsFragment : SuperFragment() {
                         database.accountDAO().deleteAccountSQL(id)
                     }
                     when(requestCode) {
-                        RequestCodes.DELETE_CATEGORY -> deleteAccount(id)
-                        RequestCodes.DELETE_SUBCATEGORY -> deleteSubAccount(id)
+                        RequestCodes.DELETE_ACCOUNT -> deleteAccount(id)
+                        RequestCodes.DELETE_SUBACCOUNT -> deleteSubAccount(id)
                     }
                 }
             }
         }
+    }
+
+    private fun addIAccount(iAccount: IAccount, initBalance: Long = 0){
+        if (iAccount is Account)
+            addAccount(iAccount)
+        else if (iAccount is SubAccount)
+            addSubAccount(iAccount)
+    }
+
+    private fun deleteIAccount(id: Long) {
+        if (!deleteAccount(id))
+            deleteSubAccount(id)
     }
 
     private fun addAccount(account: IAccount, initBalance: Long = 0){
@@ -126,12 +140,13 @@ class AccountsFragment : SuperFragment() {
         }
     }
 
-    private fun deleteAccount(id: Long) {
+    private fun deleteAccount(id: Long): Boolean {
         val index = accountsArrayList.indexOfFirst { it.account.id == id }
         if(index != -1){
             accountsArrayList.removeAt(index)
             accountsAdapter.notifyItemRemoved(index)
         }
+        return index != -1
     }
 
     private fun deleteSubAccount(id: Long) {

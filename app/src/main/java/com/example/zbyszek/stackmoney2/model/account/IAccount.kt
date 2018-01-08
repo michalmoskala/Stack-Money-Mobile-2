@@ -12,4 +12,6 @@ interface IAccount : Serializable {
     var colorId : Int
     var name : String
     var color : String
+
+    fun toAccountSQL(): AccountSQL
 }

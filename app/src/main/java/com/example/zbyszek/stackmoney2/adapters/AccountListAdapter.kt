@@ -2,6 +2,7 @@ package com.example.zbyszek.stackmoney2.adapters
 
 import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.Html
@@ -70,7 +71,12 @@ class AccountListAdapter(private var accountsArrayList: ArrayList<AccountWithSub
         }
 
         private fun showEditDialog(){
-            // TODO: Edit dialog
+            val intent = Intent(fragment.context, AddAccount::class.java)
+            intent.action = RequestCodes.EDIT.toString()
+            val bundle = Bundle()
+            bundle.putSerializable("account", accountWithSubAccounts!!.account.toAccountSQL())
+            intent.putExtras(bundle)
+            fragment.startActivityForResult(intent, RequestCodes.EDIT)
         }
 
         private fun showDeleteDialog(){

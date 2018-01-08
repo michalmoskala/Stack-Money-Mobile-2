@@ -24,6 +24,7 @@
     <string name="action_sign_in">Zaloguj</string>>
     <string name="action_sign_up">Zarejestruj</string>
     <string name="action_add">Dodaj</string>
+    <string name="action_update">Zaaktualizuj</string>
     <string name="action_settings">Ustawienia</string>
     <string name="action_logout">Wyloguj</string>>
 
@@ -48,6 +49,10 @@
     <string name="title_addCategory">Dodaj kategorię</string>
     <string name="title_addOperation">Dodaj operację</string>
     <string name="title_addAccount">Dodaj konto</string>
+
+    <string name="title_editCategory">Edytuj kategorię</string>
+    <string name="title_editOperation">Edytuj operację</string>
+    <string name="title_editAccount">Edytuj konto</string>
 
     <string name="operation_amount">Kwota</string>
     <string name="operation_title">Nazwa</string>

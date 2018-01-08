@@ -11,4 +11,9 @@ class Category(
         override var color : String = "#2d5ac1",
         override var icon : String = "&#xF1B9;"
 ) : ICategory {
+    override fun toCategorySQL(): CategorySQL {
+        val category = CategorySQL(userId, colorId, iconId, null, visibleInExpenses, visibleInIncomes, name)
+        category.id = id
+        return category
+    }
 }
