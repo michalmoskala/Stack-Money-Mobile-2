@@ -55,4 +55,8 @@ data class BindedAccountSQL(
         account.id = id
         return account
     }
+
+    override fun toString(): String {
+        return name
+    }
 }

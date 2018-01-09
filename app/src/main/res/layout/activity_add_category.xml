@@ -41,21 +41,25 @@
             </android.support.design.widget.TextInputLayout>
 
 
-
-            <android.support.design.widget.TextInputLayout
+            <Spinner
+                android:id="@+id/category_spinner_parent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/category_parentCategory_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/category_parentCategory"
-                    android:inputType="text"
-                    android:maxLines="6"
-                    android:singleLine="false" />
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
 
-            </android.support.design.widget.TextInputLayout>
+                <!--<AutoCompleteTextView-->
+                    <!--android:id="@+id/category_parentCategory_input"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:hint="@string/category_parentCategory"-->
+                    <!--android:inputType="text"-->
+                    <!--android:maxLines="6"-->
+                    <!--android:singleLine="false" />-->
+
+            <!--</android.support.design.widget.TextInputLayout>-->
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
