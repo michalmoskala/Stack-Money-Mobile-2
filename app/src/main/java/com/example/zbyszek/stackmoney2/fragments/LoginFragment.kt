@@ -72,7 +72,7 @@ class LoginFragment : Fragment() {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
-            mAuthTask = UserLoginTask(loginStr, passwordStr)
+            mAuthTask = UserLoginTask(loginStr, HashUtils.sha256(passwordStr))
             mAuthTask!!.execute(null as Void?)
         }
     }
@@ -119,9 +119,8 @@ class LoginFragment : Fragment() {
             // TODO: attempt authentication against a network service.
 
             doAsync {
-                var mPasswordo=HashUtils.sha256(mPassword)
-                val result = database.userDAO().userExists(mEmail, mPasswordo)
-                val user = database.userDAO().getUser(mEmail, mPasswordo)
+                val result = database.userDAO().userExists(mEmail, mPassword)
+                val user = database.userDAO().getUser(mEmail, mPassword)
 
                 uiThread {
                     if (result){
