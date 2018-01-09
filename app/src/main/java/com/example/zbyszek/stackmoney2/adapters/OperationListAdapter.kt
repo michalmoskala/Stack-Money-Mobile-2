@@ -1,7 +1,9 @@
 package com.example.zbyszek.stackmoney2.adapters
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.zbyszek.stackmoney2.R
+import com.example.zbyszek.stackmoney2.activities.AddOperation
 import com.example.zbyszek.stackmoney2.helpers.FontManager
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
@@ -67,7 +70,12 @@ class OperationListAdapter(private var operationsList: ArrayList<BindedOperation
         }
 
         private fun showEditDialog(){
-            // TODO: Edit dialog
+            val intent = Intent(fragment.context, AddOperation::class.java)
+            intent.action = RequestCodes.EDIT.toString()
+            val bundle = Bundle()
+            bundle.putSerializable("operation", operation!!.convertToOperation())
+            intent.putExtras(bundle)
+            fragment.startActivityForResult(intent, RequestCodes.EDIT)
         }
 
         private fun showDeleteDialog(){

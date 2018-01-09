@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.Button
 import android.widget.DatePicker
+import android.widget.EditText
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import java.util.*
@@ -26,9 +27,9 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         val dateString = "%04d-%02d-%02d".format(year,month+1,day)
 
         Toast.makeText(context, dateString, Toast.LENGTH_SHORT).show()
-        val b: Button =activity!!.findViewById(R.id.operation_date_input)
+        val b: EditText = activity!!.findViewById(R.id.operation_date_input)
 
-        b.text = dateString
+        b.setText(dateString)
 
     }
 

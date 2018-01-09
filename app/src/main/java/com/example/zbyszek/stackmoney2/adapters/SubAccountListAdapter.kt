@@ -1,6 +1,8 @@
 package com.example.zbyszek.stackmoney2.adapters
 
+import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import com.afollestad.materialdialogs.MaterialDialog
@@ -12,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_sub_category_list_row.view.*
 import org.jetbrains.anko.textColor
 import android.widget.PopupMenu
 import android.view.*
+import com.example.zbyszek.stackmoney2.activities.AddAccount
 import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.ResultCodes
 import com.example.zbyszek.stackmoney2.model.account.IAccount
@@ -67,7 +70,12 @@ class SubAccountListAdapter(private var subAccountsArrayList: ArrayList<IAccount
         }
 
         private fun showEditDialog(){
-            // TODO: Edit dialog
+            val intent = Intent(fragment.context, AddAccount::class.java)
+            intent.action = RequestCodes.EDIT.toString()
+            val bundle = Bundle()
+            bundle.putSerializable("account", subAccount!!.toAccountSQL())
+            intent.putExtras(bundle)
+            fragment.startActivityForResult(intent, RequestCodes.EDIT)
         }
 
         private fun showDeleteDialog(){
@@ -76,7 +84,7 @@ class SubAccountListAdapter(private var subAccountsArrayList: ArrayList<IAccount
                     .positiveText("Tak")
                     .negativeText("Anuluj")
                     .onPositive{ dialog, which ->
-                        fragment.onDialogResult(RequestCodes.DELETE_SUBCATEGORY, ResultCodes.DELETE_OK, subAccount!!.id.toString())
+                        fragment.onDialogResult(RequestCodes.DELETE_SUBACCOUNT, ResultCodes.DELETE_OK, subAccount!!.id.toString())
                     }
                     .show()
         }

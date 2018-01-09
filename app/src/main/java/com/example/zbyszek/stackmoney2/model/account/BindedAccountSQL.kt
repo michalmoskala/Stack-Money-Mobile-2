@@ -51,6 +51,8 @@ data class BindedAccountSQL(
     }
 
     fun convertToAccountSQL(): AccountSQL {
-        return AccountSQL(userId, colorId, parentAccountId, name)
+        val account = AccountSQL(userId, colorId, parentAccountId, name)
+        account.id = id
+        return account
     }
 }

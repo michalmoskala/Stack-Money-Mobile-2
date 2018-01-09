@@ -44,6 +44,8 @@ data class BindedCategorySQL(
     }
 
     fun convertToCategorySQL(): CategorySQL {
-        return CategorySQL(userId, colorId, iconId, parentCategoryId, visibleInExpenses, visibleInIncomes, name)
+        val category = CategorySQL(userId, colorId, iconId, parentCategoryId, visibleInExpenses, visibleInIncomes, name)
+        category.id = id
+        return category
     }
 }

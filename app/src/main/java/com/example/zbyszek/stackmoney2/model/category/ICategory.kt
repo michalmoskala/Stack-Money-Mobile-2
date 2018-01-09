@@ -12,4 +12,6 @@ interface ICategory: Serializable {
     var visibleInExpenses : Boolean
     var visibleInIncomes : Boolean
     var name : String
+
+    fun toCategorySQL(): CategorySQL
 }

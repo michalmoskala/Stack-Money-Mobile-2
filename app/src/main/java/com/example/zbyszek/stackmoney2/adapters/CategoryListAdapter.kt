@@ -3,6 +3,7 @@ package com.example.zbyszek.stackmoney2.adapters
 import android.app.Fragment
 import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -68,7 +69,12 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
         }
 
         private fun showEditDialog(){
-            // TODO: Edit dialog
+            val intent = Intent(fragment.context, AddCategory::class.java)
+            intent.action = RequestCodes.EDIT.toString()
+            val bundle = Bundle()
+            bundle.putSerializable("category", categoryWithSubCategories!!.category.toCategorySQL())
+            intent.putExtras(bundle)
+            fragment.startActivityForResult(intent, RequestCodes.EDIT)
         }
 
         private fun showDeleteDialog(){
@@ -85,7 +91,9 @@ class CategoryListAdapter(private var categoriesList: ArrayList<CategoryWithSubC
 
         private fun showAddSubCategoryDialog(){
             val intent = Intent(fragment.context, AddCategory::class.java)
-            fragment.startActivityForResult(intent, RequestCodes.ADD)
+            intent.action = RequestCodes.ADD_SUBCATEGORY.toString()
+            intent.putExtra("parent_category_id", categoryWithSubCategories!!.category.id)
+            fragment.startActivityForResult(intent, RequestCodes.ADD_SUBCATEGORY)
         }
 
         fun bind(item: CategoryWithSubCategories) {

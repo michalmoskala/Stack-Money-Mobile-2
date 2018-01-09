@@ -229,7 +229,7 @@ class RegisterFragment : Fragment() {
                 try {
                     userId = database.userDAO().insertUser(user)
                     if (userId != -1L){
-                        val question = Question(userId, mQuestion, mAnswer)
+                        val question = Question(userId, mQuestion.trim(), mAnswer.trim())
                         database.questionDAO().insertQuestion(question)
                     }
                 } catch (e: Exception){

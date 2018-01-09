@@ -53,6 +53,7 @@ class OperationsFragment : SuperFragment() {
 
     private fun addOperationButtonOnClick(){
         val intent = Intent(this.context, AddOperation::class.java)
+        intent.action = RequestCodes.ADD.toString()
         this.startActivityForResult(intent, RequestCodes.ADD)
     }
 
@@ -79,8 +80,6 @@ class OperationsFragment : SuperFragment() {
 
     private fun onActualMonthChanged(view: View?){
         setActualMonthTitle(view!!)
-//        val month = actualDate.get(MONTH) + 1
-//        val year = actualDate.get(YEAR)
 
         doAsync {
             val userId = Preferences.getUserId(context!!)
@@ -100,13 +99,12 @@ class OperationsFragment : SuperFragment() {
         when(requestCode){
             RequestCodes.ADD -> {
                 val bindedOperation = data.getSerializableExtra("new_operation") as BindedOperation
-                if(bindedOperation.date!!.startsWith(actualDate.toString("YYYY-MM"))){
-                    operationsArrayList.add(0, bindedOperation)
-                    operationsAdapter.notifyItemInserted(0)
-                }
+                addOperation(bindedOperation)
             }
             RequestCodes.EDIT -> {
-                // TODO: Edit
+                val bindedOperation = data.getSerializableExtra("edited_operation") as BindedOperation
+                deleteOperation(bindedOperation.id)
+                addOperation(bindedOperation)
             }
         }
     }
@@ -120,13 +118,26 @@ class OperationsFragment : SuperFragment() {
                 doAsync {
                     database.operationDAO().deleteOperation(Preferences.getUserId(context!!), id)
                 }
-                val index = operationsArrayList.indexOfFirst { it.id == id }
-                if (index != -1) {
-                    operationsArrayList.removeAt(index)
-                    operationsAdapter.notifyItemRemoved(index)
-                }
+                deleteOperation(id)
             }
         }
+    }
+
+    private fun addOperation(operation: BindedOperation){
+        // TODO: same month but future
+        if(operation.date!!.startsWith(actualDate.toString("YYYY-MM"))){
+            operationsArrayList.add(0, operation)
+            operationsAdapter.notifyItemInserted(0)
+        }
+    }
+
+    private fun deleteOperation(id: Long): Boolean {
+        val index = operationsArrayList.indexOfFirst { it.id == id }
+        if (index != -1) {
+            operationsArrayList.removeAt(index)
+            operationsAdapter.notifyItemRemoved(index)
+        }
+        return index != -1
     }
 
     private fun databaseConnection(){

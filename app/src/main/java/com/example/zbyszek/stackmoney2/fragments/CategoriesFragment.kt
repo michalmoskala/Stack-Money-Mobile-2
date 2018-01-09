@@ -26,6 +26,7 @@ import com.example.zbyszek.stackmoney2.model.category.CategoryWithSubCategories
 import com.example.zbyszek.stackmoney2.model.category.ICategory
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.fragment_categories.view.*
+import kotlinx.android.synthetic.main.fragment_operation_list_row.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.lang.Long.parseLong
@@ -73,10 +74,97 @@ class CategoriesFragment : SuperFragment() {
 
         view.floatingActionButton_addCategory.setOnClickListener {
             val intent = Intent(fragment.context, AddCategory::class.java)
+            intent.action = RequestCodes.ADD.toString()
             fragment.startActivityForResult(intent, RequestCodes.ADD)
         }
 
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        when(resultCode) {
+            Activity.RESULT_CANCELED -> return
+            Activity.RESULT_OK -> {
+                when(requestCode){
+                    RequestCodes.EDIT -> {
+                        val iCategory = data.getSerializableExtra("edited_category") as ICategory
+                        deleteICategory(iCategory.id)
+                        addICategory(iCategory)
+                        // TODO: back subcategories when edit category to category
+                    }
+                    RequestCodes.ADD -> {
+                        val iCategory = data.getSerializableExtra("new_category") as ICategory
+                        Toast.makeText(context,"ADD", Toast.LENGTH_LONG).show()
+                        addICategory(iCategory)
+                    }
+                }}
+        }
+    }
+
+    override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
+        super.onDialogResult(requestCode, resultCode, data)
+
+        activity!!.runOnUiThread {
+            when(resultCode) {
+                ResultCodes.DELETE_OK -> {
+                    val id = data.trim().toLong()
+                    doAsync {
+                        database.categoryDAO().onDeleteCategory(Preferences.getUserId(context!!), id)
+                    }
+                    when(requestCode) {
+                        RequestCodes.DELETE_CATEGORY -> deleteCategory(id)
+                        RequestCodes.DELETE_SUBCATEGORY -> deleteSubCategory(id)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun deleteICategory(id: Long){
+        if (!deleteCategory(id))
+            deleteSubCategory(id)
+    }
+
+    private fun addICategory(iCategory: ICategory){
+        if (iCategory is Category)
+            addCategory(iCategory)
+        else if (iCategory is SubCategory)
+            addSubCategory(iCategory)
+    }
+
+    private fun deleteCategory(id: Long): Boolean {
+        val expenseIndex = expenseCategoriesArrayList.indexOfFirst { it.category.id == id }
+        if(expenseIndex != -1){
+            expenseCategoriesArrayList.removeAt(expenseIndex)
+            expenseAdapter.notifyItemRemoved(expenseIndex)
+        }
+
+        val incomeIndex = incomeCategoriesArrayList.indexOfFirst { it.category.id == id }
+        if(incomeIndex != -1){
+            incomeCategoriesArrayList.removeAt(incomeIndex)
+            incomeAdapter.notifyItemRemoved(incomeIndex)
+        }
+
+        return expenseIndex != -1 || incomeIndex != -1
+    }
+
+    private fun deleteSubCategory(id: Long) {
+        expenseCategoriesArrayList.forEachIndexed lit@ { i, category ->
+            val index = category.subCategories.indexOfFirst { it.id == id }
+            if (index != -1) {
+                category.subCategories.removeAt(index)
+                expenseAdapter.notifyItemChanged(i)
+                return@lit
+            }
+        }
+        incomeCategoriesArrayList.forEachIndexed lite@ { i, categoryWithSubCategories ->
+            val index = categoryWithSubCategories.subCategories.indexOfFirst { it.id == id }
+            if (index != -1) {
+                categoryWithSubCategories.subCategories.removeAt(index)
+                incomeAdapter.notifyItemChanged(i)
+                return@lite
+            }
+        }
     }
 
     private fun addCategory(category: ICategory){
@@ -103,72 +191,6 @@ class CategoriesFragment : SuperFragment() {
             if (index != -1){
                 incomeCategoriesArrayList[index].subCategories.add(0, subCategory)
                 incomeAdapter.notifyItemChanged(index)
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        when(resultCode) {
-            Activity.RESULT_CANCELED -> return
-            Activity.RESULT_OK -> {
-                val iCategory = data.getSerializableExtra("new_category") as ICategory
-                Toast.makeText(context, iCategory.toString(), Toast.LENGTH_LONG).show()
-                if (iCategory is Category)
-                    addCategory(iCategory)
-                else if (iCategory is SubCategory)
-                    addSubCategory(iCategory)
-            }
-        }
-    }
-
-    override fun onDialogResult(requestCode: Int, resultCode: Int, data: String) {
-        super.onDialogResult(requestCode, resultCode, data)
-
-        activity!!.runOnUiThread {
-            when(resultCode) {
-                ResultCodes.DELETE_OK -> {
-                    val id = data.trim().toLong()
-                    doAsync {
-                        database.categoryDAO().onDeleteCategory(Preferences.getUserId(context!!), id)
-                    }
-                    when(requestCode) {
-                        RequestCodes.DELETE_CATEGORY -> deleteCategory(id)
-                        RequestCodes.DELETE_SUBCATEGORY -> deleteSubCategory(id)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun deleteCategory(id: Long) {
-        val expenseIndex = expenseCategoriesArrayList.indexOfFirst { it.category.id == id }
-        if(expenseIndex != -1){
-            expenseCategoriesArrayList.removeAt(expenseIndex)
-            expenseAdapter.notifyItemRemoved(expenseIndex)
-        }
-
-        val incomeIndex = incomeCategoriesArrayList.indexOfFirst { it.category.id == id }
-        if(incomeIndex != -1){
-            incomeCategoriesArrayList.removeAt(incomeIndex)
-            incomeAdapter.notifyItemRemoved(incomeIndex)
-        }
-    }
-
-    private fun deleteSubCategory(id: Long) {
-        expenseCategoriesArrayList.forEachIndexed lit@ { i, category ->
-            val index = category.subCategories.indexOfFirst { it.id == id }
-            if (index != -1) {
-                category.subCategories.removeAt(index)
-                expenseAdapter.notifyItemChanged(i)
-                return@lit
-            }
-        }
-        incomeCategoriesArrayList.forEachIndexed lite@ { i, categoryWithSubCategories ->
-            val index = categoryWithSubCategories.subCategories.indexOfFirst { it.id == id }
-            if (index != -1) {
-                categoryWithSubCategories.subCategories.removeAt(index)
-                incomeAdapter.notifyItemChanged(i)
-                return@lite
             }
         }
     }
