@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_login.view.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import com.example.zbyszek.stackmoney2.activities.MainActivity
+import com.example.zbyszek.stackmoney2.helpers.HashUtils
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 
 
@@ -71,7 +72,7 @@ class LoginFragment : Fragment() {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true)
-            mAuthTask = UserLoginTask(loginStr, passwordStr)
+            mAuthTask = UserLoginTask(loginStr, HashUtils.sha256(passwordStr))
             mAuthTask!!.execute(null as Void?)
         }
     }
