@@ -72,6 +72,20 @@
 
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/account_initialValue_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/account_initialValue"
+                    android:inputType="text"
+                    android:maxLines="6"
+                    android:singleLine="false" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/button_confirm_new_account"

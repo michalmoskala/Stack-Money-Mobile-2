@@ -71,8 +71,10 @@
     <string name="category_colorID">Kolor (ID)</string>
     <string name="category_iconID">Ikona (ID)</string>
 
+    <string name="account_initialValue">Kapital poczatkowy</string>
     <string name="account_title">Nazwa Konta</string>
     <string name="account_parentAccount">ID Konta nadrzędnego</string>
     <string name="account_colorID">ID koloru</string>
+
 
 </resources>

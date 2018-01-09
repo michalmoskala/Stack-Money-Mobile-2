@@ -2,6 +2,7 @@ package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.icu.text.DateFormatSymbols
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -14,16 +15,22 @@ import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
 import com.example.zbyszek.stackmoney2.model.account.BindedAccountSQL
 import com.example.zbyszek.stackmoney2.model.account.IAccount
+import com.example.zbyszek.stackmoney2.model.operation.BindedOperation
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
+import com.example.zbyszek.stackmoney2.sql.dao.AccountDAO
+import com.example.zbyszek.stackmoney2.sql.dao.CategoryDAO
 import kotlinx.android.synthetic.main.activity_add_account.*
+import kotlinx.android.synthetic.main.activity_add_operation.*
 import org.jetbrains.anko.doAsync
+import org.joda.time.DateTime
+import java.util.*
 
 class AddAccount : AppCompatActivity() {
 
-    lateinit var database : AppDatabase
-    lateinit var colors : Map<Int, String>
-    lateinit var existAccounts : List<AccountSQL>
-    lateinit var parentAccounts : List<IAccount>
+    lateinit var database: AppDatabase
+    lateinit var colors: Map<Int, String>
+    lateinit var existAccounts: List<AccountSQL>
+    lateinit var parentAccounts: List<IAccount>
 
     lateinit var action: String
     lateinit var editedAccount: AccountSQL
@@ -35,7 +42,7 @@ class AddAccount : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item!!.itemId) {
+        return when (item!!.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 true
@@ -45,7 +52,7 @@ class AddAccount : AppCompatActivity() {
     }
 
 
-    private fun onCreateEdit(){
+    private fun onCreateEdit() {
         supportActionBar!!.setTitle(R.string.title_editCategory)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         editedAccount = intent.getSerializableExtra("account") as AccountSQL
@@ -61,7 +68,7 @@ class AddAccount : AppCompatActivity() {
         }
     }
 
-    private fun onCreateSubAccount(){
+    private fun onCreateSubAccount() {
         supportActionBar!!.setTitle(R.string.title_addCategory)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -70,7 +77,7 @@ class AddAccount : AppCompatActivity() {
         }
     }
 
-    private fun onCreateAddAccount(){
+    private fun onCreateAddAccount() {
         supportActionBar!!.setTitle(R.string.title_addCategory)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -88,12 +95,12 @@ class AddAccount : AppCompatActivity() {
 
         val userId = Preferences.getUserId(applicationContext)
         doAsync {
-            colors = database.colorDAO().getAllColors().associateBy ( {it.id}, {it.value} )
+            colors = database.colorDAO().getAllColors().associateBy({ it.id }, { it.value })
             existAccounts = database.accountDAO().getAllUserAccountsSQL(userId)
             parentAccounts = existAccounts.filter { it.parentAccountId == null }.map { it.convertToAccount() }
         }
 
-        when(action){
+        when (action) {
             RequestCodes.EDIT.toString() -> onCreateEdit()
             RequestCodes.ADD_SUBACCOUNT.toString() -> onCreateSubAccount()
             else -> onCreateAddAccount()
@@ -101,7 +108,7 @@ class AddAccount : AppCompatActivity() {
     }
 
 
-    private fun editButtonOnClick(){
+    private fun editButtonOnClick() {
         var cancel = false
         var focusView: View? = null
 
@@ -111,20 +118,20 @@ class AddAccount : AppCompatActivity() {
         val parentAccountId = if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
         val userId = Preferences.getUserId(this)
 
+
         if (TextUtils.isEmpty(name)) {
             account_name_input.error = getString(R.string.error_field_required)
             focusView = account_name_input
             cancel = true
         }
-        if (parentAccountId == null){
-            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }){
+        if (parentAccountId == null) {
+            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }) {
                 account_name_input.error = "Konto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
             }
-        }
-        else {
-            if(existAccounts.any{ it.parentAccountId == parentAccountId && it.name.toLowerCase() == name.toLowerCase() }){
+        } else {
+            if (existAccounts.any { it.parentAccountId == parentAccountId && it.name.toLowerCase() == name.toLowerCase() }) {
                 account_name_input.error = "Subkonto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
@@ -145,7 +152,7 @@ class AddAccount : AppCompatActivity() {
         }
     }
 
-    private fun addButtonOnClick(){
+    private fun addButtonOnClick() {
         var cancel = false
         var focusView: View? = null
 
@@ -154,21 +161,21 @@ class AddAccount : AppCompatActivity() {
         val parentAccountIdString = account_parentAccount_input.text.toString()
         val parentAccountId = if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
         val userId = Preferences.getUserId(this)
+        val initialValue = account_initialValue_input.text.toString().toInt()
 
         if (TextUtils.isEmpty(name)) {
             account_name_input.error = getString(R.string.error_field_required)
             focusView = account_name_input
             cancel = true
         }
-        if (parentAccountId == null){
-            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }){
+        if (parentAccountId == null) {
+            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }) {
                 account_name_input.error = "Konto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
             }
-        }
-        else {
-            if(existAccounts.any{ it.parentAccountId == parentAccountId && it.name.toLowerCase() == name.toLowerCase() }){
+        } else {
+            if (existAccounts.any { it.parentAccountId == parentAccountId && it.name.toLowerCase() == name.toLowerCase() }) {
                 account_name_input.error = "Subkonto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
@@ -178,23 +185,65 @@ class AddAccount : AppCompatActivity() {
         if (cancel) {
             focusView?.requestFocus()
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-//            showProgress(true)
-//            mAuthTask = UserLoginTask(loginStr, passwordStr)
-//            mAuthTask!!.execute(null as Void?)
-            val bindedAccountSQL = BindedAccountSQL(userId, colorId.toInt(), parentAccountId, name, colors[colorId.toInt()]!!)
-            addAccount(bindedAccountSQL)
+            doAsync {
+                val bindedAccountSQL = BindedAccountSQL(userId, colorId.toInt(), parentAccountId, name, colors[colorId.toInt()]!!)
+                addAccount(bindedAccountSQL)
+
+                val category = database.categoryDAO().defaultCategory(userId, -1)
+
+
+                val dateString = "%04d-%02d-%02d".format(DateTime.now().year(),DateTime.now().monthOfYear,DateTime.now().dayOfMonth())
+
+
+
+                val bindedOperation = BindedOperation(
+                        userId,
+                        bindedAccountSQL.id,
+                        category.id,
+                        "Wartosc poczatkowa",
+                        initialValue,
+                        false,
+                        true,
+                        null,
+                        dateString,
+                        accountColor = bindedAccountSQL.color,
+                        categoryName = category.name,
+                        subCategoryName = null,
+                        color = bindedAccountSQL.color,
+                        icon = database.iconDAO().getIconById(category.iconId).value)
+                addOperation(bindedOperation)
+            }
         }
     }
 
-    private fun addAccount(bindedAccountSQL: BindedAccountSQL){
+    private fun addOperation(bindedOperation: BindedOperation) {
+        doAsync {
+            try {
+                val id = database.operationDAO().insertOperation(bindedOperation.convertToOperation())
+                bindedOperation.id = id
+                if (operation_create_pattern.isChecked) {
+                    database.operationPatternDAO().insertOperationPattern(bindedOperation.convertToOperationPattern())
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(
+                            applicationContext,
+                            "Wystąpił błąd przy tworzeniu operacji",
+                            Toast.LENGTH_LONG).show()
+                }
+
+            }
+
+        }
+    }
+
+    private fun addAccount(bindedAccountSQL: BindedAccountSQL) {
         val intent = Intent()
         doAsync {
             try {
                 val id = database.accountDAO().insertAccountSQL(bindedAccountSQL.convertToAccountSQL())
                 bindedAccountSQL.id = id
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 runOnUiThread {
                     Toast.makeText(
                             applicationContext,
@@ -214,14 +263,14 @@ class AddAccount : AppCompatActivity() {
     }
 
 
-    private fun editCategory(bindedAccountSQL: BindedAccountSQL){
+    private fun editCategory(bindedAccountSQL: BindedAccountSQL) {
         val intent = Intent()
         doAsync {
             try {
                 val categorySQL = bindedAccountSQL.convertToAccountSQL()
                 categorySQL.id = bindedAccountSQL.id
                 database.accountDAO().updateAccountSQL(categorySQL)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 runOnUiThread {
                     Toast.makeText(
                             applicationContext,
@@ -230,8 +279,7 @@ class AddAccount : AppCompatActivity() {
                 }
                 setResult(Activity.RESULT_CANCELED, intent)
                 finish()
-            }
-            finally {
+            } finally {
                 val bundle = Bundle()
                 bundle.putSerializable("edited_account", bindedAccountSQL.convertToAccount())
                 intent.putExtras(bundle)
@@ -242,7 +290,7 @@ class AddAccount : AppCompatActivity() {
     }
 
 
-    private fun databaseConnection(){
+    private fun databaseConnection() {
         database = AppDatabase.getInMemoryDatabase(this)
     }
 }
