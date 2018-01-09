@@ -86,6 +86,7 @@ class AccountsFragment : SuperFragment() {
                         val iCategory = data.getSerializableExtra("edited_account") as IAccount
                         deleteIAccount(iCategory.id)
                         addIAccount(iCategory)
+                        // TODO: back subcategories when edit category to category
                     }
                     RequestCodes.ADD -> {
                         val iAccount = data.getSerializableExtra("new_account") as IAccount

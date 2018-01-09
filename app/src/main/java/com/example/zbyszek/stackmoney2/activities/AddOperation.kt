@@ -64,8 +64,9 @@ class AddOperation : AppCompatActivity() {
         operation_radio_isIncome.isChecked = !editedOperation.isExpense
         operation_date_input.text = editedOperation.date ?: ""
 
+        operation_button_confirm_new_operation.text = getString(R.string.action_update)
         operation_button_confirm_new_operation.setOnClickListener {
-//            editButtonOnClick()
+            editButtonOnClick()
         }
 
         operation_create_pattern.visibility = View.GONE
@@ -105,14 +106,14 @@ class AddOperation : AppCompatActivity() {
         newFragment.show(supportFragmentManager, "timePicker")
     }
 
-    private fun addButtonOnClick() {
+    private fun validateOperation(): BindedOperation? {
         var cancel = false
         var focusView: View? = null
 
         val userId = Preferences.getUserId(this)
         val title = operation_name_input.text.toString().trim()
         val cost =  if(operation_amount_input.currencyText.isNullOrEmpty()) 0
-                    else round(operation_amount_input.currencyDouble * 100.0).toInt()
+        else round(operation_amount_input.currencyDouble * 100.0).toInt()
         val isExpense = operation_radio_isExpense.isChecked
         val description = operation_description_input.text.toString()
         val accountId = operation_account_input.text.toString()
@@ -140,9 +141,10 @@ class AddOperation : AppCompatActivity() {
 
         if (cancel) {
             focusView?.requestFocus()
+            return null
         } else {
-            val category =  existCategories.firstOrNull{it.id == categoryId.toLong() && it.parentCategoryId == null}
-                            ?: existCategories.first { it.id == existCategories.first { it.id == categoryId.toLong() }.parentCategoryId }
+            val category = existCategories.firstOrNull { it.id == categoryId.toLong() && it.parentCategoryId == null }
+                    ?: existCategories.first { it.id == existCategories.first { it.id == categoryId.toLong() }.parentCategoryId }
 
             val subCategory = existCategories.firstOrNull { it.id == categoryId.toLong() && it.parentCategoryId != null }
 
@@ -160,9 +162,15 @@ class AddOperation : AppCompatActivity() {
                     categoryName = category.name,
                     subCategoryName = subCategory?.name,
                     color = subCategory?.color ?: category.color,
-                    icon = subCategory?.icon ?: category.icon )
-            addOperation(operation)
+                    icon = subCategory?.icon ?: category.icon)
+            return operation
         }
+    }
+
+    private fun addButtonOnClick() {
+        val operation = validateOperation()
+        if (operation != null)
+            addOperation(operation)
     }
 
     private fun addOperation(bindedOperation: BindedOperation){
@@ -187,6 +195,40 @@ class AddOperation : AppCompatActivity() {
             finally {
                 val bundle = Bundle()
                 bundle.putSerializable("new_operation", bindedOperation)
+                intent.putExtras(bundle)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
+        }
+    }
+
+    private fun editButtonOnClick() {
+        val operation = validateOperation()
+        if (operation != null){
+            operation.id = editedOperation.id
+            editOperation(operation)
+        }
+    }
+
+    private fun editOperation(bindedOperation: BindedOperation){
+        val intent = Intent()
+        doAsync {
+            try {
+                val operation = bindedOperation.convertToOperation()
+                database.operationDAO().updateOperation(operation)
+            } catch (e: Exception){
+                runOnUiThread {
+                    Toast.makeText(
+                            applicationContext,
+                            "Wystąpił błąd przy edycji operacji",
+                            Toast.LENGTH_LONG).show()
+                }
+                setResult(Activity.RESULT_CANCELED, intent)
+                finish()
+            }
+            finally {
+                val bundle = Bundle()
+                bundle.putSerializable("edited_operation", bindedOperation)
                 intent.putExtras(bundle)
                 setResult(Activity.RESULT_OK, intent)
                 finish()

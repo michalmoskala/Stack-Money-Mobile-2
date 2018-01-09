@@ -53,6 +53,7 @@ class OperationsFragment : SuperFragment() {
 
     private fun addOperationButtonOnClick(){
         val intent = Intent(this.context, AddOperation::class.java)
+        intent.action = RequestCodes.ADD.toString()
         this.startActivityForResult(intent, RequestCodes.ADD)
     }
 
@@ -123,6 +124,7 @@ class OperationsFragment : SuperFragment() {
     }
 
     private fun addOperation(operation: BindedOperation){
+        // TODO: same month but future
         if(operation.date!!.startsWith(actualDate.toString("YYYY-MM"))){
             operationsArrayList.add(0, operation)
             operationsAdapter.notifyItemInserted(0)

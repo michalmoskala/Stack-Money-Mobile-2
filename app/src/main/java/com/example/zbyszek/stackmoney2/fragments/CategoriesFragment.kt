@@ -90,6 +90,7 @@ class CategoriesFragment : SuperFragment() {
                         val iCategory = data.getSerializableExtra("edited_category") as ICategory
                         deleteICategory(iCategory.id)
                         addICategory(iCategory)
+                        // TODO: back subcategories when edit category to category
                     }
                     RequestCodes.ADD -> {
                         val iCategory = data.getSerializableExtra("new_category") as ICategory

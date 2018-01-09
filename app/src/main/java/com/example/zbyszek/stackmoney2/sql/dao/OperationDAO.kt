@@ -63,6 +63,9 @@ interface OperationDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOperation(operation : Operation) : Long
 
+    @Update()
+    fun updateOperation(operation : Operation)
+
     @Delete()
     fun deleteOperation(operation : Operation)
 

@@ -52,7 +52,9 @@ data class BindedOperation(
         var id : Long = 0
 
         fun convertToOperation(): Operation {
-                return Operation(userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description, date)
+                val operation = Operation(userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description, date)
+                operation.id = id
+                return operation
         }
 
         fun convertToOperationPattern(): OperationPattern {
