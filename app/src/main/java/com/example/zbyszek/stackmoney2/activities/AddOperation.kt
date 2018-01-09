@@ -40,8 +40,7 @@ class AddOperation : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     lateinit var action: String
     lateinit var editedOperation: Operation
 
-//    val dateNow = DateTime.now()
-    lateinit var datePicker: DatePickerDialog //= DatePickerDialog(applicationContext, this, dateNow.year, dateNow.monthOfYear, dateNow.dayOfMonth)
+    lateinit var datePicker: DatePickerDialog
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
         val day = datePicker.datePicker.dayOfMonth
@@ -115,9 +114,7 @@ class AddOperation : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
         val dateNow = DateTime.now()
         datePicker = DatePickerDialog(this, this, dateNow.year, dateNow.monthOfYear - 1, dateNow.dayOfMonth)
-
         operation_date_input.setOnClickListener {
-//            showTimePickerDialog(null)
             datePicker.show()
         }
 

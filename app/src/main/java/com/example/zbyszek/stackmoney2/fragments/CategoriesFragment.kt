@@ -3,6 +3,7 @@ package com.example.zbyszek.stackmoney2.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.FragmentManager
@@ -16,6 +17,7 @@ import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddCategory
 import com.example.zbyszek.stackmoney2.adapters.CategoryListAdapter
 import com.example.zbyszek.stackmoney2.helpers.CategoriesHelper
+import com.example.zbyszek.stackmoney2.helpers.DrawableAwesome
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.helpers.SuperFragment
 import com.example.zbyszek.stackmoney2.model.RequestCodes
