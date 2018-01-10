@@ -40,6 +40,10 @@ class AddOperation : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     lateinit var existCategories : List<BindedCategorySQL>
     lateinit var existAccounts : List<BindedAccountSQL>
 
+    lateinit var expenseCategoriesSpinner : List<SpinnerItem>
+    lateinit var incomeCategoriesSpinner : List<SpinnerItem>
+    lateinit var accountsSpinner : List<SpinnerItem>
+
     lateinit var action: String
     lateinit var editedOperation: Operation
 
@@ -80,13 +84,20 @@ class AddOperation : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         editedOperation = intent.getSerializableExtra("operation") as Operation
 
         operation_name_input.setText(editedOperation.title)
-//        operation_account_input.setText(editedOperation.accountId.toString())
-//        operation_category_input.setText(editedOperation.categoryId.toString())
         operation_amount_input.setText(editedOperation.cost.toString())
         operation_description_input.setText(editedOperation.description ?: "")
         operation_visibleInStatistics_input.isChecked = editedOperation.visibleInStatistics
         operation_radio_isIncome.isChecked = !editedOperation.isExpense
         operation_date_input.setText(editedOperation.date ?: "")
+
+        val categoriesList = if (editedOperation.isExpense) expenseCategoriesSpinner else incomeCategoriesSpinner
+        val categoryIndex = categoriesList.indexOfFirst{ it.tag == editedOperation.categoryId }
+        if (categoryIndex != -1)
+            operation_spinner_category.setSelection(categoryIndex)
+
+        val accountIndex = accountsSpinner.indexOfFirst{ it.tag == editedOperation.accountId }
+        if (accountIndex != -1)
+            operation_spinner_account.setSelection(accountIndex)
 
         operation_button_confirm_new_operation.text = getString(R.string.action_update)
         operation_button_confirm_new_operation.setOnClickListener {
@@ -124,20 +135,24 @@ class AddOperation : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
             existCategories = database.categoryDAO().getAllUserBindedCategoriesSQL(userId)
             existAccounts = database.accountDAO().getAllUserBindedAccountsSQL(userId)
 
+            expenseCategoriesSpinner = existCategories.filter { it.visibleInExpenses }.map { SpinnerItem(it.name, it.id) }
+            incomeCategoriesSpinner = existCategories.filter { it.visibleInIncomes }.map { SpinnerItem(it.name, it.id) }
+            accountsSpinner = existAccounts.map { SpinnerItem(it.name, it.id) }
+
             expenseCategoriesAdapter = ArrayAdapter(
                     applicationContext,
                     android.R.layout.simple_spinner_item,
-                    existCategories.filter { it.visibleInExpenses }.map { SpinnerItem(it.name, it.id) })
+                    expenseCategoriesSpinner)
 
             incomeCategoriesAdapter = ArrayAdapter(
                     applicationContext,
                     android.R.layout.simple_spinner_item,
-                    existCategories.filter { it.visibleInIncomes }.map { SpinnerItem(it.name, it.id) })
+                    incomeCategoriesSpinner)
 
             accountsAdapter = ArrayAdapter(
                     applicationContext,
                     android.R.layout.simple_spinner_item,
-                    existAccounts.map { SpinnerItem(it.name, it.id) })
+                    accountsSpinner)
 
             uiThread {
                 expenseCategoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -181,28 +196,15 @@ class AddOperation : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
         val accountId = (operation_spinner_account.selectedItem as SpinnerItem).tag
         val categoryId = (operation_spinner_category.selectedItem as SpinnerItem).tag//operation_category_input.text.toString()
         val visibleInStatistics = operation_visibleInStatistics_input.isChecked
-//        val date = operation_date_input.text.toString()
 
         val datePickerf = datePicker.datePicker
-        val date = "%04d-%02d-%02d".format(datePickerf.year,datePickerf.month+1,datePickerf.dayOfMonth)
+        val date = "%04d-%02d-%02d".format(datePickerf.year, datePickerf.month + 1, datePickerf.dayOfMonth)
 
         if(cost == 0){
             operation_amount_input.error = "Wartość nie może być zerowa"//getString()
             focusView = operation_amount_input
             cancel = true
         }
-
-//        if (TextUtils.isEmpty(accountId)) {
-//            operation_account_input.error = getString(R.string.error_field_required)
-//            focusView = operation_account_input
-//            cancel = true
-//        }
-
-//        if (TextUtils.isEmpty(categoryId)) {
-//            operation_category_input.error = getString(R.string.error_field_required)
-//            focusView = operation_category_input
-//            cancel = true
-//        }
 
         if (cancel) {
             focusView?.requestFocus()

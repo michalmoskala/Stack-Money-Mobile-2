@@ -5,6 +5,7 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import com.example.zbyszek.stackmoney2.helpers.HashUtils
 import com.example.zbyszek.stackmoney2.model.*
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
 import com.example.zbyszek.stackmoney2.model.category.CategorySQL
@@ -25,7 +26,7 @@ import com.example.zbyszek.stackmoney2.sql.dao.*
                 Operation::class,
                 OperationPattern::class
         ),
-        version = 11
+        version = 12
 )
 
 abstract class AppDatabase : RoomDatabase() {
@@ -39,6 +40,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDAO() : CategoryDAO
     abstract fun operationDAO() : OperationDAO
     abstract fun operationPatternDAO() : OperationPatternDAO
+
+    abstract fun statisticsDAO() : StatisticsDAO
 
     companion object {
         private var INSTANCE: AppDatabase? = null
@@ -118,8 +121,10 @@ abstract class AppDatabase : RoomDatabase() {
                                 "END; " +
                          "END;")
 
+                val password = HashUtils.sha256("admin")
+
                 db.execSQL("INSERT INTO users (login, password) VALUES " +
-                        "('admin','admin');")
+                        "('admin','" + password + "');")
                 db.execSQL("INSERT INTO questions (user_id, question, answer) VALUES " +
                         "(1,'poproszę','sól');")
                 db.execSQL("INSERT INTO categories (user_id, color_id, icon_id, parent_category_id, name, visible_in_incomes, visible_in_expenses) VALUES " +

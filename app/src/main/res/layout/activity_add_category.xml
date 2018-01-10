@@ -92,18 +92,20 @@
             </android.support.design.widget.TextInputLayout>
 
             <Switch
-                android:id="@+id/category_isExpense_input"
+                android:id="@+id/category_visibleInExpenses_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:checked="true"
                 android:text="@string/category_visibleInExpenses"
                 android:textSize="18sp" />
 
             <Switch
-                android:id="@+id/category_isIncome_input"
+                android:id="@+id/category_visibleInIncomes_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:checked="true"
                 android:text="@string/category_visibleInIncomes"
                 android:textSize="18sp" />
 

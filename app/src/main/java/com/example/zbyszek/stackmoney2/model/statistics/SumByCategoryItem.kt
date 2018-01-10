@@ -5,7 +5,7 @@ import android.arch.persistence.room.ColumnInfo
 data class SumByCategoryItem(
 
         @ColumnInfo(name = "subcategory")
-        var subcategory : String,
+        var subcategory : String?,
 
         @ColumnInfo(name = "category")
         var category : String,
@@ -14,6 +14,14 @@ data class SumByCategoryItem(
         var isExpense : Boolean,
 
         @ColumnInfo(name = "value")
-        var value : Double
+        var value : Int
 
-)
+) {
+        fun decimalValue(): Double {
+                return value / 100.0
+        }
+
+        fun valueToString(): String {
+                return "%.2f zł".format(value / 100.0)
+        }
+}

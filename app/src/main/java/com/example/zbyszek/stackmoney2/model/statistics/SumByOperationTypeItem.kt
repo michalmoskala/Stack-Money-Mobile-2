@@ -12,4 +12,12 @@ data class SumByOperationTypeItem(
         @ColumnInfo(name = "value")
         var value : Double
 
-)
+){
+        fun decimalValue(): Double {
+                return value / 100.0
+        }
+
+        fun valueToString(): String {
+                return "%.2f zł".format(value / 100.0)
+        }
+}

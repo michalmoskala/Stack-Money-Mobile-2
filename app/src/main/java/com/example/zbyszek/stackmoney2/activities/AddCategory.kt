@@ -1,7 +1,6 @@
 package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -15,7 +14,6 @@ import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.SpinnerItem
 import com.example.zbyszek.stackmoney2.model.category.BindedCategorySQL
-import com.example.zbyszek.stackmoney2.model.category.Category
 import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 import com.example.zbyszek.stackmoney2.model.category.ICategory
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
@@ -78,8 +76,8 @@ class AddCategory : AppCompatActivity() {
 
         category_colorId_input.setText(editedCategory.colorId.toString())
         category_iconId_input.setText(editedCategory.iconId.toString())
-        category_isExpense_input.isChecked = editedCategory.visibleInExpenses
-        category_isIncome_input.isChecked = editedCategory.visibleInIncomes
+        category_visibleInExpenses_input.isChecked = editedCategory.visibleInExpenses
+        category_visibleInIncomes_input.isChecked = editedCategory.visibleInIncomes
 
         button_confirm_new_category.text = getString(R.string.action_update)
         button_confirm_new_category.setOnClickListener {
@@ -148,8 +146,8 @@ class AddCategory : AppCompatActivity() {
         val name = category_name_input.text.toString().trim()
         val parentCategoryId = (category_spinner_parent.selectedItem as SpinnerItem).tag //if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
         val userId = Preferences.getUserId(this)
-        val visibleInExpenses = category_isExpense_input.isChecked
-        val visibleInIncomes = category_isIncome_input.isChecked
+        val visibleInExpenses = category_visibleInExpenses_input.isChecked
+        val visibleInIncomes = category_visibleInIncomes_input.isChecked
 
         if (TextUtils.isEmpty(name)) {
             category_name_input.error = getString(R.string.error_field_required)
@@ -194,8 +192,8 @@ class AddCategory : AppCompatActivity() {
 //        val parentCategoryIdString = category_parentCategory_input.text.toString()
         val parentCategoryId = (category_spinner_parent.selectedItem as SpinnerItem).tag//if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
         val userId = Preferences.getUserId(this)
-        val visibleInExpenses = category_isExpense_input.isChecked
-        val visibleInIncomes = category_isIncome_input.isChecked
+        val visibleInExpenses = category_visibleInExpenses_input.isChecked
+        val visibleInIncomes = category_visibleInIncomes_input.isChecked
 
         if (TextUtils.isEmpty(name)) {
             category_name_input.error = getString(R.string.error_field_required)
