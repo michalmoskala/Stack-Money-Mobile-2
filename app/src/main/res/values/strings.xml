@@ -68,8 +68,8 @@
     <string name="category_visibleInExpenses">Widoczna w wydatkach</string>
     <string name="category_visibleInIncomes">Widoczna we wpływach</string>
     <string name="category_parentCategory">Kategoria nadrzędna (ID)</string>
-    <string name="category_colorID">Kolor (ID)</string>
     <string name="category_iconID">Ikona (ID)</string>
+    <string name="category_colorPicker">Wybierz kolor</string>
 
     <string name="account_title">Nazwa Konta</string>
     <string name="account_parentAccount">ID Konta nadrzędnego</string>

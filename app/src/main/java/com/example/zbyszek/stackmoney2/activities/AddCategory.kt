@@ -13,12 +13,12 @@ import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.model.RequestCodes
 import com.example.zbyszek.stackmoney2.model.category.BindedCategorySQL
-import com.example.zbyszek.stackmoney2.model.category.Category
 import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 import com.example.zbyszek.stackmoney2.model.category.ICategory
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_category.*
 import org.jetbrains.anko.doAsync
+import petrov.kristiyan.colorpicker.ColorPicker
 
 
 class AddCategory : AppCompatActivity() {
@@ -31,6 +31,7 @@ class AddCategory : AppCompatActivity() {
     lateinit var action: String
 
     lateinit var editedCategory: CategorySQL
+    var chosenColorId=3
 
     override fun onBackPressed() {
         val intent = Intent()
@@ -56,7 +57,6 @@ class AddCategory : AppCompatActivity() {
         category_name_input.setText(editedCategory.name)
         if (editedCategory.parentCategoryId != null)
             category_parentCategory_input.setText(editedCategory.parentCategoryId.toString())
-        category_colorId_input.setText(editedCategory.colorId.toString())
         category_iconId_input.setText(editedCategory.iconId.toString())
         category_isExpense_input.isChecked = editedCategory.visibleInExpenses
         category_isIncome_input.isChecked = editedCategory.visibleInIncomes
@@ -99,6 +99,33 @@ class AddCategory : AppCompatActivity() {
             parentCategories = existCategories.filter { it.parentCategoryId == null }.map { it.convertToCategory() }
         }
 
+       category_button_colorPicker_input.setOnClickListener {
+            val context = this
+            doAsync {
+                colors = database.colorDAO().getAllColors().associateBy({ it.id }, { it.value })
+                val colorsArrayList = (database.colorDAO().getAllColors().map { it.value } as ArrayList<String>)
+                runOnUiThread {
+
+                    val colorPicker = ColorPicker(context)
+                    colorPicker.setTitle("Wybierz kolor")
+                    colorPicker.setRoundColorButton(true)
+                    colorPicker.setColors(colorsArrayList)
+                    colorPicker.setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
+                        override fun onChooseColor(position: Int, color: Int) {
+                            if(position>-1)
+                                category_button_colorPicker_input.setBackgroundColor(color)
+                            chosenColorId=position+1
+                        }
+                        override fun onCancel(){}
+                    })
+
+
+                    colorPicker.show()
+
+                }
+            }
+        }
+
         when(action){
             RequestCodes.EDIT.toString() -> onCreateEdit()
             RequestCodes.ADD_SUBCATEGORY.toString() -> onCreateAddSubCategory()
@@ -110,7 +137,7 @@ class AddCategory : AppCompatActivity() {
         var cancel = false
         var focusView: View? = null
 
-        val colorId = category_colorId_input.text.toString()
+        val colorId = chosenColorId
         val iconId = category_iconId_input.text.toString()
         val name = category_name_input.text.toString().trim()
         val parentCategoryIdString = category_parentCategory_input.text.toString()
@@ -156,7 +183,7 @@ class AddCategory : AppCompatActivity() {
         var cancel = false
         var focusView: View? = null
 
-        val colorId = category_colorId_input.text.toString()
+        val colorId = chosenColorId
         val iconId = category_iconId_input.text.toString()
         val name = category_name_input.text.toString().trim()
         val parentCategoryIdString = category_parentCategory_input.text.toString()

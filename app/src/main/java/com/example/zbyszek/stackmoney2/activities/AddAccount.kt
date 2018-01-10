@@ -2,7 +2,6 @@ package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -19,8 +18,6 @@ import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_account.*
 import org.jetbrains.anko.doAsync
 import petrov.kristiyan.colorpicker.ColorPicker
-import android.graphics.Color.parseColor
-import org.jetbrains.anko.backgroundColor
 import java.util.ArrayList
 
 
@@ -92,21 +89,21 @@ class AddAccount : AppCompatActivity() {
         databaseConnection()
         action = intent.action
 
-        button_colorPicker_input.setOnClickListener {
+        account_button_colorPicker_input.setOnClickListener {
             val context = this
             doAsync {
                 colors = database.colorDAO().getAllColors().associateBy({ it.id }, { it.value })
-                val accountsArrayList = (database.colorDAO().getAllColors().map { it.value } as ArrayList<String>)
+                val colorsArrayList = (database.colorDAO().getAllColors().map { it.value } as ArrayList<String>)
                 runOnUiThread {
 
                     val colorPicker = ColorPicker(context)
                     colorPicker.setTitle("Wybierz kolor")
                     colorPicker.setRoundColorButton(true)
-                    colorPicker.setColors(accountsArrayList)
+                    colorPicker.setColors(colorsArrayList)
                             colorPicker.setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
                                 override fun onChooseColor(position: Int, color: Int) {
                                     if(position>-1)
-                                        button_colorPicker_input.setBackgroundColor(color)
+                                        account_button_colorPicker_input.setBackgroundColor(color)
                                         chosenColorId=position+1
                                 }
                                 override fun onCancel(){}
