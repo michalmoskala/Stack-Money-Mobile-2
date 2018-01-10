@@ -59,7 +59,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/button_colorPicker_input"
+                android:id="@+id/account_button_colorPicker_input"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
