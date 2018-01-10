@@ -74,5 +74,6 @@
     <string name="account_title">Nazwa Konta</string>
     <string name="account_parentAccount">ID Konta nadrzędnego</string>
     <string name="account_colorID">ID koloru</string>
+    <string name="account_colorPicker">Wybierz kolor</string>
 
 </resources>

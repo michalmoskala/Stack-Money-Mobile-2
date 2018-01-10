@@ -2,6 +2,7 @@ package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -17,16 +18,22 @@ import com.example.zbyszek.stackmoney2.model.account.IAccount
 import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_account.*
 import org.jetbrains.anko.doAsync
+import petrov.kristiyan.colorpicker.ColorPicker
+import android.graphics.Color.parseColor
+import org.jetbrains.anko.backgroundColor
+import java.util.ArrayList
+
 
 class AddAccount : AppCompatActivity() {
 
-    lateinit var database : AppDatabase
-    lateinit var colors : Map<Int, String>
-    lateinit var existAccounts : List<AccountSQL>
-    lateinit var parentAccounts : List<IAccount>
+    lateinit var database: AppDatabase
+    lateinit var colors: Map<Int, String>
+    lateinit var existAccounts: List<AccountSQL>
+    lateinit var parentAccounts: List<IAccount>
 
     lateinit var action: String
     lateinit var editedAccount: AccountSQL
+    var chosenColorId=3
 
     override fun onBackPressed() {
         val intent = Intent()
@@ -35,7 +42,7 @@ class AddAccount : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item!!.itemId) {
+        return when (item!!.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 true
@@ -45,7 +52,7 @@ class AddAccount : AppCompatActivity() {
     }
 
 
-    private fun onCreateEdit(){
+    private fun onCreateEdit() {
         supportActionBar!!.setTitle(R.string.title_editAccount)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         editedAccount = intent.getSerializableExtra("account") as AccountSQL
@@ -53,7 +60,7 @@ class AddAccount : AppCompatActivity() {
         account_name_input.setText(editedAccount.name)
         if (editedAccount.parentAccountId != null)
             account_parentAccount_input.setText(editedAccount.parentAccountId.toString())
-        account_colorId_input.setText(editedAccount.colorId.toString())
+
 
         button_confirm_new_account.text = getString(R.string.action_update)
         button_confirm_new_account.setOnClickListener {
@@ -61,7 +68,7 @@ class AddAccount : AppCompatActivity() {
         }
     }
 
-    private fun onCreateSubAccount(){
+    private fun onCreateSubAccount() {
         supportActionBar!!.setTitle(R.string.title_addAccount)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -70,7 +77,7 @@ class AddAccount : AppCompatActivity() {
         }
     }
 
-    private fun onCreateAddAccount(){
+    private fun onCreateAddAccount() {
         supportActionBar!!.setTitle(R.string.title_addAccount)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -78,7 +85,6 @@ class AddAccount : AppCompatActivity() {
             addButtonOnClick()
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,14 +92,41 @@ class AddAccount : AppCompatActivity() {
         databaseConnection()
         action = intent.action
 
+        button_colorPicker_input.setOnClickListener {
+            val context = this
+            doAsync {
+                colors = database.colorDAO().getAllColors().associateBy({ it.id }, { it.value })
+                val accountsArrayList = (database.colorDAO().getAllColors().map { it.value } as ArrayList<String>)
+                runOnUiThread {
+
+                    val colorPicker = ColorPicker(context)
+                    colorPicker.setTitle("Wybierz kolor")
+                    colorPicker.setRoundColorButton(true)
+                    colorPicker.setColors(accountsArrayList)
+                            colorPicker.setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
+                                override fun onChooseColor(position: Int, color: Int) {
+                                    if(position>-1)
+                                        button_colorPicker_input.setBackgroundColor(color)
+                                        chosenColorId=position+1
+                                }
+                                override fun onCancel(){}
+                            })
+
+
+                    colorPicker.show()
+
+                }
+            }
+        }
+
         val userId = Preferences.getUserId(applicationContext)
         doAsync {
-            colors = database.colorDAO().getAllColors().associateBy ( {it.id}, {it.value} )
+            colors = database.colorDAO().getAllColors().associateBy({ it.id }, { it.value })
             existAccounts = database.accountDAO().getAllUserAccountsSQL(userId)
             parentAccounts = existAccounts.filter { it.parentAccountId == null }.map { it.convertToAccount() }
         }
 
-        when(action){
+        when (action) {
             RequestCodes.EDIT.toString() -> onCreateEdit()
             RequestCodes.ADD_SUBACCOUNT.toString() -> onCreateSubAccount()
             else -> onCreateAddAccount()
@@ -101,12 +134,14 @@ class AddAccount : AppCompatActivity() {
     }
 
 
-    private fun editButtonOnClick(){
+    private fun editButtonOnClick() {
         var cancel = false
         var focusView: View? = null
 
+
+
         val name = account_name_input.text.toString().trim()
-        val colorId = account_colorId_input.text.toString()
+        val colorId = chosenColorId
         val parentAccountIdString = account_parentAccount_input.text.toString()
         val parentAccountId = if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
         val userId = Preferences.getUserId(this)
@@ -116,15 +151,14 @@ class AddAccount : AppCompatActivity() {
             focusView = account_name_input
             cancel = true
         }
-        if (parentAccountId == null){
-            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }){
+        if (parentAccountId == null) {
+            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }) {
                 account_name_input.error = "Konto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
             }
-        }
-        else {
-            if(existAccounts.any{ it.parentAccountId == parentAccountId && it.name.toLowerCase() == name.toLowerCase() }){
+        } else {
+            if (existAccounts.any { it.parentAccountId == parentAccountId && it.name.toLowerCase() == name.toLowerCase() }) {
                 account_name_input.error = "Subkonto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
@@ -141,16 +175,16 @@ class AddAccount : AppCompatActivity() {
 //            mAuthTask!!.execute(null as Void?)
             val bindedAccountSQL = BindedAccountSQL(userId, colorId.toInt(), parentAccountId, name, colors[colorId.toInt()]!!)
             bindedAccountSQL.id = editedAccount.id
-            editCategory(bindedAccountSQL)
+            editAccount(bindedAccountSQL)
         }
     }
 
-    private fun addButtonOnClick(){
+    private fun addButtonOnClick() {
         var cancel = false
         var focusView: View? = null
 
         val name = account_name_input.text.toString().trim()
-        val colorId = account_colorId_input.text.toString()
+        val colorId = chosenColorId
         val parentAccountIdString = account_parentAccount_input.text.toString()
         val parentAccountId = if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
         val userId = Preferences.getUserId(this)
@@ -160,15 +194,14 @@ class AddAccount : AppCompatActivity() {
             focusView = account_name_input
             cancel = true
         }
-        if (parentAccountId == null){
-            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }){
+        if (parentAccountId == null) {
+            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }) {
                 account_name_input.error = "Konto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
             }
-        }
-        else {
-            if(existAccounts.any{ it.parentAccountId == parentAccountId && it.name.toLowerCase() == name.toLowerCase() }){
+        } else {
+            if (existAccounts.any { it.parentAccountId == parentAccountId && it.name.toLowerCase() == name.toLowerCase() }) {
                 account_name_input.error = "Subkonto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
@@ -188,13 +221,13 @@ class AddAccount : AppCompatActivity() {
         }
     }
 
-    private fun addAccount(bindedAccountSQL: BindedAccountSQL){
+    private fun addAccount(bindedAccountSQL: BindedAccountSQL) {
         val intent = Intent()
         doAsync {
             try {
                 val id = database.accountDAO().insertAccountSQL(bindedAccountSQL.convertToAccountSQL())
                 bindedAccountSQL.id = id
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 runOnUiThread {
                     Toast.makeText(
                             applicationContext,
@@ -214,14 +247,14 @@ class AddAccount : AppCompatActivity() {
     }
 
 
-    private fun editCategory(bindedAccountSQL: BindedAccountSQL){
+    private fun editAccount(bindedAccountSQL: BindedAccountSQL) {
         val intent = Intent()
         doAsync {
             try {
                 val categorySQL = bindedAccountSQL.convertToAccountSQL()
                 categorySQL.id = bindedAccountSQL.id
                 database.accountDAO().updateAccountSQL(categorySQL)
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 runOnUiThread {
                     Toast.makeText(
                             applicationContext,
@@ -230,8 +263,7 @@ class AddAccount : AppCompatActivity() {
                 }
                 setResult(Activity.RESULT_CANCELED, intent)
                 finish()
-            }
-            finally {
+            } finally {
                 val bundle = Bundle()
                 bundle.putSerializable("edited_account", bindedAccountSQL.convertToAccount())
                 intent.putExtras(bundle)
@@ -242,7 +274,7 @@ class AddAccount : AppCompatActivity() {
     }
 
 
-    private fun databaseConnection(){
+    private fun databaseConnection() {
         database = AppDatabase.getInMemoryDatabase(this)
     }
 }
