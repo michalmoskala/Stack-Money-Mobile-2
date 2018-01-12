@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Html
 import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
@@ -20,6 +21,10 @@ import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_category.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig
+
+
 
 
 class AddCategory : AppCompatActivity() {
@@ -30,11 +35,16 @@ class AddCategory : AppCompatActivity() {
     lateinit var existCategories : List<CategorySQL>
     lateinit var parentCategories : List<ICategory>
     lateinit var parentCategoriesSpinner : ArrayList<SpinnerItem>
+    lateinit var iconSpinner : ArrayList<SpinnerItem>
+
+
     lateinit var action: String
 
     lateinit var editedCategory: CategorySQL
 
     lateinit var parentCategoriesAdapter: ArrayAdapter<SpinnerItem>
+    lateinit var iconAdapter: ArrayAdapter<SpinnerItem>
+
 
     override fun onBackPressed() {
         val intent = Intent()
@@ -75,7 +85,6 @@ class AddCategory : AppCompatActivity() {
         }
 
         category_colorId_input.setText(editedCategory.colorId.toString())
-        category_iconId_input.setText(editedCategory.iconId.toString())
         category_visibleInExpenses_input.isChecked = editedCategory.visibleInExpenses
         category_visibleInIncomes_input.isChecked = editedCategory.visibleInIncomes
 
@@ -119,14 +128,34 @@ class AddCategory : AppCompatActivity() {
             parentCategoriesSpinner = ArrayList(parentCategories.map { SpinnerItem(it.name, it.id) })
             parentCategoriesSpinner.add(0, SpinnerItem("Brak",-1L))
 
+            iconSpinner=ArrayList(icons.map{ SpinnerItem(Html.fromHtml(it.value).toString(),it.key.toLong()) })
+
             parentCategoriesAdapter = ArrayAdapter(
                     applicationContext,
                     android.R.layout.simple_spinner_item,
                     parentCategoriesSpinner)
 
+
+            CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
+                    .setDefaultFontPath("fonts/fontawesome-webfont.ttf")
+                    .setFontAttrId(R.attr.fontPath)
+                    .build()
+            )
+            var penis=applicationContext
+            penis=CalligraphyContextWrapper.wrap(penis)
+
+            iconAdapter = ArrayAdapter(
+                    penis,
+                    android.R.layout.simple_spinner_item,
+                    iconSpinner)
+
+
             uiThread {
                 parentCategoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 category_spinner_parent.adapter = parentCategoriesAdapter
+
+                iconAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                icon_spinner_parent.adapter = iconAdapter
 
                 when(action){
                     RequestCodes.EDIT.toString() -> onCreateEdit()
@@ -142,7 +171,7 @@ class AddCategory : AppCompatActivity() {
         var focusView: View? = null
 
         val colorId = category_colorId_input.text.toString()
-        val iconId = category_iconId_input.text.toString()
+        val iconId=(icon_spinner_parent.selectedItem as SpinnerItem).tag
         val name = category_name_input.text.toString().trim()
         val parentCategoryId = (category_spinner_parent.selectedItem as SpinnerItem).tag //if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
         val userId = Preferences.getUserId(this)
@@ -187,8 +216,8 @@ class AddCategory : AppCompatActivity() {
         var focusView: View? = null
 
         val colorId = category_colorId_input.text.toString()
-        val iconId = category_iconId_input.text.toString()
         val name = category_name_input.text.toString().trim()
+        val iconId=(icon_spinner_parent.selectedItem as SpinnerItem).tag
 //        val parentCategoryIdString = category_parentCategory_input.text.toString()
         val parentCategoryId = (category_spinner_parent.selectedItem as SpinnerItem).tag//if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
         val userId = Preferences.getUserId(this)
