@@ -1,6 +1,7 @@
 package com.example.zbyszek.stackmoney2.model.operation
 
 import android.arch.persistence.room.*
+import com.example.zbyszek.stackmoney2.helpers.CurrencyHelper
 import com.example.zbyszek.stackmoney2.model.operationPattern.OperationPattern
 import java.io.Serializable
 
@@ -59,5 +60,14 @@ data class BindedOperation(
 
         fun convertToOperationPattern(): OperationPattern {
                 return OperationPattern(userId, accountId, categoryId, title, cost, isExpense, visibleInStatistics, description)
+        }
+
+        override fun toString(): String {
+                return  "Kwota: ${CurrencyHelper.toZylasy(cost, isExpense)}\n" +
+                        "Nazwa: $title\n" +
+                        "Kategoria: $categoryName ${if(subCategoryName.isNullOrEmpty()) "" else " -> " + subCategoryName}\n" +
+                        "Data: $date\n" +
+                        "Id konta: $accountId"
+
         }
 }
