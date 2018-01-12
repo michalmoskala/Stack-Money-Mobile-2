@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.activities.AddOperation
@@ -67,6 +68,7 @@ class OperationListAdapter(private var operationsList: ArrayList<BindedOperation
 
         private fun showDetailsDialog(){
             // TODO: Details dialog
+            Toast.makeText(fragment.context, operation.toString(), Toast.LENGTH_LONG).show()
         }
 
         private fun showEditDialog(){

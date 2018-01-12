@@ -48,4 +48,8 @@ data class BindedCategorySQL(
         category.id = id
         return category
     }
+
+    override fun toString(): String {
+        return name
+    }
 }

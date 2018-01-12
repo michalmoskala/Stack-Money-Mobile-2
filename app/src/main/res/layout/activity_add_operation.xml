@@ -86,35 +86,45 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <Spinner
+                android:id="@+id/operation_spinner_category"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/operation_category_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/operation_category"
-                    android:inputType="text"
-                    android:maxLines="6"
-                    android:singleLine="false" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
+            <Spinner
+                android:id="@+id/operation_spinner_account"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/operation_account_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/operation_account"
-                    android:inputType="text"
-                    android:maxLines="6"
-                    android:singleLine="false" />
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
 
-            </android.support.design.widget.TextInputLayout>
+                <!--<AutoCompleteTextView-->
+                    <!--android:id="@+id/operation_category_input"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:hint="@string/operation_category"-->
+                    <!--android:inputType="text"-->
+                    <!--android:maxLines="6"-->
+                    <!--android:singleLine="false" />-->
+
+            <!--</android.support.design.widget.TextInputLayout>-->
+
+            <!--<android.support.design.widget.TextInputLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <!--<AutoCompleteTextView-->
+                    <!--android:id="@+id/operation_account_input"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:hint="@string/operation_account"-->
+                    <!--android:inputType="text"-->
+                    <!--android:maxLines="6"-->
+                    <!--android:singleLine="false" />-->
+
+            <!--</android.support.design.widget.TextInputLayout>-->
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"

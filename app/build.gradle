@@ -41,5 +41,5 @@ dependencies {
     compile 'net.danlew:android.joda:2.9.9.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'petrov.kristiyan:colorpicker-library:1.1.8'
-
+    compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 }

@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.model.RequestCodes
+import com.example.zbyszek.stackmoney2.model.SpinnerItem
 import com.example.zbyszek.stackmoney2.model.account.AccountSQL
 import com.example.zbyszek.stackmoney2.model.account.BindedAccountSQL
 import com.example.zbyszek.stackmoney2.model.account.IAccount
@@ -19,19 +21,21 @@ import kotlinx.android.synthetic.main.activity_add_account.*
 import org.jetbrains.anko.doAsync
 import petrov.kristiyan.colorpicker.ColorPicker
 import java.util.ArrayList
-
+import org.jetbrains.anko.uiThread
 
 class AddAccount : AppCompatActivity() {
 
-    lateinit var database: AppDatabase
-    lateinit var colors: Map<Int, String>
-    lateinit var existAccounts: List<AccountSQL>
-    lateinit var parentAccounts: List<IAccount>
+    lateinit var database : AppDatabase
+    lateinit var colors : Map<Int, String>
+    lateinit var existAccounts : List<AccountSQL>
+    lateinit var parentAccounts : List<IAccount>
+    lateinit var parentAccountsSpinner : ArrayList<SpinnerItem>
 
     lateinit var action: String
     lateinit var editedAccount: AccountSQL
     var chosenColorId=3
 
+    lateinit var parentAccountsAdapter: ArrayAdapter<SpinnerItem>
     override fun onBackPressed() {
         val intent = Intent()
         setResult(Activity.RESULT_CANCELED, intent)
@@ -55,9 +59,25 @@ class AddAccount : AppCompatActivity() {
         editedAccount = intent.getSerializableExtra("account") as AccountSQL
 
         account_name_input.setText(editedAccount.name)
-        if (editedAccount.parentAccountId != null)
-            account_parentAccount_input.setText(editedAccount.parentAccountId.toString())
+        if (editedAccount.parentAccountId == null){
+            val index = parentAccountsSpinner.indexOfFirst { it.tag == editedAccount.id }
+            if (index != -1){
+                parentAccountsSpinner.removeAt(index)
+                parentAccountsAdapter = ArrayAdapter(
+                        applicationContext,
+                        android.R.layout.simple_spinner_item,
+                        parentAccountsSpinner)
+            }
+        }
+        else {
+            val parentIndex = parentAccountsSpinner.indexOfFirst { it.tag == editedAccount.parentAccountId }
+            if (parentIndex != -1)
+                account_spinner_parent.setSelection(parentIndex)
+        }
 
+//        if (editedAccount.parentAccountId != null)
+//            account_parentAccount_input.setText(editedAccount.parentAccountId.toString())
+//        account_colorId_input.setText(editedAccount.colorId.toString())
 
         button_confirm_new_account.text = getString(R.string.action_update)
         button_confirm_new_account.setOnClickListener {
@@ -89,44 +109,52 @@ class AddAccount : AppCompatActivity() {
         databaseConnection()
         action = intent.action
 
-        account_button_colorPicker_input.setOnClickListener {
-            val context = this
-            doAsync {
-                colors = database.colorDAO().getAllColors().associateBy({ it.id }, { it.value })
-                val colorsArrayList = (database.colorDAO().getAllColors().map { it.value } as ArrayList<String>)
-                runOnUiThread {
-
-                    val colorPicker = ColorPicker(context)
-                    colorPicker.setTitle("Wybierz kolor")
-                    colorPicker.setRoundColorButton(true)
-                    colorPicker.setColors(colorsArrayList)
-                            colorPicker.setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
-                                override fun onChooseColor(position: Int, color: Int) {
-                                    if(position>-1)
-                                        account_button_colorPicker_input.setBackgroundColor(color)
-                                        chosenColorId=position+1
-                                }
-                                override fun onCancel(){}
-                            })
-
-
-                    colorPicker.show()
-
-                }
-            }
-        }
 
         val userId = Preferences.getUserId(applicationContext)
+        val context = this
         doAsync {
             colors = database.colorDAO().getAllColors().associateBy({ it.id }, { it.value })
             existAccounts = database.accountDAO().getAllUserAccountsSQL(userId)
             parentAccounts = existAccounts.filter { it.parentAccountId == null }.map { it.convertToAccount() }
-        }
 
-        when (action) {
-            RequestCodes.EDIT.toString() -> onCreateEdit()
-            RequestCodes.ADD_SUBACCOUNT.toString() -> onCreateSubAccount()
-            else -> onCreateAddAccount()
+            parentAccountsSpinner = ArrayList(parentAccounts.map { SpinnerItem(it.name, it.id) })
+            parentAccountsSpinner.add(0, SpinnerItem("Brak",-1L))
+
+            parentAccountsAdapter = ArrayAdapter(
+                    applicationContext,
+                    android.R.layout.simple_spinner_item,
+                    parentAccountsSpinner)
+
+            uiThread {
+                parentAccountsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                account_spinner_parent.adapter = parentAccountsAdapter
+
+                account_button_colorPicker_input.setOnClickListener {
+                    val colorsArrayList = (colors.map { it.value } as ArrayList<String>)
+                    runOnUiThread {
+
+                        val colorPicker = ColorPicker(context)
+                        colorPicker.setTitle("Wybierz kolor")
+                        colorPicker.setRoundColorButton(true)
+                        colorPicker.setColors(colorsArrayList)
+                        colorPicker.setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
+                            override fun onChooseColor(position: Int, color: Int) {
+                                if(position>-1)
+                                    account_button_colorPicker_input.setBackgroundColor(color)
+                                chosenColorId=position+1
+                            }
+                            override fun onCancel(){}
+                        })
+                        colorPicker.show()
+                    }
+                }
+
+                when(action){
+                    RequestCodes.EDIT.toString() -> onCreateEdit()
+                    RequestCodes.ADD_SUBACCOUNT.toString() -> onCreateSubAccount()
+                    else -> onCreateAddAccount()
+                }
+            }
         }
     }
 
@@ -135,12 +163,9 @@ class AddAccount : AppCompatActivity() {
         var cancel = false
         var focusView: View? = null
 
-
-
         val name = account_name_input.text.toString().trim()
         val colorId = chosenColorId
-        val parentAccountIdString = account_parentAccount_input.text.toString()
-        val parentAccountId = if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
+        val parentAccountId = (account_spinner_parent.selectedItem as SpinnerItem).tag///if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
         val userId = Preferences.getUserId(this)
 
         if (TextUtils.isEmpty(name)) {
@@ -148,8 +173,10 @@ class AddAccount : AppCompatActivity() {
             focusView = account_name_input
             cancel = true
         }
-        if (parentAccountId == null) {
-            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }) {
+
+        if (parentAccountId == -1L){
+            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }){
+
                 account_name_input.error = "Konto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
@@ -170,7 +197,7 @@ class AddAccount : AppCompatActivity() {
 //            showProgress(true)
 //            mAuthTask = UserLoginTask(loginStr, passwordStr)
 //            mAuthTask!!.execute(null as Void?)
-            val bindedAccountSQL = BindedAccountSQL(userId, colorId.toInt(), parentAccountId, name, colors[colorId.toInt()]!!)
+            val bindedAccountSQL = BindedAccountSQL(userId, colorId.toInt(), if(parentAccountId == -1L) null else parentAccountId, name, colors[colorId.toInt()]!!)
             bindedAccountSQL.id = editedAccount.id
             editAccount(bindedAccountSQL)
         }
@@ -181,9 +208,9 @@ class AddAccount : AppCompatActivity() {
         var focusView: View? = null
 
         val name = account_name_input.text.toString().trim()
+
         val colorId = chosenColorId
-        val parentAccountIdString = account_parentAccount_input.text.toString()
-        val parentAccountId = if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
+        val parentAccountId = (account_spinner_parent.selectedItem as SpinnerItem).tag///if (parentAccountIdString.isEmpty()) null else parentAccountIdString.toLong()
         val userId = Preferences.getUserId(this)
 
         if (TextUtils.isEmpty(name)) {
@@ -191,8 +218,10 @@ class AddAccount : AppCompatActivity() {
             focusView = account_name_input
             cancel = true
         }
-        if (parentAccountId == null) {
-            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }) {
+
+        if (parentAccountId == -1L){
+            if (parentAccounts.any { it.name.toLowerCase() == name.toLowerCase() }){
+
                 account_name_input.error = "Konto o takiej nazwie już istneje"
                 focusView = account_name_input
                 cancel = true
@@ -213,7 +242,7 @@ class AddAccount : AppCompatActivity() {
 //            showProgress(true)
 //            mAuthTask = UserLoginTask(loginStr, passwordStr)
 //            mAuthTask!!.execute(null as Void?)
-            val bindedAccountSQL = BindedAccountSQL(userId, colorId.toInt(), parentAccountId, name, colors[colorId.toInt()]!!)
+            val bindedAccountSQL = BindedAccountSQL(userId, colorId.toInt(), if(parentAccountId == -1L) null else parentAccountId, name, colors[colorId.toInt()]!!)
             addAccount(bindedAccountSQL)
         }
     }

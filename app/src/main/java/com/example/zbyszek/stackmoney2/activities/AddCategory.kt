@@ -1,17 +1,19 @@
 package com.example.zbyszek.stackmoney2.activities
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Html
 import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.zbyszek.stackmoney2.R
 import com.example.zbyszek.stackmoney2.helpers.Preferences
 import com.example.zbyszek.stackmoney2.model.RequestCodes
+import com.example.zbyszek.stackmoney2.model.SpinnerItem
 import com.example.zbyszek.stackmoney2.model.category.BindedCategorySQL
 import com.example.zbyszek.stackmoney2.model.category.CategorySQL
 import com.example.zbyszek.stackmoney2.model.category.ICategory
@@ -19,7 +21,9 @@ import com.example.zbyszek.stackmoney2.sql.AppDatabase
 import kotlinx.android.synthetic.main.activity_add_category.*
 import org.jetbrains.anko.doAsync
 import petrov.kristiyan.colorpicker.ColorPicker
-
+import org.jetbrains.anko.uiThread
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 
 class AddCategory : AppCompatActivity() {
 
@@ -28,10 +32,18 @@ class AddCategory : AppCompatActivity() {
     lateinit var icons : Map<Int, String>
     lateinit var existCategories : List<CategorySQL>
     lateinit var parentCategories : List<ICategory>
+    lateinit var parentCategoriesSpinner : ArrayList<SpinnerItem>
+    lateinit var iconSpinner : ArrayList<SpinnerItem>
+
+
     lateinit var action: String
 
     lateinit var editedCategory: CategorySQL
     var chosenColorId=3
+
+    lateinit var parentCategoriesAdapter: ArrayAdapter<SpinnerItem>
+    lateinit var iconAdapter: ArrayAdapter<SpinnerItem>
+
 
     override fun onBackPressed() {
         val intent = Intent()
@@ -55,11 +67,24 @@ class AddCategory : AppCompatActivity() {
         editedCategory = intent.getSerializableExtra("category") as CategorySQL
 
         category_name_input.setText(editedCategory.name)
-        if (editedCategory.parentCategoryId != null)
-            category_parentCategory_input.setText(editedCategory.parentCategoryId.toString())
-        category_iconId_input.setText(editedCategory.iconId.toString())
-        category_isExpense_input.isChecked = editedCategory.visibleInExpenses
-        category_isIncome_input.isChecked = editedCategory.visibleInIncomes
+        if (editedCategory.parentCategoryId == null){
+            val index = parentCategoriesSpinner.indexOfFirst { it.tag == editedCategory.id }
+            if (index != -1){
+                parentCategoriesSpinner.removeAt(index)
+                parentCategoriesAdapter = ArrayAdapter(
+                        applicationContext,
+                        android.R.layout.simple_spinner_item,
+                        parentCategoriesSpinner)
+            }
+        }
+        else {
+            val parentIndex = parentCategoriesSpinner.indexOfFirst { it.tag == editedCategory.parentCategoryId }
+            if (parentIndex != -1)
+                category_spinner_parent.setSelection(parentIndex)
+        }
+
+        category_visibleInExpenses_input.isChecked = editedCategory.visibleInExpenses
+        category_visibleInIncomes_input.isChecked = editedCategory.visibleInIncomes
 
         button_confirm_new_category.text = getString(R.string.action_update)
         button_confirm_new_category.setOnClickListener {
@@ -92,44 +117,74 @@ class AddCategory : AppCompatActivity() {
         action = intent.action
         Toast.makeText(this, action, Toast.LENGTH_SHORT).show()
         val userId = Preferences.getUserId(applicationContext)
+        val context = this
         doAsync {
             colors = database.colorDAO().getAllColors().associateBy ( {it.id}, {it.value} )
             icons = database.iconDAO().getAllIcons().associateBy ( {it.id}, {it.value} )
             existCategories = database.categoryDAO().getAllUserCategoriesSQL(userId)
-            parentCategories = existCategories.filter { it.parentCategoryId == null }.map { it.convertToCategory() }
-        }
+            parentCategories = ArrayList(existCategories.filter { it.parentCategoryId == null }.map { it.convertToCategory() })
 
-       category_button_colorPicker_input.setOnClickListener {
-            val context = this
-            doAsync {
-                colors = database.colorDAO().getAllColors().associateBy({ it.id }, { it.value })
-                val colorsArrayList = (database.colorDAO().getAllColors().map { it.value } as ArrayList<String>)
-                runOnUiThread {
+            parentCategoriesSpinner = ArrayList(parentCategories.map { SpinnerItem(it.name, it.id) })
+            parentCategoriesSpinner.add(0, SpinnerItem("Brak",-1L))
 
-                    val colorPicker = ColorPicker(context)
-                    colorPicker.setTitle("Wybierz kolor")
-                    colorPicker.setRoundColorButton(true)
-                    colorPicker.setColors(colorsArrayList)
-                    colorPicker.setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
-                        override fun onChooseColor(position: Int, color: Int) {
-                            if(position>-1)
-                                category_button_colorPicker_input.setBackgroundColor(color)
-                            chosenColorId=position+1
-                        }
-                        override fun onCancel(){}
-                    })
+            iconSpinner=ArrayList(icons.map{ SpinnerItem(Html.fromHtml(it.value).toString(),it.key.toLong()) })
+
+            parentCategoriesAdapter = ArrayAdapter(
+                    applicationContext,
+                    android.R.layout.simple_spinner_item,
+                    parentCategoriesSpinner)
 
 
-                    colorPicker.show()
+            CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
+                    .setDefaultFontPath("fonts/fontawesome-webfont.ttf")
+                    .setFontAttrId(R.attr.fontPath)
+                    .build()
+            )
+            var penis=applicationContext
+            penis=CalligraphyContextWrapper.wrap(penis)
 
+            iconAdapter = ArrayAdapter(
+                    penis,
+                    android.R.layout.simple_spinner_item,
+                    iconSpinner)
+
+
+            uiThread {
+                parentCategoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                category_spinner_parent.adapter = parentCategoriesAdapter
+
+                iconAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                icon_spinner_parent.adapter = iconAdapter
+
+                category_button_colorPicker_input.setOnClickListener {
+                    val colorsArrayList = (colors.map { it.value } as ArrayList<String>)
+                    runOnUiThread {
+
+                        val colorPicker = ColorPicker(context)
+                        colorPicker.setTitle("Wybierz kolor")
+                        colorPicker.setRoundColorButton(true)
+                        colorPicker.setColors(colorsArrayList)
+                        colorPicker.setOnChooseColorListener(object : ColorPicker.OnChooseColorListener {
+                            override fun onChooseColor(position: Int, color: Int) {
+                                if(position>-1)
+                                    category_button_colorPicker_input.setBackgroundColor(color)
+                                chosenColorId=position+1
+                            }
+                            override fun onCancel(){}
+                        })
+
+
+                        colorPicker.show()
+
+                    }
+                }
+
+                when(action){
+                    RequestCodes.EDIT.toString() -> onCreateEdit()
+                    RequestCodes.ADD_SUBCATEGORY.toString() -> onCreateAddSubCategory()
+                    else -> onCreateAddCategory()
                 }
             }
-        }
-
-        when(action){
-            RequestCodes.EDIT.toString() -> onCreateEdit()
-            RequestCodes.ADD_SUBCATEGORY.toString() -> onCreateAddSubCategory()
-            else -> onCreateAddCategory()
         }
     }
 
@@ -138,20 +193,20 @@ class AddCategory : AppCompatActivity() {
         var focusView: View? = null
 
         val colorId = chosenColorId
-        val iconId = category_iconId_input.text.toString()
+        val iconId=(icon_spinner_parent.selectedItem as SpinnerItem).tag
+
         val name = category_name_input.text.toString().trim()
-        val parentCategoryIdString = category_parentCategory_input.text.toString()
-        val parentCategoryId = if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
+        val parentCategoryId = (category_spinner_parent.selectedItem as SpinnerItem).tag //if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
         val userId = Preferences.getUserId(this)
-        val visibleInExpenses = category_isExpense_input.isChecked
-        val visibleInIncomes = category_isIncome_input.isChecked
+        val visibleInExpenses = category_visibleInExpenses_input.isChecked
+        val visibleInIncomes = category_visibleInIncomes_input.isChecked
 
         if (TextUtils.isEmpty(name)) {
             category_name_input.error = getString(R.string.error_field_required)
             focusView = category_name_input
             cancel = true
         }
-        if (parentCategoryId == null){
+        if (parentCategoryId == -1L){
             if (parentCategories
                     .filter { it.id != editedCategory.id }
                     .any { it.name.toLowerCase() == name.toLowerCase() }){
@@ -173,7 +228,7 @@ class AddCategory : AppCompatActivity() {
         if (cancel) {
             focusView?.requestFocus()
         } else {
-            val bindedCategorySQL = BindedCategorySQL(userId, colorId.toInt(), iconId.toInt(), colors[colorId.toInt()]!!, icons[iconId.toInt()]!!, parentCategoryId,visibleInExpenses,visibleInIncomes,name)
+            val bindedCategorySQL = BindedCategorySQL(userId, colorId.toInt(), iconId.toInt(), colors[colorId.toInt()]!!, icons[iconId.toInt()]!!, if (parentCategoryId == -1L) null else parentCategoryId,visibleInExpenses,visibleInIncomes,name)
             bindedCategorySQL.id = editedCategory.id
             editCategory(bindedCategorySQL)
         }
@@ -184,20 +239,20 @@ class AddCategory : AppCompatActivity() {
         var focusView: View? = null
 
         val colorId = chosenColorId
-        val iconId = category_iconId_input.text.toString()
         val name = category_name_input.text.toString().trim()
-        val parentCategoryIdString = category_parentCategory_input.text.toString()
-        val parentCategoryId = if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
+        val iconId=(icon_spinner_parent.selectedItem as SpinnerItem).tag
+//        val parentCategoryIdString = category_parentCategory_input.text.toString()
+        val parentCategoryId = (category_spinner_parent.selectedItem as SpinnerItem).tag//if (parentCategoryIdString.isEmpty()) null else parentCategoryIdString.toLong()
         val userId = Preferences.getUserId(this)
-        val visibleInExpenses = category_isExpense_input.isChecked
-        val visibleInIncomes = category_isIncome_input.isChecked
+        val visibleInExpenses = category_visibleInExpenses_input.isChecked
+        val visibleInIncomes = category_visibleInIncomes_input.isChecked
 
         if (TextUtils.isEmpty(name)) {
             category_name_input.error = getString(R.string.error_field_required)
             focusView = category_name_input
             cancel = true
         }
-        if (parentCategoryId == null){
+        if (parentCategoryId == -1L){
             if (parentCategories.any { it.name.toLowerCase() == name.toLowerCase() }){
                 category_name_input.error = "Kategoria o takiej nazwie już istneje"
                 focusView = category_name_input
@@ -215,7 +270,7 @@ class AddCategory : AppCompatActivity() {
         if (cancel) {
             focusView?.requestFocus()
         } else {
-            val bindedCategorySQL = BindedCategorySQL(userId, colorId.toInt(), iconId.toInt(), colors[colorId.toInt()]!!, icons[iconId.toInt()]!!, parentCategoryId,visibleInExpenses,visibleInIncomes,name)
+            val bindedCategorySQL = BindedCategorySQL(userId, colorId.toInt(), iconId.toInt(), colors[colorId.toInt()]!!, icons[iconId.toInt()]!!, if(parentCategoryId == -1L) null else parentCategoryId,visibleInExpenses,visibleInIncomes,name)
             addCategory(bindedCategorySQL)
         }
     }
